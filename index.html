@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Website chính thức của Câu lạc bộ Nghệ thuật - THPT Bảo Lộc, Cơ sở 1.">
+  <meta name="theme-color" content="#58e878">
+  <title>ART CLUB — THPT Bảo Lộc</title>
+  <link rel="icon" href="assets/logo.jpg">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="page-noise" aria-hidden="true"></div>
+
+  <header class="site-header" id="top">
+    <a class="brand" href="#home" aria-label="Trang chủ Art Club">
+      <img src="assets/logo.jpg" alt="Logo CLB Nghệ thuật">
+      <span>
+        <strong>ART CLUB</strong>
+        <small>THPT BẢO LỘC</small>
+      </span>
+    </a>
+
+    <button class="menu-toggle" aria-label="Mở menu" aria-expanded="false">☰</button>
+
+    <nav class="nav" aria-label="Điều hướng chính">
+      <a href="#about">Về CLB</a>
+      <a href="#gallery">Tác phẩm</a>
+      <a href="#playlist">Âm nhạc</a>
+      <a href="#activities">Hoạt động</a>
+      <a href="#join">Tham gia</a>
+      <a href="#contact">Liên hệ</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero section" id="home">
+      <div class="hero-copy">
+        <span class="eyebrow">CREATIVITY • COMMUNITY • ART</span>
+        <h1>VẼ ĐIỀU<br><span>CẬU THẤY.</span><br>LÀM ĐIỀU CẬU MƠ.</h1>
+        <p>
+          Một không gian để học sinh khám phá nghệ thuật,
+          gặp những người cùng đam mê và biến những ý tưởng
+          trong đầu thành điều có thể nhìn thấy.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-dark" href="#gallery">Khám phá tác phẩm ↗</a>
+          <a class="text-link" href="#join">Muốn tham gia? →</a>
+        </div>
+      </div>
+
+      <div class="hero-art" aria-label="Mascot CLB">
+        <div class="burst burst-blue"></div>
+        <div class="burst burst-pink"></div>
+        <div class="burst burst-yellow"></div>
+        <div class="doodle">✦</div>
+        <div class="doodle doodle-2">♪</div>
+        <div class="logo-orbit">
+          <img src="assets/logo.jpg" alt="Mascot cáo của CLB Nghệ thuật">
+        </div>
+        <div class="sticker">MADE<br>WITH<br>FEELING</div>
+      </div>
+    </section>
+
+    <section class="marquee" aria-hidden="true">
+      <div>DRAW • CREATE • SHARE • DREAM • DRAW • CREATE • SHARE • DREAM •</div>
+    </section>
+
+    <section class="section about" id="about">
+      <div class="section-label">01 / ABOUT</div>
+      <div class="about-grid">
+        <div>
+          <h2>Nghệ thuật không cần<br><em>hoàn hảo.</em></h2>
+        </div>
+        <div>
+          <p class="lead">
+            Chúng tớ tin rằng mỗi người đều có một cách riêng để kể câu chuyện của mình.
+            Có thể bằng một bức tranh, một tấm ảnh, một thiết kế — hoặc đơn giản là một
+            ý tưởng chưa từng được thử.
+          </p>
+          <p>
+            Art Club là nơi để cậu học hỏi, thử nghiệm, mắc lỗi, làm lại và cùng nhau
+            tạo nên những thứ thật sự có ý nghĩa.
+          </p>
+        </div>
+      </div>
+
+      <div class="values">
+        <article><span>01</span><h3>TỰ DO</h3><p>Thử những điều chưa từng thử.</p></article>
+        <article><span>02</span><h3>SÁNG TẠO</h3><p>Biến ý tưởng thành hình hài.</p></article>
+        <article><span>03</span><h3>KẾT NỐI</h3><p>Gặp những người cùng nhịp.</p></article>
+      </div>
+    </section>
+
+    <section class="section gallery-section" id="gallery">
+      <div class="section-heading">
+        <div>
+          <div class="section-label">02 / GALLERY</div>
+          <h2>Những gì chúng tớ<br><em>đã tạo ra.</em></h2>
+        </div>
+        <p>Click vào một tác phẩm để xem lớn hơn.</p>
+      </div>
+
+      <div class="filters" role="tablist" aria-label="Lọc tác phẩm">
+        <button class="filter active" data-filter="all">Tất cả</button>
+        <button class="filter" data-filter="paintings">Hội họa</button>
+        <button class="filter" data-filter="digital-art">Digital Art</button>
+        <button class="filter" data-filter="photography">Photography</button>
+        <button class="filter" data-filter="events">Hoạt động</button>
+      </div>
+
+      <div class="gallery" id="galleryGrid">
+        <!--
+          THÊM TRANH:
+          1. Upload ảnh vào thư mục gallery/...
+          2. Copy một "item" trong script.js và đổi tên file, tên tác phẩm...
+        -->
+        <article class="gallery-card placeholder-card" data-category="paintings">
+          <div class="placeholder-art">YOUR<br>ART<br>HERE</div>
+          <div class="gallery-info"><h3>Tác phẩm đầu tiên</h3><p>Upload ảnh của CLB để thay thế.</p></div>
+        </article>
+
+        <article class="gallery-card placeholder-card" data-category="digital-art">
+          <div class="placeholder-art alt">CREATE<br>SOMETHING</div>
+          <div class="gallery-info"><h3>Digital Art</h3><p>Thêm tác phẩm của thành viên.</p></div>
+        </article>
+
+        <article class="gallery-card placeholder-card" data-category="photography">
+          <div class="placeholder-art photo">CAPTURE<br>THE MOMENT</div>
+          <div class="gallery-info"><h3>Photography</h3><p>Thêm ảnh hoạt động / chân dung.</p></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section playlist-section" id="playlist">
+      <div class="playlist-copy">
+        <div class="section-label">03 / SOUNDTRACK</div>
+        <h2>Nhạc để<br><em>vẽ.</em></h2>
+        <p>
+          Một góc nhỏ cho những playlist mà chúng tớ nghe khi vẽ,
+          thiết kế, làm project hoặc đơn giản là ngồi cạnh nhau.
+        </p>
+        <div class="playlist-tags">
+          <span>🎨 Drawing</span><span>🌙 Late Night</span><span>☀️ Good Mood</span>
+        </div>
+      </div>
+
+      <div class="spotify-card">
+        <div class="spotify-top">
+          <span>NOW / PLAYLIST</span>
+          <span>SPOTIFY ↗</span>
+        </div>
+
+        <!--
+          DÁN LINK SPOTIFY EMBED VÀO src Ở ĐÂY.
+          Ví dụ:
+          https://open.spotify.com/embed/playlist/ID_PLAYLIST?utm_source=generator
+        -->
+        <div class="spotify-placeholder">
+          <div class="vinyl">♫</div>
+          <h3>ART CLUB PLAYLIST</h3>
+          <p>Dán link Spotify Embed của CLB vào file index.html.</p>
+          <a href="https://open.spotify.com/" target="_blank" rel="noopener">Mở Spotify ↗</a>
+        </div>
+
+        <!--
+        <iframe
+          class="spotify-frame"
+          src="https://open.spotify.com/embed/playlist/ID_CUA_CAU?utm_source=generator"
+          width="100%" height="352" frameborder="0"
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          loading="lazy"></iframe>
+        -->
+      </div>
+    </section>
+
+    <section class="section activities" id="activities">
+      <div class="section-label">04 / WHAT WE DO</div>
+      <h2>Không chỉ <em>ngồi vẽ.</em></h2>
+
+      <div class="activity-list">
+        <article><span>01</span><div><h3>WORKSHOP</h3><p>Cùng học kỹ thuật, màu sắc, bố cục và khám phá phong cách cá nhân.</p></div><b>↗</b></article>
+        <article><span>02</span><div><h3>FREE DRAWING</h3><p>Không đề bài. Không áp lực. Chỉ cần một cây bút và một ý tưởng.</p></div><b>↗</b></article>
+        <article><span>03</span><div><h3>EXHIBITION</h3><p>Đưa những tác phẩm của thành viên đến gần hơn với mọi người.</p></div><b>↗</b></article>
+        <article><span>04</span><div><h3>CREATIVE PROJECT</h3><p>Cùng thực hiện những dự án nghệ thuật và kết hợp với các CLB khác.</p></div><b>↗</b></article>
+      </div>
+    </section>
+
+    <section class="join-section" id="join">
+      <div class="join-inner">
+        <div class="section-label">05 / JOIN US</div>
+        <h2>Muốn tạo ra<br><span>điều gì đó?</span></h2>
+        <p>
+          Cậu không cần phải là người vẽ giỏi nhất.
+          Chỉ cần cậu muốn học, muốn thử và muốn tạo ra điều gì đó cùng chúng tớ.
+        </p>
+        <!-- Đổi href này thành Google Form tuyển thành viên của CLB -->
+        <a class="btn btn-white" href="#" onclick="alert('Hãy thay dấu # bằng link Google Form tuyển thành viên của CLB nhé!'); return false;">
+          Đăng ký tham gia ↗
+        </a>
+      </div>
+      <div class="join-doodle">LET'S<br>MAKE<br>ART!</div>
+    </section>
+
+    <section class="section contact" id="contact">
+      <div class="section-label">06 / CONTACT</div>
+      <div class="contact-grid">
+        <div>
+          <h2>Tìm chúng tớ<br><em>ở đây.</em></h2>
+          <p class="lead">Một tin nhắn, một email, hoặc ghé qua trường — tụi mình luôn vui khi gặp những người có cùng niềm yêu thích nghệ thuật.</p>
+        </div>
+
+        <div class="contact-list">
+          <a href="https://maps.google.com/?q=Trường+THPT+Bảo+Lộc+Cơ+sở+1" target="_blank" rel="noopener">
+            <span>📍 ĐỊA ĐIỂM</span>
+            <strong>Trường THPT Bảo Lộc — Cơ sở 1 ↗</strong>
+          </a>
+          <a href="mailto:artclub287@gmail.com">
+            <span>✉ EMAIL</span>
+            <strong>artclub287@gmail.com ↗</strong>
+          </a>
+          <a href="https://www.facebook.com/share/19B7YQZiLG/?mibextid=wwXIfr" target="_blank" rel="noopener">
+            <span>🔵 FACEBOOK</span>
+            <strong>Art Club ↗</strong>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-brand">
+      <img src="assets/logo.jpg" alt="Logo Art Club">
+      <div><strong>ART CLUB</strong><small>THPT BẢO LỘC</small></div>
+    </div>
+    <p>Vẽ điều cậu thấy. Làm điều cậu mơ.</p>
+    <a href="#top">↑ Lên đầu trang</a>
+    <small>© 2026 Art Club</small>
+  </footer>
+
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="lightbox-close" aria-label="Đóng">×</button>
+    <img id="lightboxImage" src="" alt="">
+    <div id="lightboxCaption"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
