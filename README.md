@@ -54,3 +54,12 @@ Trong `index.html`, tìm nút `Đăng ký tham gia` và thay `href="#"` bằng l
 - Trường THPT Bảo Lộc — Cơ sở 1
 - artclub287@gmail.com
 - Facebook: https://www.facebook.com/share/19B7YQZiLG/?mibextid=wwXIfr
+
+
+## Bản giao diện 2 — mềm và có chiều sâu
+
+- Nền có gradient, lưới giấy và texture rất nhẹ.
+- Card có hiệu ứng kính/đổ bóng để tạo cảm giác nổi khối.
+- Chuyển động dùng easing mềm hơn, tốc độ chậm hơn.
+- Có hỗ trợ `prefers-reduced-motion`.
+- Giữ nguyên cấu trúc HTML/JS và màu nhận diện từ logo.
