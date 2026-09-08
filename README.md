@@ -1,65 +1,20 @@
-# ART CLUB — THPT Bảo Lộc
+# ART CLUB — THPT Bảo Lộc / Comic Studio Refresh
 
-Website giới thiệu CLB Nghệ thuật, tối ưu cho PC / tablet / mobile.
+Bản giao diện cập nhật theo yêu cầu 08/09/2026.
 
-## Cấu trúc
-
-- `index.html` — nội dung website
-- `style.css` — giao diện và responsive
-- `script.js` — menu, gallery, filter, lightbox
-- `assets/logo.jpg` — logo CLB
-- `gallery/` — nơi lưu tranh / ảnh
-
-## Đăng website bằng GitHub Pages
-
-1. Tạo repository trên GitHub và để `Public`.
-2. Upload toàn bộ các file/thư mục trong project.
-3. Vào `Settings` → `Pages`.
-4. Chọn `Deploy from a branch`.
-5. Branch: `main`, Folder: `/ (root)`.
-6. Save và chờ GitHub Pages triển khai.
+## Đã thay đổi
+- Logo mới được dùng ở header, hero, máy đĩa than, gallery và footer. Logo được cắt bằng CSS theo hình tròn để không còn cảm giác bị nhốt trong khung vuông.
+- Hero logo có 2 vòng orbit chuyển động, chấm màu, parallax nhẹ trên desktop và popup comic khi bấm.
+- Toàn bộ hệ màu chuyển sang giấy kem/xám, sage, đỏ đất, dusty blue và vàng mù tạt; giảm neon/trắng tinh.
+- Thêm halftone, speech bubble, ticker, sticker, burst, doodle và các nét comic nhưng giữ khoảng thở chuyên nghiệp.
+- Gallery trở thành Exhibition Wall với khung treo lệch nhẹ.
+- Music có máy đĩa than riêng, đĩa quay tương tác, logo làm nhãn đĩa và Spotify playlist được nhúng trực tiếp.
+- Playlist: https://open.spotify.com/playlist/4l15Ccxw8hVu7YIpUU6QM0
+- Font giới hạn ở Space Grotesk cho display/heading và DM Sans cho nội dung.
+- Có VI/EN switch, responsive mobile, keyboard-accessible lightbox, prefers-reduced-motion.
 
 ## Thêm tác phẩm
-
-1. Upload ảnh vào đúng thư mục:
-   - `gallery/paintings/`
-   - `gallery/digital-art/`
-   - `gallery/photography/`
-   - `gallery/events/`
-2. Mở `script.js`.
-3. Tìm `const artworks = [`.
-4. Thêm một object, ví dụ:
-
-{
-  image: "gallery/paintings/tranh-01.jpg",
-  category: "paintings",
-  title: "Mùa hạ",
-  author: "Nguyễn A",
-  description: "Acrylic • 2026"
-}
-
-5. Commit changes.
-
-## Thêm Spotify
-
-Trong `index.html`, tìm phần `spotify-placeholder`.
-Lấy mã Embed từ Spotify rồi thay placeholder bằng iframe Spotify.
-
-## Đổi link tuyển thành viên
-
-Trong `index.html`, tìm nút `Đăng ký tham gia` và thay `href="#"` bằng link Google Form.
-
-## Thông tin liên hệ đã cài
-
-- Trường THPT Bảo Lộc — Cơ sở 1
-- artclub287@gmail.com
-- Facebook: https://www.facebook.com/share/19B7YQZiLG/?mibextid=wwXIfr
-
-
-## Bản giao diện 2 — mềm và có chiều sâu
-
-- Nền có gradient, lưới giấy và texture rất nhẹ.
-- Card có hiệu ứng kính/đổ bóng để tạo cảm giác nổi khối.
-- Chuyển động dùng easing mềm hơn, tốc độ chậm hơn.
-- Có hỗ trợ `prefers-reduced-motion`.
-- Giữ nguyên cấu trúc HTML/JS và màu nhận diện từ logo.
+Mở `script.js`, thêm object vào mảng `artworks` theo mẫu:
+```js
+{ image:'gallery/paintings/ten-file.jpg', category:'paintings', title:'Tên tác phẩm', author:'Tên tác giả', description:'Chất liệu / năm' }
+```
