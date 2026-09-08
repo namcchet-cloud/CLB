@@ -1,150 +1,203 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="vi">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Art Club — THPT Bảo Lộc. Không gian sáng tạo, triển lãm và âm nhạc của học sinh.">
-  <meta name="theme-color" content="#f2eadb">
-  <title>ART CLUB — THPT Bảo Lộc</title>
-  <link rel="icon" href="assets/logo-new.jpeg">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
+<meta content="CLB Nghệ thuật — THPT Bảo Lộc. Không gian sáng tạo, triển lãm và âm nhạc của học sinh." name="description"/>
+<meta content="#f2eadb" name="theme-color"/>
+<title>CLB Nghệ thuật — THPT Bảo Lộc</title>
+<link href="assets/logo-new.jpeg" rel="icon"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800&amp;family=DM+Sans:wght@400;500;600;700&amp;family=Fraunces:ital,wght@0,600;0,700;1,600&amp;display=swap" rel="stylesheet"/>
+<link href="style.css?v=2.1" rel="stylesheet"/>
 </head>
 <body>
-  <a class="skip-link" href="#main">Đến nội dung chính</a>
-  <div class="paper-noise" aria-hidden="true"></div>
+<a class="skip-link" data-i18n="skip" href="#main">Đến nội dung chính</a>
+<div aria-hidden="true" class="paper-noise"></div>
+<header class="site-header" id="top">
+<a aria-label="Art Club — Trang chủ" class="brand" data-i18n-aria="brandHome" href="#home">
+<span class="brand-logo"><img alt="Logo Art Club THPT Bảo Lộc" data-i18n-alt="logoAlt" src="assets/logo-new.jpeg"/></span>
+<span class="brand-copy"><strong data-i18n="clubName">CLB Nghệ thuật</strong><small data-i18n="schoolName">THPT BẢO LỘC</small></span>
+</a>
 
-  <header class="site-header" id="top">
-    <a class="brand" href="#home" aria-label="Art Club — Trang chủ">
-      <span class="brand-logo"><img src="assets/logo-new.jpeg" alt="Logo Art Club THPT Bảo Lộc"></span>
-      <span class="brand-copy"><strong>ART CLUB</strong><small>THPT BẢO LỘC</small></span>
-    </a>
+<nav aria-label="Điều hướng chính" class="nav" data-i18n-aria="navigation" id="mainNav">
+<a data-i18n="navAbout" href="#about">Về CLB</a>
+<a data-i18n="navGallery" href="#gallery">Tác phẩm</a>
+<a data-i18n="navActivities" href="#activities">Hoạt động</a>
+<a data-i18n="navMusic" href="#playlist">Âm nhạc</a>
+<a data-i18n="navContact" href="#contact">Liên hệ</a>
 
-    <button class="menu-toggle" type="button" aria-label="Mở menu" aria-expanded="false" aria-controls="mainNav"><span></span><span></span></button>
-    <nav class="nav" id="mainNav" aria-label="Điều hướng chính">
-      <a href="#about" data-i18n="navAbout">Về CLB</a>
-      <a href="#gallery" data-i18n="navGallery">Tác phẩm</a>
-      <a href="#activities" data-i18n="navActivities">Hoạt động</a>
-      <a href="#playlist" data-i18n="navMusic">Âm nhạc</a>
-      <a href="#contact" data-i18n="navContact">Liên hệ</a>
-      <button class="lang-toggle" type="button" aria-label="Đổi ngôn ngữ"><span class="lang-current">VI</span><span>/</span><span>EN</span></button>
-    </nav>
-  </header>
+</nav>
+<div class="header-actions">
+<a class="header-join" data-join="" href="https://forms.gle/kwnmuuC9N77aHMzGA" rel="noopener noreferrer" target="_blank"><span data-i18n="joinShort">Tham gia CLB</span><b aria-hidden="true">↗</b></a>
+<button aria-label="Đổi sang tiếng Anh" class="lang-toggle" type="button"><span data-lang-option="vi">VI</span><span aria-hidden="true">/</span><span data-lang-option="en">EN</span></button>
+<button aria-controls="mainNav" aria-expanded="false" aria-label="Mở menu" class="menu-toggle" data-i18n-aria="menu" type="button"><span></span><span></span></button></div></header>
+<main id="main">
+<section class="hero section" id="home">
+<div class="hero-copy reveal">
+<div class="kicker"><span data-i18n="clubName">CLB Nghệ thuật</span><i></i><span data-i18n="schoolName">THPT BẢO LỘC</span></div>
+<h1 data-i18n-html="heroTitle">VẼ ĐIỀU CẬU THẤY.<br/><em>LÀM ĐIỀU CẬU MƠ.</em></h1>
+<p data-i18n="heroBody">Một góc nhỏ ở Bảo Lộc, một khoảng trời cho ý tưởng. Cùng tụi mình vẽ, thử, khám phá và tạo nên những điều mang màu sắc của riêng cậu.</p>
+<div class="hero-actions">
+<a class="comic-button primary" href="#gallery"><span data-i18n="explore">Khám phá tác phẩm</span><b>↗</b></a>
+<a class="scribble-link" data-i18n="meetUs" href="#about">Gặp chúng tớ</a>
+</div>
+<div aria-hidden="true" class="hero-note"><span>✦</span> <span data-i18n="heroNote">Không cần hoàn hảo. Chỉ cần là cậu.</span></div>
+</div>
+<div class="hero-stage reveal" data-ambient="" data-parallax-root="">
+<span aria-hidden="true" class="comic-ray ray-a float-doodle" data-ambient="" data-depth="0.3"></span>
+<span aria-hidden="true" class="comic-ray ray-b float-doodle" data-ambient="" data-depth="0.55"></span>
+<span aria-hidden="true" class="comic-spark spark-a float-doodle" data-ambient="" data-depth="0.8">✦</span>
+<span aria-hidden="true" class="comic-spark spark-b float-doodle" data-ambient="" data-depth="0.45">⚡</span>
+<span aria-hidden="true" class="comic-note note-a float-doodle" data-ambient="" data-depth="0.65">♪</span>
+<div class="logo-float" data-ambient=""><button aria-controls="mascotCard" aria-expanded="false" aria-label="Mở câu chuyện về mascot Art Club" class="hero-logo" data-i18n-aria="mascotOpen" type="button">
+<span class="orbit orbit-one"></span><span class="orbit orbit-two"></span><span class="orbit-dots"></span>
+<img alt="Mascot cáo cam của Art Club" data-i18n-alt="mascotAlt" src="assets/logo-new.jpeg"/>
+<span class="tap-label" data-i18n="tapLogo">TAP! <i>↘</i></span>
+</button></div>
+<div aria-hidden="true" class="comic-bubble bubble-one" data-i18n="wow">WOW!</div>
+<div aria-hidden="true" class="comic-bubble bubble-two" data-i18n="createTag">CREATE!</div>
+<aside aria-hidden="true" aria-labelledby="mascotTitle" class="mascot-card" id="mascotCard" inert="" role="dialog">
+<button aria-label="Đóng" class="mascot-close" data-i18n-aria="close" type="button">×</button>
+<span class="mini-label" data-i18n="creativeCorner">THE CREATIVE CORNER</span>
+<h2 data-i18n="mascotTitle" id="mascotTitle">Cáo nhà CLB Nghệ thuật</h2>
+<p data-i18n="mascotBody">Một chiếc mascot hơi tinh nghịch, mê màu sắc, nhạc hay và luôn sẵn sàng kéo một ý tưởng nhỏ thành chuyện lớn.</p>
+<div class="mascot-tags"><span data-i18n="drawTag">DRAW!</span><span data-i18n="playTag">PLAY!</span><span data-i18n="makeTag">MAKE!</span></div>
+</aside>
+</div>
+</section>
+<div aria-hidden="true" class="ticker" data-ambient=""><div class="ticker-track"><span data-i18n="ticker">VẼ · THỬ · MƠ · SÁNG TẠO · CÙNG NHAU · </span><span data-i18n="ticker">VẼ · THỬ · MƠ · SÁNG TẠO · CÙNG NHAU · </span><span data-i18n="ticker">VẼ · THỬ · MƠ · SÁNG TẠO · CÙNG NHAU · </span><span data-i18n="ticker">VẼ · THỬ · MƠ · SÁNG TẠO · CÙNG NHAU · </span></div></div>
+<section class="section about panel-paper" id="about">
+<div class="section-label reveal"><span>01</span><b data-i18n="aboutLabel">CHÚNG TỚ LÀ AI?</b></div>
+<div class="about-grid">
+<div class="reveal"><h2 data-i18n-html="aboutTitle">Hơn một câu lạc bộ.<br/><em>Một nơi để là cậu.</em></h2></div>
+<div class="about-copy reveal"><p class="lead" data-i18n="aboutLead">Chúng tớ tin rằng mỗi người đều có một cách riêng để kể câu chuyện của mình — bằng tranh, ảnh, thiết kế hoặc một ý tưởng chưa từng được thử.</p><p data-i18n="aboutBody">CLB Nghệ thuật là nơi để cậu học hỏi, thử nghiệm, mắc lỗi, làm lại và cùng nhau tạo nên những thứ có ý nghĩa. Nghệ thuật không cần hoàn hảo. Chỉ cần bắt đầu.</p></div>
+</div>
+<div class="values">
+<article class="reveal" data-ambient="" data-reveal="left"><span>01</span><h3 data-i18n="value1Title">Tự do thử</h3><p data-i18n="value1Body">Thử những điều chưa từng thử.</p><i>✎</i></article>
+<article class="reveal" data-ambient="" data-reveal="pop"><span>02</span><h3 data-i18n="value2Title">Thoải mái sáng tạo</h3><p data-i18n="value2Body">Biến ý tưởng thành hình hài.</p><i>✦</i></article>
+<article class="reveal" data-ambient="" data-reveal="right"><span>03</span><h3 data-i18n="value3Title">Cùng nhau lớn lên</h3><p data-i18n="value3Body">Gặp những người cùng nhịp.</p><i>☺</i></article>
+</div>
+</section>
+<section class="section gallery-section panel-wall" id="gallery">
+<div class="section-heading reveal">
+<div><div class="section-label"><span>02</span><b data-i18n="galleryLabel">GÓC TRIỂN LÃM</b></div><h2 data-i18n-html="galleryTitle">Một chút màu<br/><em>của tụi mình.</em></h2></div>
+<p data-i18n="galleryBody">Mỗi tác phẩm, một câu chuyện riêng. Những khung tranh được treo như một bức tường triển lãm nhỏ.</p>
+</div>
+<div aria-label="Lọc tác phẩm" class="filters" data-i18n-aria="filterLabel" role="group">
+<button aria-pressed="true" class="filter active" data-filter="all" data-i18n="filterAll" type="button">Tất cả</button><button aria-pressed="false" class="filter" data-filter="paintings" data-i18n="filterPainting" type="button">Hội họa</button><button aria-pressed="false" class="filter" data-filter="digital-art" data-i18n="filterDigital" type="button">Digital</button><button aria-pressed="false" class="filter" data-filter="photography" data-i18n="filterPhoto" type="button">Nhiếp ảnh</button><button aria-pressed="false" class="filter" data-filter="events" data-i18n="filterEvents" type="button">Hoạt động</button>
+</div>
+<div class="exhibition-wall" id="galleryGrid"></div>
+<p class="gallery-hint" data-i18n="galleryHint">Bấm vào một khung để xem tác phẩm lớn hơn.</p>
+</section>
+<section class="section activities panel-blue" id="activities">
+<div class="section-label reveal"><span>03</span><b data-i18n="activityLabel">TỤI MÌNH LÀM GÌ?</b></div>
+<div class="activity-title reveal"><h2 data-i18n-html="activityTitle">Không chỉ<br/><em>ngồi vẽ.</em></h2><span class="speech" data-ambient="" data-i18n-html="makeStuff">LET'S<br/>MAKE<br/>STUFF!</span></div>
+<div class="activity-grid">
+<article class="activity-card reveal" data-ambient="" data-reveal="left"><b>01</b><span class="icon">✷</span><h3 data-i18n="actTitle1">WORKSHOP</h3><p data-i18n="act1">Cùng học kỹ thuật, màu sắc, bố cục và khám phá phong cách cá nhân.</p></article>
+<article class="activity-card reveal" data-ambient="" data-reveal="right"><b>02</b><span class="icon">✎</span><h3 data-i18n="actTitle2">FREE DRAWING</h3><p data-i18n="act2">Không đề bài. Không áp lực. Chỉ cần một cây bút và một ý tưởng.</p></article>
+<article class="activity-card reveal" data-ambient="" data-reveal="left"><b>03</b><span class="icon">▣</span><h3 data-i18n="actTitle3">EXHIBITION</h3><p data-i18n="act3">Đưa những tác phẩm của thành viên đến gần hơn với mọi người.</p></article>
+<article class="activity-card reveal" data-ambient="" data-reveal="right"><b>04</b><span class="icon">⚡</span><h3 data-i18n="actTitle4">CREATIVE PROJECT</h3><p data-i18n="act4">Cùng thực hiện những dự án nghệ thuật và kết hợp với các CLB khác.</p></article>
+</div>
+</section>
+<section class="section playlist-section panel-music" data-theme="green" id="playlist">
+<div class="music-top">
+<div class="music-copy reveal" data-reveal="left">
+<div class="section-label"><span>04</span><b data-i18n="musicLabel">GÓC ÂM NHẠC</b></div>
+<h2 data-i18n-html="musicTitle">Một chút nhạc.<br/><em>Một trời cảm hứng.</em></h2>
+</div>
+<div class="music-intro reveal" data-reveal="right">
+<span aria-hidden="true" class="music-doodle" data-ambient="">♫</span>
+<p data-i18n="musicBody">Chọn một chiếc đĩa, nhấn phát và để ý tưởng trôi theo nhạc.</p>
+<span class="edition-stamp" data-i18n="soundEdition">PHÒNG NGHE · HAI SẮC MÀU</span>
+</div>
+</div>
+<div class="listening-room">
+<div class="turntable-column reveal" data-reveal="pop">
+<div aria-label="Máy đĩa của CLB Nghệ thuật" class="turntable" data-i18n-aria="deckLabel" data-state="idle" id="turntable">
+<div class="deck-head"><span><b data-i18n="clubName">CLB Nghệ thuật</b><small data-i18n="soundSelect">TUYỂN CHỌN ÂM NHẠC</small></span><span class="deck-model">ST–02<br/>33⅓ RPM</span></div>
+<div class="vinyl-stage">
+<span aria-hidden="true" class="deck-speck speck-one">✦</span>
+<span aria-hidden="true" class="deck-speck speck-two">✳</span>
+<div class="record-carrier" id="recordCarrier">
+<div aria-hidden="true" class="vinyl" data-theme="green" id="vinyl">
+<span class="groove g1"></span><span class="groove g2"></span><span class="groove g3"></span>
+<div class="record-label"><img alt="" id="recordArtwork" src="assets/logo-new.jpeg"/></div>
+<span class="spindle"></span>
+</div>
+</div>
+<button aria-label="Phát đĩa đang chọn" class="vinyl-hit" data-i18n-aria="playDisc" data-play="" type="button"></button>
+<div aria-hidden="true" class="tonearm"><div class="arm-pivot"></div><span class="arm-shaft"></span></div>
+<span aria-hidden="true" class="deck-speed">STEREO<br/>33 / 45</span>
+</div>
+<div class="deck-controls">
+<button aria-pressed="false" class="play-vinyl" data-play="" id="playButton" type="button"><span aria-hidden="true" id="playIcon">▶</span><span data-i18n="play" id="playText">Phát nhạc</span></button>
+<div class="deck-signal"><span class="led"></span><span data-i18n="standby" id="deckSignal">CHỜ PHÁT</span></div>
+<div aria-hidden="true" class="equalizer"><i></i><i></i><i></i><i></i><i></i></div>
+</div>
+</div>
+<div class="deck-caption"><span id="selectedRecordName">Góc sáng tạo</span><a href="https://open.spotify.com/playlist/4l15Ccxw8hVu7YIpUU6QM0" id="recordSpotifyLink" rel="noopener noreferrer" target="_blank"><span data-i18n="openSpotify">Mở đĩa này trên Spotify</span> ↗</a></div>
+<p aria-live="polite" class="player-status" data-i18n="playerIdle" id="playerStatus" role="status">Chọn đĩa rồi nhấn Phát nhạc.</p>
+<div class="spotify-shell" id="spotifyShell">
+<div class="spotify-mount" id="spotifyMount"><div class="embed-placeholder"><span>♫</span><p data-i18n="embedLoading">Trình phát Spotify sẽ hiện ở đây.</p></div></div>
+<noscript><iframe allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" height="352" src="https://open.spotify.com/embed/playlist/4l15Ccxw8hVu7YIpUU6QM0" title="Spotify playlist" width="100%"></iframe></noscript>
+</div>
+<p class="music-fineprint" data-i18n="playbackNote">Spotify có thể yêu cầu bấm Play trực tiếp hoặc chỉ cho nghe thử. Trang không tự phát nhạc khi vừa mở.</p>
+</div>
+<aside class="music-sidebar">
+<section aria-labelledby="crateHeading" class="record-crate reveal" data-reveal="right">
+<div class="small-heading"><span class="small-number">01 / 02</span><h3 data-i18n="chooseRecord" id="crateHeading">Hôm nay, nghe đĩa nào?</h3><span aria-hidden="true">↙</span></div>
+<div aria-label="Chọn đĩa nhạc" class="record-options" data-i18n-aria="recordChoices" id="recordOptions" role="group"></div>
+<p class="crate-note" data-i18n="crateNote">Hai chiếc đĩa, hai khoảng trời. Đổi đĩa để đổi playlist.</p>
+</section>
+<section aria-labelledby="lyricsHeading" class="lyrics-card reveal" data-reveal="right">
+<div class="lyrics-heading"><span class="section-label"><span>♪</span><b data-i18n="lyrics" id="lyricsHeading">LỜI BÀI HÁT</b></span><span class="live-indicator" data-i18n="waiting" id="lyricsBadge">ĐANG CHỜ</span></div>
+<h3 data-i18n="trackWaiting" id="trackTitle">Bài nhạc của cậu sẽ hiện ở đây.</h3>
+<div class="track-meta"><span data-i18n="trackHint" id="trackArtist">Phát một bài trong trình phát bên cạnh.</span><a data-i18n="trackOnSpotify" hidden="" id="currentTrackLink" rel="noopener noreferrer" target="_blank">Bài trên Spotify ↗</a></div>
+<div class="track-progress"><time id="currentTime">0:00</time><progress aria-label="Tiến độ phát nhạc" data-i18n-aria="progress" id="trackProgress" max="100" value="0"></progress><time id="totalTime">0:00</time></div>
+<p class="lyrics-status" data-i18n="lyricsWaiting" id="lyricsStatus" role="status">Lời sẽ được tìm theo bài đang phát. Cậu cũng có thể dùng file .lrc của mình.</p>
+<div aria-label="Lời bài hát, có thể cuộn" class="lyrics-viewport" data-i18n-aria="lyricsScroll" id="lyricsViewport" tabindex="0">
+<div class="lyrics-empty" id="lyricsEmpty"><span aria-hidden="true">♪</span><p data-i18n="lyricsEmpty">Một giai điệu.<br/>Một khoảng riêng.</p></div>
+<ol class="lyrics-lines" hidden="" id="lyricsLines"></ol>
+</div>
+<div class="lyrics-candidates" hidden="" id="lyricsCandidates"></div>
+<div class="lyrics-source" id="lyricsSource"></div>
+<details class="lyrics-tools">
+<summary data-i18n="lyricsTools">Tìm lại lời / Thêm file .lrc</summary>
+<form class="lyrics-search" id="lyricsSearch">
+<label><span data-i18n="songTitle">Tên bài hát</span><input autocomplete="off" data-i18n-placeholder="songTitle" id="lyricsQuery" maxlength="180" name="track" placeholder="Tên bài hát" required="" type="text"/></label>
+<label><span data-i18n="artist">Nghệ sĩ</span><input autocomplete="off" data-i18n-placeholder="artistOptional" id="lyricsArtistInput" maxlength="140" name="artist" placeholder="Nghệ sĩ (nên điền)" type="text"/></label>
+<button class="small-button" data-i18n="searchLyrics" id="searchLyricsButton" type="submit">Tìm lời trên LRCLIB</button>
+</form>
+<label class="file-label"><span data-i18n="importLrc">Chọn file .lrc cho bài đang phát</span><input accept=".lrc,text/plain" id="lrcFile" type="file"/></label>
+<p data-i18n="lyricsPrivacy">File .lrc chỉ được lưu trên trình duyệt này, không tải lên máy chủ. Chỉ sử dụng lời cậu có quyền chia sẻ.</p>
+<button class="text-button" data-i18n="forgetLyrics" id="forgetLyrics" type="button">Xóa lời đã ghép cho bài này</button>
+</details>
+</section>
+</aside>
+</div>
+</section>
+<section class="join-section" data-ambient="" id="join">
+<div aria-hidden="true" class="join-burst"></div>
+<div class="join-inner reveal"><div class="section-label"><span>05</span><b data-i18n="joinLabel">HẸN CẬU Ở CLB NGHỆ THUẬT</b></div><h2 data-i18n-html="joinTitle">Chỗ này còn thiếu<br/><em>màu sắc của cậu.</em></h2><p data-i18n="joinBody">Cậu không cần phải là người vẽ giỏi nhất. Chỉ cần muốn học, muốn thử và muốn tạo ra điều gì đó cùng tụi mình.</p><a class="comic-button light" data-join="" href="https://forms.gle/kwnmuuC9N77aHMzGA" rel="noopener noreferrer" target="_blank"><span data-i18n="joinButton">Điền form tham gia CLB</span><b>↗</b></a></div>
+<div aria-hidden="true" class="join-sticker" data-ambient="" data-i18n-html="belong">YOU<br/>BELONG<br/>HERE!</div>
+</section>
+<section class="section contact panel-paper" id="contact">
+<div class="section-label reveal"><span>06</span><b data-i18n="contactLabel">GIỮ KẾT NỐI</b></div>
+<div class="contact-grid">
+<div class="reveal"><h2 data-i18n-html="contactTitle">Tìm chúng tớ<br/><em>ở đây.</em></h2><p class="lead" data-i18n="contactBody">Một tin nhắn, một email, hoặc ghé qua trường — tụi mình luôn vui khi gặp những người có cùng niềm yêu thích nghệ thuật.</p></div>
+<div class="contact-list reveal"><a href="https://maps.google.com/?q=Trường+THPT+Bảo+Lộc+Cơ+sở+1" rel="noopener" target="_blank"><span data-i18n="visit">GHÉ CHƠI</span><strong data-i18n="schoolAddress">Trường THPT Bảo Lộc — Cơ sở 1</strong><b>↗</b></a><a href="mailto:artclub287@gmail.com"><span>EMAIL</span><strong>artclub287@gmail.com</strong><b>↗</b></a><a href="https://www.facebook.com/share/19B7YQZiLG/?mibextid=wwXIfr" rel="noopener" target="_blank"><span>FACEBOOK</span><strong data-i18n="clubFull">CLB Nghệ thuật · THPT Bảo Lộc</strong><b>↗</b></a></div>
+</div>
+</section>
+</main>
+<footer class="footer">
+<a class="footer-brand" href="#top"><span class="brand-logo"><img alt="" height="44" src="assets/logo-new.jpeg" width="44"/></span><span><strong data-i18n="clubName">CLB Nghệ thuật</strong><small data-i18n="schoolName">THPT BẢO LỘC</small></span></a>
+<p data-i18n="footerLine">Vẽ điều cậu thấy. Làm điều cậu mơ.</p>
+<div class="footer-tools"><button aria-pressed="true" class="text-button" id="motionToggle" type="button"><span aria-hidden="true">✦</span> <span data-i18n="motionOn" id="motionText">Chuyển động: Bật</span></button><a data-i18n="backTop" href="#top">↑ Lên đầu trang</a></div>
+<small>© 2026 <span data-i18n="clubName">CLB Nghệ thuật</span></small></footer>
+<dialog aria-label="Xem tác phẩm" class="lightbox" data-i18n-aria="viewArt" id="lightbox"><button aria-label="Đóng" class="lightbox-close" data-i18n-aria="close" type="button">×</button><figure><img alt="" id="lightboxImage" src="assets/logo-new.jpeg"/><figcaption id="lightboxCaption"></figcaption></figure></dialog>
 
-  <main id="main">
-    <section class="hero section" id="home">
-      <div class="hero-copy reveal">
-        <div class="kicker"><span>ART CLUB</span><i></i><span>THPT BẢO LỘC</span></div>
-        <h1 data-i18n-html="heroTitle">VẼ ĐIỀU CẬU THẤY.<br><em>LÀM ĐIỀU CẬU MƠ.</em></h1>
-        <p data-i18n="heroBody">Một góc nhỏ ở Bảo Lộc, một khoảng trời cho ý tưởng. Cùng tụi mình vẽ, thử, khám phá và tạo nên những điều mang màu sắc của riêng cậu.</p>
-        <div class="hero-actions">
-          <a class="comic-button primary" href="#gallery"><span data-i18n="explore">Khám phá tác phẩm</span><b>↗</b></a>
-          <a class="scribble-link" href="#about" data-i18n="meetUs">Gặp chúng tớ</a>
-        </div>
-        <div class="hero-note" aria-hidden="true"><span>✦</span> Không cần hoàn hảo. Chỉ cần là cậu.</div>
-      </div>
-
-      <div class="hero-stage reveal" data-parallax-root>
-        <span class="comic-ray ray-a" data-depth="0.3"></span>
-        <span class="comic-ray ray-b" data-depth="0.55"></span>
-        <span class="comic-spark spark-a" data-depth="0.8">✦</span>
-        <span class="comic-spark spark-b" data-depth="0.45">⚡</span>
-        <span class="comic-note note-a" data-depth="0.65">♪</span>
-        <button class="hero-logo" type="button" aria-label="Mở câu chuyện về mascot Art Club" aria-expanded="false">
-          <span class="orbit orbit-one"></span><span class="orbit orbit-two"></span><span class="orbit-dots"></span>
-          <img src="assets/logo-new.jpeg" alt="Mascot cáo cam của Art Club">
-          <span class="tap-label">TAP! <i>↘</i></span>
-        </button>
-        <div class="comic-bubble bubble-one" aria-hidden="true">WOW!</div>
-        <div class="comic-bubble bubble-two" aria-hidden="true">CREATE!</div>
-        <aside class="mascot-card" aria-hidden="true">
-          <button class="mascot-close" type="button" aria-label="Đóng">×</button>
-          <span class="mini-label">THE CREATIVE CORNER</span>
-          <h2 data-i18n="mascotTitle">Cáo nhà Art Club</h2>
-          <p data-i18n="mascotBody">Một chiếc mascot hơi tinh nghịch, mê màu sắc, nhạc hay và luôn sẵn sàng kéo một ý tưởng nhỏ thành chuyện lớn.</p>
-          <div class="mascot-tags"><span>DRAW!</span><span>PLAY!</span><span>MAKE!</span></div>
-        </aside>
-      </div>
-    </section>
-
-    <div class="ticker" aria-hidden="true"><div>DRAW • CREATE • SHARE • DREAM • MAKE A MESS • TRY AGAIN • DRAW • CREATE • SHARE • DREAM •</div></div>
-
-    <section class="section about panel-paper" id="about">
-      <div class="section-label reveal"><span>01</span><b data-i18n="aboutLabel">CHÚNG TỚ LÀ AI?</b></div>
-      <div class="about-grid">
-        <div class="reveal"><h2 data-i18n-html="aboutTitle">Hơn một câu lạc bộ.<br><em>Một nơi để là cậu.</em></h2></div>
-        <div class="about-copy reveal"><p class="lead" data-i18n="aboutLead">Chúng tớ tin rằng mỗi người đều có một cách riêng để kể câu chuyện của mình — bằng tranh, ảnh, thiết kế hoặc một ý tưởng chưa từng được thử.</p><p data-i18n="aboutBody">Art Club là nơi để cậu học hỏi, thử nghiệm, mắc lỗi, làm lại và cùng nhau tạo nên những thứ có ý nghĩa. Nghệ thuật không cần hoàn hảo. Chỉ cần bắt đầu.</p></div>
-      </div>
-      <div class="values">
-        <article class="reveal"><span>01</span><h3 data-i18n="value1Title">Tự do thử</h3><p data-i18n="value1Body">Thử những điều chưa từng thử.</p><i>✎</i></article>
-        <article class="reveal"><span>02</span><h3 data-i18n="value2Title">Thoải mái sáng tạo</h3><p data-i18n="value2Body">Biến ý tưởng thành hình hài.</p><i>✦</i></article>
-        <article class="reveal"><span>03</span><h3 data-i18n="value3Title">Cùng nhau lớn lên</h3><p data-i18n="value3Body">Gặp những người cùng nhịp.</p><i>☺</i></article>
-      </div>
-    </section>
-
-    <section class="section gallery-section panel-wall" id="gallery">
-      <div class="section-heading reveal">
-        <div><div class="section-label"><span>02</span><b data-i18n="galleryLabel">GÓC TRIỂN LÃM</b></div><h2 data-i18n-html="galleryTitle">Một chút màu<br><em>của tụi mình.</em></h2></div>
-        <p data-i18n="galleryBody">Mỗi tác phẩm, một câu chuyện riêng. Những khung tranh được treo như một bức tường triển lãm nhỏ.</p>
-      </div>
-      <div class="filters" role="tablist" aria-label="Lọc tác phẩm">
-        <button class="filter active" data-filter="all" type="button">Tất cả</button><button class="filter" data-filter="paintings" type="button">Hội họa</button><button class="filter" data-filter="digital-art" type="button">Digital</button><button class="filter" data-filter="photography" type="button">Nhiếp ảnh</button><button class="filter" data-filter="events" type="button">Hoạt động</button>
-      </div>
-      <div class="exhibition-wall" id="galleryGrid"></div>
-      <p class="gallery-hint" data-i18n="galleryHint">Bấm vào một khung để xem tác phẩm lớn hơn.</p>
-    </section>
-
-    <section class="section activities panel-blue" id="activities">
-      <div class="section-label reveal"><span>03</span><b data-i18n="activityLabel">TỤI MÌNH LÀM GÌ?</b></div>
-      <div class="activity-title reveal"><h2 data-i18n-html="activityTitle">Không chỉ<br><em>ngồi vẽ.</em></h2><span class="speech">LET'S<br>MAKE<br>STUFF!</span></div>
-      <div class="activity-grid">
-        <article class="activity-card reveal"><b>01</b><span class="icon">✷</span><h3>WORKSHOP</h3><p data-i18n="act1">Cùng học kỹ thuật, màu sắc, bố cục và khám phá phong cách cá nhân.</p></article>
-        <article class="activity-card reveal"><b>02</b><span class="icon">✎</span><h3>FREE DRAWING</h3><p data-i18n="act2">Không đề bài. Không áp lực. Chỉ cần một cây bút và một ý tưởng.</p></article>
-        <article class="activity-card reveal"><b>03</b><span class="icon">▣</span><h3>EXHIBITION</h3><p data-i18n="act3">Đưa những tác phẩm của thành viên đến gần hơn với mọi người.</p></article>
-        <article class="activity-card reveal"><b>04</b><span class="icon">⚡</span><h3>CREATIVE PROJECT</h3><p data-i18n="act4">Cùng thực hiện những dự án nghệ thuật và kết hợp với các CLB khác.</p></article>
-      </div>
-    </section>
-
-    <section class="section playlist-section panel-music" id="playlist">
-      <div class="music-copy reveal">
-        <div class="section-label"><span>04</span><b data-i18n="musicLabel">GÓC ÂM NHẠC</b></div>
-        <h2 data-i18n-html="musicTitle">Một chút nhạc.<br><em>Một trời cảm hứng.</em></h2>
-        <p data-i18n="musicBody">Cho những buổi vẽ, làm project hay chỉ ngồi cạnh nhau. Bật playlist lên và để căn phòng có thêm một nhịp riêng.</p>
-        <a class="comic-button dark" href="https://open.spotify.com/playlist/4l15Ccxw8hVu7YIpUU6QM0?si=enyTsl60TrS9PKo9izV-pg&utm_source=copy-link&pi=p9f0_YyoTUyYA" target="_blank" rel="noopener"><span>Open in Spotify</span><b>↗</b></a>
-      </div>
-      <div class="turntable-wrap reveal">
-        <div class="turntable" aria-label="Máy đĩa than Art Club">
-          <div class="deck-head"><span>ART CLUB / SOUND SELECT</span><span>33⅓ RPM</span></div>
-          <div class="vinyl-stage">
-            <div class="vinyl" aria-hidden="true"><span class="groove g1"></span><span class="groove g2"></span><span class="groove g3"></span><div class="record-label"><img src="assets/logo-new.jpeg" alt=""></div></div>
-            <div class="tonearm" aria-hidden="true"><span></span></div>
-          </div>
-          <div class="deck-controls"><button class="play-vinyl" type="button" aria-pressed="false"><span>▶</span> SPIN</button><div class="led"></div><span>GOOD VIBRATIONS ♪</span></div>
-        </div>
-        <iframe class="spotify-frame" title="Art Club Spotify playlist" src="https://open.spotify.com/embed/playlist/4l15Ccxw8hVu7YIpUU6QM0?utm_source=generator&theme=0" width="100%" height="352" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-      </div>
-    </section>
-
-    <section class="join-section" id="join">
-      <div class="join-burst" aria-hidden="true"></div>
-      <div class="join-inner reveal"><div class="section-label"><span>05</span><b data-i18n="joinLabel">HẸN CẬU Ở ART CLUB</b></div><h2 data-i18n-html="joinTitle">Chỗ này còn thiếu<br><em>màu sắc của cậu.</em></h2><p data-i18n="joinBody">Cậu không cần phải là người vẽ giỏi nhất. Chỉ cần muốn học, muốn thử và muốn tạo ra điều gì đó cùng tụi mình.</p><a class="comic-button light" href="mailto:artclub287@gmail.com?subject=Tham%20gia%20Art%20Club"><span data-i18n="joinButton">Nhắn tụi mình để tham gia</span><b>↗</b></a></div>
-      <div class="join-sticker" aria-hidden="true">YOU<br>BELONG<br>HERE!</div>
-    </section>
-
-    <section class="section contact panel-paper" id="contact">
-      <div class="section-label reveal"><span>06</span><b data-i18n="contactLabel">GIỮ KẾT NỐI</b></div>
-      <div class="contact-grid">
-        <div class="reveal"><h2 data-i18n-html="contactTitle">Tìm chúng tớ<br><em>ở đây.</em></h2><p class="lead" data-i18n="contactBody">Một tin nhắn, một email, hoặc ghé qua trường — tụi mình luôn vui khi gặp những người có cùng niềm yêu thích nghệ thuật.</p></div>
-        <div class="contact-list reveal"><a href="https://maps.google.com/?q=Trường+THPT+Bảo+Lộc+Cơ+sở+1" target="_blank" rel="noopener"><span>GHÉ CHƠI</span><strong>Trường THPT Bảo Lộc — Cơ sở 1</strong><b>↗</b></a><a href="mailto:artclub287@gmail.com"><span>EMAIL</span><strong>artclub287@gmail.com</strong><b>↗</b></a><a href="https://www.facebook.com/share/19B7YQZiLG/?mibextid=wwXIfr" target="_blank" rel="noopener"><span>FACEBOOK</span><strong>Art Club · THPT Bảo Lộc</strong><b>↗</b></a></div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer"><a class="footer-brand" href="#top"><span class="brand-logo"><img src="assets/logo-new.jpeg" alt=""></span><span><strong>ART CLUB</strong><small>THPT BẢO LỘC</small></span></a><p data-i18n="footerLine">Vẽ điều cậu thấy. Làm điều cậu mơ.</p><a href="#top">↑ TOP</a><small>© 2026 Art Club</small></footer>
-
-  <dialog class="lightbox" id="lightbox"><button class="lightbox-close" type="button" aria-label="Đóng">×</button><figure><img id="lightboxImage" src="" alt=""><figcaption id="lightboxCaption"></figcaption></figure></dialog>
-  <script src="script.js"></script>
-</body>
+<div aria-hidden="true" id="fxLayer"></div><script defer="" src="content.js?v=2.1"></script><script defer="" src="js/i18n.js?v=2.1"></script><script defer="" src="js/motion.js?v=2.1"></script><script defer="" src="js/lyrics.js?v=2.1"></script><script defer="" src="js/player.js?v=2.1"></script><script defer="" src="script.js?v=2.1"></script></body>
 </html>
