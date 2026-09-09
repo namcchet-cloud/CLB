@@ -1385,7 +1385,7 @@ try {
     if(!artist?.mascot)return;
     const flyer=make('div','akiko-flight');
     flyer.setAttribute('aria-hidden','true');
-    flyer.innerHTML=`<div class="akiko-rocket"><span class="akiko-flame"></span><span class="akiko-fin fin-a"></span><span class="akiko-fin fin-b"></span><span class="akiko-porthole"><img src="${artist.mascot}" alt=""></span></div><span class="akiko-smoke s1"></span><span class="akiko-smoke s2"></span><span class="akiko-smoke s3"></span>`;
+    flyer.innerHTML=`<div class="akiko-rocket"><span class="akiko-flame"></span><span class="akiko-fin fin-a"></span><span class="akiko-fin fin-b"></span></div><img class="akiko-rider" src="${artist.mascot}" alt=""><span class="akiko-smoke s1"></span><span class="akiko-smoke s2"></span><span class="akiko-smoke s3"></span>`;
     document.body.append(flyer);
     requestAnimationFrame(()=>flyer.classList.add('is-flying'));
     setTimeout(()=>flyer.remove(),6200);
@@ -1407,7 +1407,7 @@ try {
       if(artist.mascot){const avatar=make('span','artist-chip-avatar');const im=make('img');im.src=artist.mascot;im.alt='';im.loading='lazy';im.decoding='async';avatar.append(im);btn.append(avatar);}
       btn.append(badge,copy);
       btn.addEventListener('click',()=>{
-        if(selectedArtist===artist.id){motion?.burst(btn,'',5);return;}
+        if(selectedArtist===artist.id){motion?.burst(btn,'',5);if(artist.id==='akiko-oishi')launchAkiko();return;}
         selectedArtist=artist.id;filter='all';updateFilterButtons();renderArtists();renderGallery();
         motion?.burst(btn,'',9);
         if(artist.id==='akiko-oishi')launchAkiko();
@@ -1525,4 +1525,4 @@ try {
  });
 })();
 
-window.ClubBuild='2.5.1';
+window.ClubBuild='2.5.2';

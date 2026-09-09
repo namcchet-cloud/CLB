@@ -26,14 +26,14 @@ window.CLUB_CONTENT = {
       id: "bao-tam",
       name: { vi: "Trần Nguyễn Bảo Tâm", en: "Trần Nguyễn Bảo Tâm" },
       label: { vi: "Họa sĩ", en: "Artist" },
-      note: { vi: "5 tác phẩm · Tranh cách điệu", en: "5 works · Stylized painting" }
+      note: { vi: "6 tác phẩm · Tranh cách điệu & Digital", en: "6 works · Stylized & Digital" }
     },
     {
       id: "akiko-oishi",
       name: { vi: "Akiko Oishi", en: "Akiko Oishi" },
       label: { vi: "Họa sĩ Digital", en: "Digital Artist" },
       note: { vi: "6 tác phẩm · Digital", en: "6 works · Digital" },
-      mascot: "assets/gallery/akiko/mascot-original.webp"
+      mascot: "assets/gallery/akiko/mascot-flying.webp"
     }
   ],
   artworks: [
@@ -69,9 +69,21 @@ window.CLUB_CONTENT = {
       image: "assets/gallery/mien-mong-sac.webp",
       thumb: "assets/gallery/thumbs/mien-mong-sac.webp",
       category: "paintings",
-      title: { vi: "Nấm Thách Anh", en: "Nấm Thách Anh" },
+      title: { vi: "Sức Mạnh Của Nấm", en: "Sức Mạnh Của Nấm" },
       author: { vi: "Họa sĩ Trần Nguyễn Bảo Tâm", en: "Artist Trần Nguyễn Bảo Tâm" },
       description: { vi: "Tranh cách điệu · 2026", en: "Stylized painting · 2026" }
+    },
+    {
+      artistId: "bao-tam",
+      image: "assets/gallery/merina.webp",
+      thumb: "assets/gallery/thumbs/merina.webp",
+      category: "digital-art",
+      title: { vi: "Merina", en: "Merina" },
+      author: { vi: "Họa sĩ Trần Nguyễn Bảo Tâm", en: "Artist Trần Nguyễn Bảo Tâm" },
+      description: {
+        vi: "Digital · Tiểu thư nam tước ở biên giới. Thích làm vườn và uống trà.",
+        en: "Digital · A baron's daughter from the borderlands. She loves gardening and tea."
+      }
     },
     {
       artistId: "bao-tam",

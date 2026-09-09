@@ -1,7 +1,7 @@
 /* CLB Nghe thuat / Comic Studio 2.2
    Three type families. Motion, layout and player state are kept independent. */
 :root {
-  --club-build:251;
+  --club-build:252;
   --paper:#f2eadb; --paper-2:#e7ddca; --ink:#252923; --muted:#606254;
   --sage:#b9cba3; --sage-dark:#536b48; --rust:#a44331;
   --blue:#355972; --dusty:#5d7d91; --mustard:#e0bb58; --pink:#d990a4;
@@ -651,7 +651,7 @@ html[data-motion-level="quiet"] .float-doodle,html[data-motion-level="quiet"] .l
 }
 
 /* 2.3: contain layout overflow at its source, not by translating the page. */
-:root { --club-build:251; --gutter:clamp(18px,3vw,32px); --display:"Barlow Condensed","Arial Narrow","Liberation Sans Narrow",sans-serif; }
+:root { --club-build:252; --gutter:clamp(18px,3vw,32px); --display:"Barlow Condensed","Arial Narrow","Liberation Sans Narrow",sans-serif; }
 html { width:100%; max-width:100%; overflow-x:hidden; }
 body { width:100%; min-width:0; max-width:100%; overflow-x:hidden; }
 @supports (overflow:clip) { html,body { overflow-x:clip; } }
@@ -868,37 +868,39 @@ h1,h2,h3,.contact-list strong,.record-option strong { overflow-wrap:break-word; 
 .gallery-card-no-title .gallery-info{padding-top:7px}
 .gallery-card-no-title .gallery-info p{font-weight:700;letter-spacing:.12em;text-transform:uppercase}
 
-.akiko-flight{position:fixed;left:-220px;top:0;width:200px;height:120px;z-index:9998;pointer-events:none;opacity:0;filter:drop-shadow(0 10px 6px #25292333);will-change:transform,opacity}
-.akiko-flight.is-flying{animation:akikoFly 5.8s cubic-bezier(.28,.05,.25,1) forwards}
-.akiko-rocket{position:absolute;left:16px;top:22px;width:146px;height:74px;border:4px solid #252923;border-radius:55% 34% 34% 55%;background:#f4ead5;transform:rotate(-4deg);box-shadow:inset -15px -9px 0 #d76f5f,5px 6px 0 #25292318}
-.akiko-rocket:after{content:"";position:absolute;right:-34px;top:19px;border-left:38px solid #d76f5f;border-top:17px solid transparent;border-bottom:17px solid transparent;filter:drop-shadow(3px 2px 0 #252923)}
-.akiko-porthole{position:absolute;width:60px;height:60px;left:39px;top:3px;border:4px solid #252923;border-radius:50%;overflow:hidden;background:#111;z-index:2}
-.akiko-porthole img{width:100%;height:100%;object-fit:cover;display:block}
+.akiko-flight{position:fixed;left:-260px;top:0;width:250px;height:170px;z-index:9998;pointer-events:none;opacity:0;filter:drop-shadow(0 12px 8px #25292338);will-change:transform,opacity}
+.akiko-flight.is-flying{animation:akikoFly 6.2s cubic-bezier(.28,.05,.25,1) forwards}
+.akiko-rocket{position:absolute;left:42px;top:82px;width:154px;height:66px;border:4px solid #252923;border-radius:58% 34% 34% 58%;background:#f4ead5;transform:rotate(-5deg);box-shadow:inset -17px -9px 0 #d76f5f,5px 6px 0 #25292318}
+.akiko-rocket:after{content:"";position:absolute;right:-34px;top:15px;border-left:39px solid #d76f5f;border-top:17px solid transparent;border-bottom:17px solid transparent;filter:drop-shadow(3px 2px 0 #252923)}
+.akiko-rider{position:absolute;left:50px;top:4px;width:128px;height:105px;object-fit:contain;z-index:4;transform:rotate(-4deg);transform-origin:58% 88%;animation:akikoRiderBob .42s ease-in-out infinite alternate;filter:drop-shadow(2px 3px 0 #f7f0df) drop-shadow(0 3px 0 #25292355)}
 .akiko-fin{position:absolute;width:38px;height:26px;background:#6e7f8e;border:3px solid #252923;z-index:-1}
-.akiko-fin.fin-a{left:68px;top:-19px;clip-path:polygon(0 100%,55% 0,100% 100%)}
-.akiko-fin.fin-b{left:68px;bottom:-19px;clip-path:polygon(0 0,55% 100%,100% 0)}
-.akiko-flame{position:absolute;left:-48px;top:19px;width:52px;height:31px;background:#efb33f;clip-path:polygon(100% 0,100% 100%,0 50%);filter:drop-shadow(-7px 0 0 #d75c46);animation:akikoFlame .16s ease-in-out infinite alternate}
-.akiko-smoke{position:absolute;width:17px;height:17px;border:2px solid #252923;border-radius:50%;background:#f7f0df;opacity:.85;left:3px;top:55px;animation:akikoSmoke .9s ease-out infinite}
-.akiko-smoke.s2{animation-delay:.25s;left:-13px;top:45px}.akiko-smoke.s3{animation-delay:.5s;left:-28px;top:66px}
+.akiko-fin.fin-a{left:69px;top:-19px;clip-path:polygon(0 100%,55% 0,100% 100%)}
+.akiko-fin.fin-b{left:69px;bottom:-19px;clip-path:polygon(0 0,55% 100%,100% 0)}
+.akiko-flame{position:absolute;left:-49px;top:16px;width:54px;height:31px;background:#efb33f;clip-path:polygon(100% 0,100% 100%,0 50%);filter:drop-shadow(-8px 0 0 #d75c46);animation:akikoFlame .16s ease-in-out infinite alternate}
+.akiko-smoke{position:absolute;width:17px;height:17px;border:2px solid #252923;border-radius:50%;background:#f7f0df;opacity:.85;left:23px;top:114px;animation:akikoSmoke .9s ease-out infinite}
+.akiko-smoke.s2{animation-delay:.25s;left:8px;top:104px}.akiko-smoke.s3{animation-delay:.5s;left:-9px;top:125px}
 @keyframes artistTwinkle{50%{transform:rotate(17deg) scale(1.2);opacity:.55}}
-@keyframes akikoFlame{to{transform:scaleX(.73) scaleY(1.12)}}
-@keyframes akikoSmoke{to{transform:translate(-34px,16px) scale(1.7);opacity:0}}
+@keyframes akikoRiderBob{to{transform:translateY(-5px) rotate(2deg)}}
+@keyframes akikoFlame{to{transform:scaleX(.7) scaleY(1.15)}}
+@keyframes akikoSmoke{to{transform:translate(-38px,17px) scale(1.8);opacity:0}}
 @keyframes akikoFly{
-  0%{opacity:0;transform:translate(-8vw,20vh) rotate(-8deg) scale(.82)}
-  7%{opacity:1}
-  18%{transform:translate(27vw,7vh) rotate(8deg) scale(1)}
-  36%{transform:translate(74vw,22vh) rotate(-12deg) scale(.94)}
-  54%{transform:translate(43vw,57vh) rotate(15deg) scale(1.05)}
-  73%{transform:translate(83vw,70vh) rotate(-16deg) scale(.9)}
-  90%{opacity:1;transform:translate(55vw,36vh) rotate(8deg) scale(.96)}
-  100%{opacity:0;transform:translate(116vw,16vh) rotate(-5deg) scale(.8)}
+  0%{opacity:0;transform:translate(-10vw,18vh) rotate(-8deg) scale(.78)}
+  6%{opacity:1}
+  18%{transform:translate(25vw,5vh) rotate(7deg) scale(.95)}
+  34%{transform:translate(76vw,20vh) rotate(-10deg) scale(.9)}
+  48%{transform:translate(58vw,51vh) rotate(18deg) scale(1.05)}
+  62%{transform:translate(18vw,67vh) rotate(-15deg) scale(.92)}
+  77%{transform:translate(76vw,73vh) rotate(11deg) scale(.88)}
+  90%{opacity:1;transform:translate(48vw,35vh) rotate(-4deg) scale(.96)}
+  100%{opacity:0;transform:translate(118vw,12vh) rotate(9deg) scale(.76)}
 }
 @media(max-width:700px){
   .artist-switcher{grid-template-columns:1fr;gap:9px;margin:17px 0 14px}
   .artist-chip{min-height:72px;padding:10px 11px;grid-template-columns:auto 1fr auto}
   .artist-chip-copy strong{font-size:20px}.artist-chip-avatar{width:48px;height:48px}
-  .akiko-flight{width:150px;height:95px;transform-origin:center}
-  .akiko-rocket{transform:scale(.78) rotate(-4deg);transform-origin:left top}
+  .akiko-flight{width:190px;height:135px;transform-origin:center}
+  .akiko-rocket{left:33px;top:64px;transform:scale(.82) rotate(-5deg);transform-origin:left top}
+  .akiko-rider{left:38px;top:2px;width:104px;height:85px}
 }
-@media(prefers-reduced-motion:reduce){.artist-chip.active:after,.akiko-flight,.akiko-flame,.akiko-smoke{animation:none!important}.akiko-flight{display:none}}
+@media(prefers-reduced-motion:reduce){html:not([data-motion="full"]) .artist-chip.active:after,html:not([data-motion="full"]) .akiko-flight,html:not([data-motion="full"]) .akiko-flame,html:not([data-motion="full"]) .akiko-smoke,html:not([data-motion="full"]) .akiko-rider{animation:none!important}html:not([data-motion="full"]) .akiko-flight{display:none}}
 [data-motion="off"] .artist-chip.active:after,[data-motion="off"] .akiko-flight,[data-motion="off"] .akiko-flame,[data-motion="off"] .akiko-smoke{animation:none!important}
