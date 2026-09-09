@@ -1,10 +1,19 @@
-CLB Nghe thuat - cap nhat Gallery
+CLB v2.4.2 - sua loi ten tac pham khong cap nhat
 
-Thay / tai len GitHub cac muc sau:
+Thay DONG THOI 2 tep o thu muc goc GitHub:
+- index.html
 - content.js
-- style.css
-- thu muc assets/gallery/ (5 anh .webp)
 
-Giu nguyen index.html, script.js va cac tai nguyen khac.
+Khong can thay style.css, script.js hay assets/.
 
-Tac gia 5 tac pham: Hoa si Tran Nguyen Bao Tam.
+Ly do: index.html cu goi content.js?v=2.3.0 nen trinh duyet co the dung cache cu.
+Ban nay doi thanh content.js?v=2.4.2 de ep tai noi dung moi.
+
+5 ten tac pham:
+1. Ot Ngot
+2. Nam Da
+3. Sac
+4. Nam Thach Anh
+5. An Toan Thuc Pham
+Phan loai: Tranh cach dieu
+Tac gia: Hoa si Tran Nguyen Bao Tam
