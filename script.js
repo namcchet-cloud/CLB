@@ -1380,15 +1380,86 @@ try {
   }
   function launchAkiko() {
     if(document.documentElement.dataset.motion==='off')return;
+    document.querySelector('.akiko-flight-scene')?.remove();
     document.querySelector('.akiko-flight')?.remove();
     const artist=artists.find(a=>a.id==='akiko-oishi');
     if(!artist?.mascot)return;
-    const flyer=make('div','akiko-flight');
-    flyer.setAttribute('aria-hidden','true');
-    flyer.innerHTML=`<div class="akiko-rocket"><span class="akiko-flame"></span><span class="akiko-fin fin-a"></span><span class="akiko-fin fin-b"></span></div><img class="akiko-rider" src="${artist.mascot}" alt=""><span class="akiko-smoke s1"></span><span class="akiko-smoke s2"></span><span class="akiko-smoke s3"></span>`;
-    document.body.append(flyer);
-    requestAnimationFrame(()=>flyer.classList.add('is-flying'));
-    setTimeout(()=>flyer.remove(),6200);
+
+    const scene=make('div','akiko-flight-scene');
+    scene.setAttribute('aria-hidden','true');
+    scene.innerHTML=`
+      <svg class="akiko-trail-svg" aria-hidden="true"><path class="akiko-trail-glow"></path><path class="akiko-trail-line"></path></svg>
+      <div class="akiko-flyer">
+        <div class="akiko-ship">
+          <span class="akiko-ship-nose"></span><span class="akiko-window"><i></i></span>
+          <span class="akiko-wing wing-top"></span><span class="akiko-wing wing-bottom"></span>
+          <span class="akiko-bolt bolt-a"></span><span class="akiko-bolt bolt-b"></span>
+          <span class="akiko-engine"><i></i><b></b></span>
+        </div>
+        <img class="akiko-rider-exact" src="${artist.mascot}" alt="">
+        <span class="akiko-speed speed-a"></span><span class="akiko-speed speed-b"></span><span class="akiko-speed speed-c"></span>
+      </div>
+      <div class="akiko-comic-fx"></div>`;
+    document.body.append(scene);
+
+    const flyer=scene.querySelector('.akiko-flyer');
+    const trail=scene.querySelector('.akiko-trail-line');
+    const glow=scene.querySelector('.akiko-trail-glow');
+    const fx=scene.querySelector('.akiko-comic-fx');
+    const W=Math.max(innerWidth,320), H=Math.max(innerHeight,420);
+    const mobile=W<700;
+    const points=mobile?[
+      [-170,H*.67],[W*.11,H*.37],[W*.47,H*.12],[W*.88,H*.25],
+      [W*.74,H*.58],[W*.28,H*.72],[W*.14,H*.47],[W*.63,H*.34],[W+180,H*.16]
+    ]:[
+      [-220,H*.66],[W*.10,H*.42],[W*.29,H*.13],[W*.61,H*.08],[W*.91,H*.26],
+      [W*.78,H*.60],[W*.49,H*.73],[W*.18,H*.61],[W*.12,H*.35],[W*.54,H*.30],[W+250,H*.12]
+    ];
+
+    function catmull(i,t){
+      const p0=points[Math.max(0,i-1)],p1=points[i],p2=points[Math.min(points.length-1,i+1)],p3=points[Math.min(points.length-1,i+2)];
+      const t2=t*t,t3=t2*t;
+      return [
+        .5*((2*p1[0])+(-p0[0]+p2[0])*t+(2*p0[0]-5*p1[0]+4*p2[0]-p3[0])*t2+(-p0[0]+3*p1[0]-3*p2[0]+p3[0])*t3),
+        .5*((2*p1[1])+(-p0[1]+p2[1])*t+(2*p0[1]-5*p1[1]+4*p2[1]-p3[1])*t2+(-p0[1]+3*p1[1]-3*p2[1]+p3[1])*t3)
+      ];
+    }
+    const samples=[];
+    const perSeg=11;
+    for(let i=0;i<points.length-1;i++)for(let k=0;k<perSeg;k++)samples.push(catmull(i,k/perSeg));
+    samples.push(points[points.length-1]);
+    const d=samples.map((p,i)=>`${i?'L':'M'}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' ');
+    trail.setAttribute('d',d);glow.setAttribute('d',d);
+
+    const keyframes=samples.map((p,i)=>{
+      const prev=samples[Math.max(0,i-1)],next=samples[Math.min(samples.length-1,i+1)];
+      const raw=Math.atan2(next[1]-prev[1],next[0]-prev[0])*180/Math.PI;
+      const angle=Math.max(-24,Math.min(24,raw));
+      const bob=Math.sin(i*.72)*3.5;
+      return {transform:`translate3d(${p[0]}px,${p[1]+bob}px,0) translate(-50%,-50%) rotate(${angle}deg)`,opacity:i<3||i>samples.length-4?0:1};
+    });
+
+    const duration=mobile?6900:7600;
+    flyer.animate(keyframes,{duration,easing:'linear',fill:'forwards'});
+    [trail,glow].forEach((el,idx)=>{
+      const len=Math.max(1200,el.getTotalLength());
+      el.style.strokeDasharray=String(len);el.style.strokeDashoffset=String(len);
+      el.animate([{strokeDashoffset:len,opacity:0},{strokeDashoffset:len*.72,opacity:.85},{strokeDashoffset:0,opacity:idx?.35:.82},{strokeDashoffset:-len*.18,opacity:0}],{duration:duration+250,easing:'cubic-bezier(.22,.8,.28,1)',fill:'forwards'});
+    });
+
+    const effects=[
+      ['✦','star',.15,.26,.1],['WHOOSH!','word',.29,.12,-7],['☁','puff',.50,.70,0],['★','star',.73,.53,8],
+      ['VÚT!','word',.83,.23,5],['✧','star',.41,.25,-8],['☁','puff',.16,.59,0],['!','bang',.64,.16,-9]
+    ];
+    effects.forEach(([text,kind,x,y,rot],i)=>{
+      const el=make('span',`akiko-fx ${kind}`,text);el.style.left=`${x*100}%`;el.style.top=`${y*100}%`;el.style.setProperty('--r',`${rot}deg`);el.style.animationDelay=`${(.32+i*.43).toFixed(2)}s`;fx.append(el);
+    });
+    for(let i=0;i<9;i++){
+      const s=make('i','akiko-mini-star',i%2?'✦':'★');
+      s.style.left=`${12+(i*9)%78}%`;s.style.top=`${18+(i*17)%62}%`;s.style.animationDelay=`${(.15+i*.19).toFixed(2)}s`;fx.append(s);
+    }
+
+    setTimeout(()=>scene.remove(),duration+700);
   }
   function updateFilterButtons() {
     document.querySelectorAll('.filter').forEach(el=>{
@@ -1525,4 +1596,4 @@ try {
  });
 })();
 
-window.ClubBuild='2.5.2';
+window.ClubBuild='2.5.3';
