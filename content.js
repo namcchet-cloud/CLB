@@ -25,37 +25,37 @@ window.CLUB_CONTENT = {
     {
       image: "assets/gallery/ba-mam-sac.webp",
       category: "paintings",
-      title: { vi: "Ớt Ngọt", en: "Ớt Ngọt" },
+      title: { vi: "Ba Mầm Sắc", en: "Three Chromatic Sprouts" },
       author: { vi: "Họa sĩ Trần Nguyễn Bảo Tâm", en: "Artist Trần Nguyễn Bảo Tâm" },
-      description: { vi: "Tranh cách điệu · 2026", en: "Stylized painting · 2026" }
+      description: { vi: "Tác phẩm hội họa · 2026", en: "Painting · 2026" }
     },
     {
       image: "assets/gallery/no-trong-tinh-sac.webp",
       category: "paintings",
-      title: { vi: "Nấm Đá", en: "Nấm Đá" },
+      title: { vi: "Nở Trong Tĩnh Sắc", en: "Blooming in Still Tones" },
       author: { vi: "Họa sĩ Trần Nguyễn Bảo Tâm", en: "Artist Trần Nguyễn Bảo Tâm" },
-      description: { vi: "Tranh cách điệu · 2026", en: "Stylized painting · 2026" }
+      description: { vi: "Tác phẩm hội họa · 2026", en: "Painting · 2026" }
     },
     {
       image: "assets/gallery/song-anh.webp",
       category: "paintings",
-      title: { vi: "Sắc", en: "Sắc" },
+      title: { vi: "Song Ảnh", en: "Twin Reflections" },
       author: { vi: "Họa sĩ Trần Nguyễn Bảo Tâm", en: "Artist Trần Nguyễn Bảo Tâm" },
-      description: { vi: "Tranh cách điệu · 2026", en: "Stylized painting · 2026" }
+      description: { vi: "Tác phẩm hội họa · 2026", en: "Painting · 2026" }
     },
     {
       image: "assets/gallery/mien-mong-sac.webp",
       category: "paintings",
-      title: { vi: "Nấm Thách Anh", en: "Nấm Thách Anh" },
+      title: { vi: "Miền Mộng Sắc", en: "Chromatic Dreamscape" },
       author: { vi: "Họa sĩ Trần Nguyễn Bảo Tâm", en: "Artist Trần Nguyễn Bảo Tâm" },
-      description: { vi: "Tranh cách điệu · 2026", en: "Stylized painting · 2026" }
+      description: { vi: "Tác phẩm hội họa · 2026", en: "Painting · 2026" }
     },
     {
       image: "assets/gallery/an-nhien-trong-vong-mau.webp",
       category: "paintings",
-      title: { vi: "An Toàn Thực Phẩm", en: "An Toàn Thực Phẩm" },
+      title: { vi: "An Nhiên Trong Vòng Màu", en: "Stillness in a Circle of Color" },
       author: { vi: "Họa sĩ Trần Nguyễn Bảo Tâm", en: "Artist Trần Nguyễn Bảo Tâm" },
-      description: { vi: "Tranh cách điệu · 2026", en: "Stylized painting · 2026" }
+      description: { vi: "Tác phẩm hội họa · 2026", en: "Painting · 2026" }
     }
   ],
   lyrics: {
