@@ -23,11 +23,39 @@ window.CLUB_CONTENT = {
   ],
   artworks: [
     {
-      image: "assets/logo-new.jpeg",
+      image: "assets/gallery/ba-mam-sac.webp",
       category: "paintings",
-      title: { vi: "Chú cáo của CLB Nghệ thuật", en: "The Art Club fox" },
-      author: { vi: "CLB Nghệ thuật · THPT Bảo Lộc", en: "Art Club · Bảo Lộc High School" },
-      description: { vi: "Linh vật / 2026", en: "Mascot / 2026" }
+      title: { vi: "Ba Mầm Sắc", en: "Three Chromatic Sprouts" },
+      author: { vi: "Họa sĩ Trần Nguyễn Bảo Tâm", en: "Artist Trần Nguyễn Bảo Tâm" },
+      description: { vi: "Tác phẩm hội họa · 2026", en: "Painting · 2026" }
+    },
+    {
+      image: "assets/gallery/no-trong-tinh-sac.webp",
+      category: "paintings",
+      title: { vi: "Nở Trong Tĩnh Sắc", en: "Blooming in Still Tones" },
+      author: { vi: "Họa sĩ Trần Nguyễn Bảo Tâm", en: "Artist Trần Nguyễn Bảo Tâm" },
+      description: { vi: "Tác phẩm hội họa · 2026", en: "Painting · 2026" }
+    },
+    {
+      image: "assets/gallery/song-anh.webp",
+      category: "paintings",
+      title: { vi: "Song Ảnh", en: "Twin Reflections" },
+      author: { vi: "Họa sĩ Trần Nguyễn Bảo Tâm", en: "Artist Trần Nguyễn Bảo Tâm" },
+      description: { vi: "Tác phẩm hội họa · 2026", en: "Painting · 2026" }
+    },
+    {
+      image: "assets/gallery/mien-mong-sac.webp",
+      category: "paintings",
+      title: { vi: "Miền Mộng Sắc", en: "Chromatic Dreamscape" },
+      author: { vi: "Họa sĩ Trần Nguyễn Bảo Tâm", en: "Artist Trần Nguyễn Bảo Tâm" },
+      description: { vi: "Tác phẩm hội họa · 2026", en: "Painting · 2026" }
+    },
+    {
+      image: "assets/gallery/an-nhien-trong-vong-mau.webp",
+      category: "paintings",
+      title: { vi: "An Nhiên Trong Vòng Màu", en: "Stillness in a Circle of Color" },
+      author: { vi: "Họa sĩ Trần Nguyễn Bảo Tâm", en: "Artist Trần Nguyễn Bảo Tâm" },
+      description: { vi: "Tác phẩm hội họa · 2026", en: "Painting · 2026" }
     }
   ],
   lyrics: {
