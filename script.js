@@ -1,4 +1,4 @@
-/* CLB Nghe thuat - build 2.5.1. Readable, dependency-free bundle. */
+/* CLB Nghe thuat - build 2.5.3. Readable, dependency-free bundle. */
 window.ClubModuleErrors=[];
 
 /* ===== js/i18n.js ===== */
@@ -620,7 +620,7 @@ try {
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('motionDock'))$('motionDock').open=false;});
   document.addEventListener('click',e=>{if(!$('motionDock')?.contains(e.target)&&$('motionDock'))$('motionDock').open=false;});
 
-  window.ClubMotion={version:'2.5.1',burst,flyRecord,animate,register,setChoice,get enabled(){return enabled;},get choice(){return choice;}};
+  window.ClubMotion={version:'2.5.3',burst,flyRecord,animate,register,setChoice,get enabled(){return enabled;},get choice(){return choice;}};
   window.addEventListener('pageshow',()=>{root.dataset.pageHidden='false';syncPreference();register();});
   window.addEventListener('blur',resetPointer);
   root.dataset.pageHidden=String(document.hidden);
@@ -730,7 +730,7 @@ try {
     if(visible)wake();else{cancelAnimationFrame(frame);frame=0;last=0;}
   },{rootMargin:'120px'}).observe(deck);
   window.addEventListener('pageshow',()=>wake());
-  window.ClubTurntable={version:'2.5.1',setPlayback,stopDemo,reset(){stopDemo();setPlayback({playing:false,position:0,duration:0});},get state(){return {angle,speed,armAngle,lift,playing,buffering,demo,visible,allowed};}};
+  window.ClubTurntable={version:'2.5.3',setPlayback,stopDemo,reset(){stopDemo();setPlayback({playing:false,position:0,duration:0});},get state(){return {angle,speed,armAngle,lift,playing,buffering,demo,visible,allowed};}};
   paint();
 })();
 
@@ -1305,6 +1305,282 @@ try {
 } catch(error) { window.ClubModuleErrors.push('js/player.js'); console.error('js/player.js', error); }
 
 
+/* ===== Akiko flight 2.5.3: original pixels, bounded comic flight ===== */
+try {
+(() => {
+  'use strict';
+  const VERSION = '2.5.3';
+  const MASCOT = 'assets/gallery/akiko/mascot-intact-v253.webp';
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+  const root = document.documentElement;
+  const clamp = (n, a, b) => Math.min(b, Math.max(a, n));
+  const smooth = n => { n = clamp(n, 0, 1); return n * n * (3 - 2 * n); };
+  const angleDelta = n => ((n + 180) % 360 + 360) % 360 - 180;
+  let active = null, requestId = 0, imagePromise = null, lastError = '';
+  const allowed = () => root.dataset.motion !== 'off' && window.ClubMotion?.enabled !== false;
+  const quiet = () => root.dataset.motionChoice === 'quiet';
+  const text = (vi, en) => root.lang === 'en' ? en : vi;
+
+  // Do not recolor, blend, crop, mirror or redraw this bitmap. Both eyes are original.
+  function loadMascot() {
+    if (imagePromise) return imagePromise;
+    imagePromise = new Promise(resolve => {
+      const img = new Image();
+      let done = false;
+      const finish = ok => {
+        if (done) return;
+        done = true; clearTimeout(timeout); img.onload = img.onerror = null;
+        if (!ok) imagePromise = null;
+        resolve(ok);
+      };
+      const timeout = setTimeout(() => finish(false), 8000);
+      img.onload = () => {
+        if (img.decode) img.decode().then(() => finish(true), () => finish(img.naturalWidth > 0));
+        else finish(true);
+      };
+      img.onerror = () => finish(false);
+      img.src = MASCOT;
+    });
+    return imagePromise;
+  }
+  function stop() {
+    requestId++;
+    if (!active) return;
+    cancelAnimationFrame(active.raf);
+    active.overlay.remove();
+    active = null;
+  }
+  function report(message = '') {
+    lastError = message;
+    let el = document.getElementById('akikoFlightStatus');
+    if (!el && message) {
+      el = document.createElement('p'); el.id = 'akikoFlightStatus';
+      el.className = 'af253-status'; el.setAttribute('role', 'status');
+      document.getElementById('artistSwitcher')?.after(el);
+    }
+    if (el) { el.textContent = message; el.hidden = !message; }
+  }
+  function svg(tag, attrs = {}) {
+    const node = document.createElementNS(SVG_NS, tag);
+    Object.entries(attrs).forEach(([k, v]) => node.setAttribute(k, String(v)));
+    return node;
+  }
+  // Catmull-Rom to cubic Bezier. Adjacent segments share a tangent (no zigzag corners).
+  function curvedPath(points) {
+    let d = `M ${points[0][0]} ${points[0][1]}`;
+    for (let i = 0; i < points.length - 1; i++) {
+      const a = points[i - 1] || points[i], b = points[i];
+      const c = points[i + 1], e = points[i + 2] || c;
+      const c1 = [b[0] + (c[0] - a[0]) / 6, b[1] + (c[1] - a[1]) / 6];
+      const c2 = [c[0] - (e[0] - b[0]) / 6, c[1] - (e[1] - b[1]) / 6];
+      d += ` C ${c1[0]} ${c1[1]} ${c2[0]} ${c2[1]} ${c[0]} ${c[1]}`;
+    }
+    return d;
+  }
+  function buildRoute(width, height, size, trigger, isQuiet) {
+    const headerBottom = document.querySelector('.site-header')?.getBoundingClientRect().bottom || 64;
+    const left = 130 * size, right = Math.max(left + 32, width - 130 * size);
+    const top = Math.min(height * .45, Math.max(118 * size, headerBottom + 97 * size));
+    const bottom = Math.max(top + 44, height - 98 * size);
+    const point = (x, y) => [left + (right - left) * x, top + (bottom - top) * y];
+    const rect = trigger?.getBoundingClientRect();
+    const start = rect && rect.bottom > 0 && rect.top < height
+      ? [clamp(rect.left + rect.width * .52, left, right), clamp(rect.bottom + 70 * size, top, bottom)]
+      : point(.18, .72);
+    if (isQuiet || height < 390) {
+      return curvedPath([start, point(.65, .36), point(.9, .24), [width + 130 * size, top + 30]]);
+    }
+    return curvedPath([
+      start, point(.46, .13), point(.81, .22), point(.87, .55),
+      point(.65, .86), point(.24, .76), point(.12, .43),
+      point(.33, .25), point(.62, .40), [width + 146 * size, top + (bottom - top) * .18]
+    ]);
+  }
+  const ROCKET_SVG = `<svg viewBox="0 0 240 120" class="af253-ship" aria-hidden="true" focusable="false">
+    <g stroke="#34333b" stroke-linejoin="round" stroke-linecap="round">
+      <g class="af253-fire" stroke-width="2.2">
+        <path d="M49 41 C27 24 20 40 8 34 C18 50 -7 47 1 62 C-13 74 18 70 9 87 C27 76 29 92 50 78Z" fill="#d97965"/>
+        <path d="M47 46 C28 39 30 50 14 48 C27 57 12 65 19 72 C32 69 35 85 49 73Z" fill="#edc970" stroke="none"/>
+        <path d="M49 53 Q30 53 28 61 Q37 67 49 68Z" fill="#fff2ce" stroke="none"/>
+      </g>
+      <path d="M78 42 L64 12 Q64 7 71 10 L120 33 M77 78 L63 108 Q62 114 71 110 L122 86" fill="#8e96b1" stroke-width="3"/>
+      <path d="M81 38 L73 20 L104 34 M80 84 L72 102 L106 86" fill="#c2c2d6" stroke="none"/>
+      <rect x="41" y="43" width="22" height="35" rx="6" fill="#68798a" stroke-width="3"/>
+      <path d="M50 48 L50 71" fill="none" stroke="#c8d3d4" stroke-width="3"/>
+      <path d="M61 35 C112 12 177 20 222 60 C177 100 112 108 61 85 L55 73 L55 47Z" fill="#fff3d8" stroke-width="3.3"/>
+      <path d="M63 74 Q135 100 208 64 L217 65 C169 102 112 104 62 83Z" fill="#e1c9bc" stroke="none"/>
+      <path d="M178 29 Q203 40 222 60 Q202 81 178 91 Q190 60 178 29Z" fill="#d58284" stroke-width="3"/>
+      <path d="M185 37 Q198 43 208 53" fill="none" stroke="#f8c7b3" stroke-width="4"/>
+      <path d="M78 38 Q115 26 150 30" fill="none" stroke="#fffef2" stroke-width="4"/>
+      <circle cx="114" cy="62" r="21" fill="#c6bbc9" stroke-width="3"/>
+      <circle cx="114" cy="62" r="15" fill="#7799a6" stroke-width="2"/>
+      <path d="M103 58 Q108 48 116 51" fill="none" stroke="#dce9e6" stroke-width="4"/>
+      <circle cx="131" cy="62" r="1.7" fill="#34333b" stroke="none"/>
+      <circle cx="97" cy="62" r="1.7" fill="#34333b" stroke="none"/>
+      <path d="M153 53 L156 59 L163 60 L158 65 L159 72 L153 68 L147 72 L148 65 L143 60 L150 59Z" fill="#edc970" stroke-width="1.6"/>
+      <path d="M70 47 L72 70 M76 45 L79 72" fill="none" stroke="#718596" stroke-width="2"/>
+      <path d="M92 85 Q105 91 118 89" fill="none" stroke-width="2"/>
+    </g>
+  </svg>`;
+
+  function createFlight(trigger) {
+    const w = root.clientWidth, h = window.innerHeight;
+    const isQuiet = quiet();
+    const size = clamp(Math.min(w / 530, h / 620), .56, .92);
+    const overlay = document.createElement('div');
+    overlay.className = 'af253-layer'; overlay.setAttribute('aria-hidden', 'true');
+    const trails = svg('svg', {viewBox: `0 0 ${w} ${h}`, class: 'af253-trails', 'aria-hidden': 'true'});
+    const path = svg('path', {d: buildRoute(w, h, size, trigger, isQuiet), fill: 'none', stroke: 'none'});
+    const trailUnder = svg('path', {class: 'af253-trail-under', fill: 'none'});
+    const trailInk = svg('path', {class: 'af253-trail-ink', fill: 'none'});
+    trails.append(path, trailUnder, trailInk);
+    const craft = document.createElement('div'); craft.className = 'af253-craft';
+    const hull = document.createElement('div'); hull.className = 'af253-hull'; hull.innerHTML = ROCKET_SVG;
+    const rider = document.createElement('img'); rider.className = 'af253-rider';
+    rider.src = MASCOT; rider.alt = ''; rider.width = 760; rider.height = 603; rider.draggable = false;
+    craft.append(hull, rider); overlay.append(trails, craft); document.body.append(overlay);
+    const flight = {
+      overlay, craft, hull, rider, path, trailUnder, trailInk,
+      fire: hull.querySelector('.af253-fire'), length: path.getTotalLength(),
+      size, w, h, isQuiet, particles: [], trail: [], emitted: new Set(), raf: 0,
+      started: performance.now(), previous: 0, phase: 'boarding', elapsed: 0,
+      boarding: isQuiet ? 280 : 760, cruise: isQuiet ? 2300 : 6000,
+      lastPuff: -1000, lastStar: -1000, lastTrail: -1000,
+      heading: null, position: {x: 0, y: 0}, rng: 14253
+    };
+    flight.total = flight.boarding + flight.cruise + 160;
+    return flight;
+  }
+  function random(f) { f.rng = (f.rng * 1664525 + 1013904223) >>> 0; return f.rng / 4294967296; }
+  function particle(f, kind, x, y, vx = 0, vy = 0, words = '') {
+    if (f.particles.length >= (f.isQuiet ? 10 : 38)) return;
+    const el = document.createElement('span'); el.className = `af253-particle af253-${kind}`;
+    if (kind === 'star') el.textContent = random(f) > .5 ? '\u2726' : '\u2727';
+    else if (kind === 'words') el.textContent = words;
+    const life = kind === 'words' ? 1080 : kind === 'puff' ? 760 : 920;
+    const rotation = (random(f) - .5) * (kind === 'words' ? 14 : 100);
+    const tone = ['#c98da7','#7595a4','#d7b55c','#aea3c3'][Math.floor(random(f) * 4)];
+    el.style.setProperty('--af253-tone', tone);
+    if (kind === 'words') {
+      x = clamp(x, 65, f.w - 65); y = clamp(y, 55, f.h - 55);
+    }
+    el.style.left = `${x}px`; el.style.top = `${y}px`;
+    f.overlay.append(el);
+    f.particles.push({el, kind, born: f.elapsed, life, vx, vy, rotation});
+  }
+  function burst(f, x, y) {
+    for (let i = 0; i < (f.isQuiet ? 3 : 9); i++) {
+      const a = (i / 9) * Math.PI * 2;
+      particle(f, i % 3 === 0 ? 'star' : 'puff', x, y,
+        Math.cos(a) * (45 + random(f) * 50), Math.sin(a) * (40 + random(f) * 40));
+    }
+    particle(f, 'ring', x, y);
+  }
+  function updateParticles(f) {
+    for (let i = f.particles.length - 1; i >= 0; i--) {
+      const p = f.particles[i], age = f.elapsed - p.born, u = age / p.life;
+      if (u >= 1) { p.el.remove(); f.particles.splice(i, 1); continue; }
+      const travel = 1 - Math.pow(1 - u, 2);
+      const zoom = p.kind === 'ring' ? .4 + u * 2.6
+        : p.kind === 'words' ? .8 + .2 * smooth(u * 7)
+        : p.kind === 'puff' ? .4 + .85 * travel : .65 + .45 * Math.sin(Math.PI * u);
+      p.el.style.opacity = String((p.kind === 'words' ? smooth(u * 12) : .9) * (1 - smooth((u - .45) / .55)));
+      p.el.style.transform = `translate(-50%, -50%) translate3d(${p.vx * travel}px,${p.vy * travel}px,0) rotate(${p.rotation + (p.kind === 'star' ? 80 * u : 0)}deg) scale(${zoom})`;
+    }
+  }
+  function frame(now, f) {
+    if (active !== f) return;
+    if (!allowed() || document.hidden) { stop(); return; }
+    const dt = f.previous ? Math.min(60, now - f.previous) : 16.67;
+    f.previous = now; f.elapsed = now - f.started;
+    if (f.elapsed >= f.total) { stop(); return; }
+    const u = clamp((f.elapsed - f.boarding) / f.cruise, 0, 1);
+    // One continuous acceleration/deceleration over the whole curve, not per segment.
+    const distance = f.length * (.5 - .5 * Math.cos(Math.PI * u));
+    const pos = f.path.getPointAtLength(distance);
+    const before = f.path.getPointAtLength(Math.max(0, distance - 7));
+    const after = f.path.getPointAtLength(Math.min(f.length, distance + 7));
+    const target = Math.atan2(after.y - before.y, after.x - before.x) * 180 / Math.PI;
+    if (f.heading === null) f.heading = target;
+    else f.heading += angleDelta(target - f.heading) * (1 - Math.exp(-dt / 72));
+    const boarding = clamp(f.elapsed / f.boarding, 0, 1);
+    const bob = f.elapsed < f.boarding ? -4 * Math.sin(boarding * Math.PI * 2) : 0;
+    const x = pos.x, y = pos.y + bob;
+    f.position = {x, y}; f.phase = u === 0 ? 'boarding' : u > .93 ? 'exit' : 'cruise';
+    const scale = f.size * (.91 + .09 * smooth(boarding));
+    const visible = smooth(f.elapsed / 160) * (1 - smooth((u - .955) / .045));
+    f.craft.style.opacity = String(visible);
+    f.craft.style.transform = `translate3d(${x - 120}px,${y - 133}px,0) scale(${scale})`;
+    f.hull.style.transform = `rotate(${f.heading}deg)`;
+    // Keep the exact face upright and completely above the hull (only a gentle bank).
+    const bank = clamp(Math.sin(f.heading * Math.PI / 180) * 9, -9, 9);
+    f.rider.style.transform = `translateY(${1.6 * Math.sin(f.elapsed / 240)}px) rotate(${bank}deg)`;
+    f.fire.style.transform = `scale(${.80 + .18 * Math.sin(f.elapsed / 69)},${.95 + .05 * Math.sin(f.elapsed / 92)})`;
+    f.fire.style.opacity = String(.45 + .55 * smooth(boarding));
+    const rad = f.heading * Math.PI / 180;
+    const nozzle = {x: x - 81 * scale * Math.cos(rad), y: y - 81 * scale * Math.sin(rad)};
+    if (u > .005 && u < .96 && f.elapsed - f.lastTrail > 32) {
+      f.lastTrail = f.elapsed; f.trail.push({...nozzle, time: f.elapsed});
+    }
+    f.trail = f.trail.filter(p => f.elapsed - p.time < 580).slice(-22);
+    const d = f.trail.map((p, i) => `${i ? 'L' : 'M'}${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ');
+    f.trailUnder.setAttribute('d', d); f.trailInk.setAttribute('d', d);
+    if (u > .01 && u < .92 && f.elapsed - f.lastPuff > (f.isQuiet ? 250 : 120)) {
+      f.lastPuff = f.elapsed;
+      particle(f, 'puff', nozzle.x, nozzle.y, -Math.cos(rad) * 35 + (random(f) - .5) * 20, -Math.sin(rad) * 35 + 15);
+    }
+    if (!f.isQuiet && u > .03 && u < .94 && f.elapsed - f.lastStar > 260) {
+      f.lastStar = f.elapsed;
+      particle(f, 'star', nozzle.x + (random(f) - .5) * 26, nozzle.y + (random(f) - .5) * 26,
+        (random(f) - .5) * 60, (random(f) - .5) * 65);
+    }
+    for (const [at, label] of [
+      [.015, text('V\u00daT!', 'WHOOSH!')],
+      [.39, text('V\u00c8O~', 'WHEE~')],
+      [.74, text('H\u00cd H\u00cd!', 'HEHE!')]
+    ]) {
+      if (u < at || f.emitted.has(at) || (f.isQuiet && at !== .015)) continue;
+      f.emitted.add(at); particle(f, 'words', x - 28, y + 65 * scale, 0, -26, label);
+      burst(f, nozzle.x, nozzle.y);
+    }
+    updateParticles(f);
+    f.raf = requestAnimationFrame(t => frame(t, f));
+  }
+  async function launch(trigger) {
+    stop(); report();
+    if (!allowed() || document.hidden) return false;
+    const id = requestId;
+    const loaded = await loadMascot();
+    if (id !== requestId || !allowed() || document.hidden) return false;
+    if (!loaded) {
+      report(text('Ch\u01b0a t\u1ea3i \u0111\u01b0\u1ee3c mascot. Ki\u1ec3m tra t\u1ec7p mascot-intact-v253.webp trong assets/gallery/akiko/.',
+        'Mascot could not load. Check assets/gallery/akiko/mascot-intact-v253.webp.'));
+      return false;
+    }
+    const f = createFlight(trigger); active = f;
+    f.raf = requestAnimationFrame(t => frame(t, f));
+    return true;
+  }
+  document.addEventListener('club:motion', () => { if (!allowed()) stop(); });
+  document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); });
+  window.addEventListener('pagehide', stop);
+  // A real orientation/viewport change cancels safely; iOS toolbar-only height changes do not.
+  window.addEventListener('resize', () => {
+    if (active && (Math.abs(root.clientWidth - active.w) > 30 || Math.abs(innerHeight - active.h) > 160)) stop();
+  }, {passive: true});
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') stop(); });
+  window.ClubAkikoFlight = {
+    version: VERSION, mascotURL: MASCOT, launch, stop,
+    get state() {
+      return {version: VERSION, active: !!active, phase: active?.phase || 'idle',
+        elapsed: Math.round(active?.elapsed || 0), position: active ? {...active.position} : null,
+        heading: active?.heading ?? null, particles: active?.particles.length || 0, error: lastError};
+    }
+  };
+})();
+} catch (error) { window.ClubModuleErrors.push('akiko-flight'); console.error('akiko-flight', error); }
+
+
 /* ===== script.js ===== */
 try {
 (() => {
@@ -1374,92 +1650,13 @@ try {
   }
   function openArtwork(index,trigger) {
     if(!lightbox?.showModal)return;
+    window.ClubAkikoFlight?.stop();
     lastTrigger=trigger;paintLightbox(index);
     lightbox.showModal(); document.body.classList.add('no-scroll');
     motion?.animate(lightbox.querySelector('figure'),[{opacity:0,transform:'translateY(24px) scale(.95)'},{opacity:1,transform:'translateY(0) scale(1)'}],{duration:550,easing:'cubic-bezier(.16,1,.3,1)'});
   }
   function launchAkiko() {
-    if(document.documentElement.dataset.motion==='off')return;
-    document.querySelector('.akiko-flight-scene')?.remove();
-    document.querySelector('.akiko-flight')?.remove();
-    const artist=artists.find(a=>a.id==='akiko-oishi');
-    if(!artist?.mascot)return;
-
-    const scene=make('div','akiko-flight-scene');
-    scene.setAttribute('aria-hidden','true');
-    scene.innerHTML=`
-      <svg class="akiko-trail-svg" aria-hidden="true"><path class="akiko-trail-glow"></path><path class="akiko-trail-line"></path></svg>
-      <div class="akiko-flyer">
-        <div class="akiko-ship">
-          <span class="akiko-ship-nose"></span><span class="akiko-window"><i></i></span>
-          <span class="akiko-wing wing-top"></span><span class="akiko-wing wing-bottom"></span>
-          <span class="akiko-bolt bolt-a"></span><span class="akiko-bolt bolt-b"></span>
-          <span class="akiko-engine"><i></i><b></b></span>
-        </div>
-        <img class="akiko-rider-exact" src="${artist.mascot}" alt="">
-        <span class="akiko-speed speed-a"></span><span class="akiko-speed speed-b"></span><span class="akiko-speed speed-c"></span>
-      </div>
-      <div class="akiko-comic-fx"></div>`;
-    document.body.append(scene);
-
-    const flyer=scene.querySelector('.akiko-flyer');
-    const trail=scene.querySelector('.akiko-trail-line');
-    const glow=scene.querySelector('.akiko-trail-glow');
-    const fx=scene.querySelector('.akiko-comic-fx');
-    const W=Math.max(innerWidth,320), H=Math.max(innerHeight,420);
-    const mobile=W<700;
-    const points=mobile?[
-      [-170,H*.67],[W*.11,H*.37],[W*.47,H*.12],[W*.88,H*.25],
-      [W*.74,H*.58],[W*.28,H*.72],[W*.14,H*.47],[W*.63,H*.34],[W+180,H*.16]
-    ]:[
-      [-220,H*.66],[W*.10,H*.42],[W*.29,H*.13],[W*.61,H*.08],[W*.91,H*.26],
-      [W*.78,H*.60],[W*.49,H*.73],[W*.18,H*.61],[W*.12,H*.35],[W*.54,H*.30],[W+250,H*.12]
-    ];
-
-    function catmull(i,t){
-      const p0=points[Math.max(0,i-1)],p1=points[i],p2=points[Math.min(points.length-1,i+1)],p3=points[Math.min(points.length-1,i+2)];
-      const t2=t*t,t3=t2*t;
-      return [
-        .5*((2*p1[0])+(-p0[0]+p2[0])*t+(2*p0[0]-5*p1[0]+4*p2[0]-p3[0])*t2+(-p0[0]+3*p1[0]-3*p2[0]+p3[0])*t3),
-        .5*((2*p1[1])+(-p0[1]+p2[1])*t+(2*p0[1]-5*p1[1]+4*p2[1]-p3[1])*t2+(-p0[1]+3*p1[1]-3*p2[1]+p3[1])*t3)
-      ];
-    }
-    const samples=[];
-    const perSeg=11;
-    for(let i=0;i<points.length-1;i++)for(let k=0;k<perSeg;k++)samples.push(catmull(i,k/perSeg));
-    samples.push(points[points.length-1]);
-    const d=samples.map((p,i)=>`${i?'L':'M'}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' ');
-    trail.setAttribute('d',d);glow.setAttribute('d',d);
-
-    const keyframes=samples.map((p,i)=>{
-      const prev=samples[Math.max(0,i-1)],next=samples[Math.min(samples.length-1,i+1)];
-      const raw=Math.atan2(next[1]-prev[1],next[0]-prev[0])*180/Math.PI;
-      const angle=Math.max(-24,Math.min(24,raw));
-      const bob=Math.sin(i*.72)*3.5;
-      return {transform:`translate3d(${p[0]}px,${p[1]+bob}px,0) translate(-50%,-50%) rotate(${angle}deg)`,opacity:i<3||i>samples.length-4?0:1};
-    });
-
-    const duration=mobile?6900:7600;
-    flyer.animate(keyframes,{duration,easing:'linear',fill:'forwards'});
-    [trail,glow].forEach((el,idx)=>{
-      const len=Math.max(1200,el.getTotalLength());
-      el.style.strokeDasharray=String(len);el.style.strokeDashoffset=String(len);
-      el.animate([{strokeDashoffset:len,opacity:0},{strokeDashoffset:len*.72,opacity:.85},{strokeDashoffset:0,opacity:idx?.35:.82},{strokeDashoffset:-len*.18,opacity:0}],{duration:duration+250,easing:'cubic-bezier(.22,.8,.28,1)',fill:'forwards'});
-    });
-
-    const effects=[
-      ['✦','star',.15,.26,.1],['WHOOSH!','word',.29,.12,-7],['☁','puff',.50,.70,0],['★','star',.73,.53,8],
-      ['VÚT!','word',.83,.23,5],['✧','star',.41,.25,-8],['☁','puff',.16,.59,0],['!','bang',.64,.16,-9]
-    ];
-    effects.forEach(([text,kind,x,y,rot],i)=>{
-      const el=make('span',`akiko-fx ${kind}`,text);el.style.left=`${x*100}%`;el.style.top=`${y*100}%`;el.style.setProperty('--r',`${rot}deg`);el.style.animationDelay=`${(.32+i*.43).toFixed(2)}s`;fx.append(el);
-    });
-    for(let i=0;i<9;i++){
-      const s=make('i','akiko-mini-star',i%2?'✦':'★');
-      s.style.left=`${12+(i*9)%78}%`;s.style.top=`${18+(i*17)%62}%`;s.style.animationDelay=`${(.15+i*.19).toFixed(2)}s`;fx.append(s);
-    }
-
-    setTimeout(()=>scene.remove(),duration+700);
+    window.ClubAkikoFlight?.launch(artistSwitcher?.querySelector('[data-artist="akiko-oishi"]'));
   }
   function updateFilterButtons() {
     document.querySelectorAll('.filter').forEach(el=>{
@@ -1475,12 +1672,12 @@ try {
       const badge=make('span','artist-chip-index',String(index+1).padStart(2,'0'));
       const copy=make('span','artist-chip-copy');
       copy.append(make('small','',local(artist.label)),make('strong','',local(artist.name)),make('em','',local(artist.note)));
-      if(artist.mascot){const avatar=make('span','artist-chip-avatar');const im=make('img');im.src=artist.mascot;im.alt='';im.loading='lazy';im.decoding='async';avatar.append(im);btn.append(avatar);}
+      if(artist.mascot){btn.classList.add('artist-chip-with-avatar');const avatar=make('span','artist-chip-avatar');const im=make('img');im.src=artist.id==='akiko-oishi' ? (window.ClubAkikoFlight?.mascotURL || artist.mascot) : artist.mascot;im.alt='';im.loading='lazy';im.decoding='async';avatar.append(im);btn.append(avatar);}
       btn.append(badge,copy);
       btn.addEventListener('click',()=>{
         if(selectedArtist===artist.id){motion?.burst(btn,'',5);if(artist.id==='akiko-oishi')launchAkiko();return;}
-        selectedArtist=artist.id;filter='all';updateFilterButtons();renderArtists();renderGallery();
-        motion?.burst(btn,'',9);
+        window.ClubAkikoFlight?.stop();selectedArtist=artist.id;filter='all';updateFilterButtons();renderArtists();renderGallery();
+        motion?.burst(artistSwitcher.querySelector('[data-artist="'+artist.id+'"]'),'',9);
         if(artist.id==='akiko-oishi')launchAkiko();
       });
       artistSwitcher.append(btn);
@@ -1586,6 +1783,7 @@ try {
  update();
  window.ClubDiagnostics=()=>({
    build:window.ClubBuild,
+   akiko:window.ClubAkikoFlight?.state,
    viewport:root.clientWidth,layout:root.scrollWidth,
    overflow:Math.max(0,root.scrollWidth-root.clientWidth),
    motion:root.dataset.motion,choice:root.dataset.motionChoice,
