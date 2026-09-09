@@ -46,7 +46,7 @@ window.CLUB_CONTENT = {
     {
       image: "assets/gallery/mien-mong-sac.webp",
       category: "paintings",
-      title: { vi: "Nấm Thách Anh", en: "Nấm Thách Anh" },
+      title: { vi: "Sức Mạnh Của Nấm", en: "Sức Mạnh Của Nấm" },
       author: { vi: "Họa sĩ Trần Nguyễn Bảo Tâm", en: "Artist Trần Nguyễn Bảo Tâm" },
       description: { vi: "Tranh cách điệu · 2026", en: "Stylized painting · 2026" }
     },
