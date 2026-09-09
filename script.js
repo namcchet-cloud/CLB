@@ -1,4 +1,4 @@
-/* CLB Nghe thuat - build 2.3.0. Readable, dependency-free bundle. */
+/* CLB Nghe thuat - build 2.5.1. Readable, dependency-free bundle. */
 window.ClubModuleErrors=[];
 
 /* ===== js/i18n.js ===== */
@@ -620,7 +620,7 @@ try {
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('motionDock'))$('motionDock').open=false;});
   document.addEventListener('click',e=>{if(!$('motionDock')?.contains(e.target)&&$('motionDock'))$('motionDock').open=false;});
 
-  window.ClubMotion={version:'2.3.0',burst,flyRecord,animate,register,setChoice,get enabled(){return enabled;},get choice(){return choice;}};
+  window.ClubMotion={version:'2.5.1',burst,flyRecord,animate,register,setChoice,get enabled(){return enabled;},get choice(){return choice;}};
   window.addEventListener('pageshow',()=>{root.dataset.pageHidden='false';syncPreference();register();});
   window.addEventListener('blur',resetPointer);
   root.dataset.pageHidden=String(document.hidden);
@@ -730,7 +730,7 @@ try {
     if(visible)wake();else{cancelAnimationFrame(frame);frame=0;last=0;}
   },{rootMargin:'120px'}).observe(deck);
   window.addEventListener('pageshow',()=>wake());
-  window.ClubTurntable={version:'2.3.0',setPlayback,stopDemo,reset(){stopDemo();setPlayback({playing:false,position:0,duration:0});},get state(){return {angle,speed,armAngle,lift,playing,buffering,demo,visible,allowed};}};
+  window.ClubTurntable={version:'2.5.1',setPlayback,stopDemo,reset(){stopDemo();setPlayback({playing:false,position:0,duration:0});},get state(){return {angle,speed,armAngle,lift,playing,buffering,demo,visible,allowed};}};
   paint();
 })();
 
@@ -1353,17 +1353,24 @@ try {
   });
 
   const gallery=document.getElementById('galleryGrid');
+  const artistSwitcher=document.getElementById('artistSwitcher');
   const lightbox=document.getElementById('lightbox');
-  let filter='all', selectedIndex=-1, lastTrigger=null;
+  const artists=Array.isArray(content.artists)?content.artists:[];
+  let filter='all', selectedArtist=artists[0]?.id||null, selectedIndex=-1, lastTrigger=null;
   function make(tag,cls,text) {
     const el=document.createElement(tag);if(cls)el.className=cls;if(text!==undefined)el.textContent=text;return el;
+  }
+  function artName(art) {
+    const title=local(art.title)?.trim();
+    return title||`${local(art.author)} · ${local(art.description)}`;
   }
   function paintLightbox(index) {
     const art=content.artworks[index]; if(!art)return;
     selectedIndex=index;
     const img=document.getElementById('lightboxImage');
-    img.src=art.image;img.alt=local(art.title);
-    document.getElementById('lightboxCaption').textContent=`${local(art.title)} — ${local(art.author)}`;
+    img.src=art.image;img.alt=artName(art);
+    const title=local(art.title)?.trim();
+    document.getElementById('lightboxCaption').textContent=title?`${title} — ${local(art.author)}`:`${local(art.author)} — ${local(art.description)}`;
   }
   function openArtwork(index,trigger) {
     if(!lightbox?.showModal)return;
@@ -1371,34 +1378,69 @@ try {
     lightbox.showModal(); document.body.classList.add('no-scroll');
     motion?.animate(lightbox.querySelector('figure'),[{opacity:0,transform:'translateY(24px) scale(.95)'},{opacity:1,transform:'translateY(0) scale(1)'}],{duration:550,easing:'cubic-bezier(.16,1,.3,1)'});
   }
+  function launchAkiko() {
+    if(document.documentElement.dataset.motion==='off')return;
+    document.querySelector('.akiko-flight')?.remove();
+    const artist=artists.find(a=>a.id==='akiko-oishi');
+    if(!artist?.mascot)return;
+    const flyer=make('div','akiko-flight');
+    flyer.setAttribute('aria-hidden','true');
+    flyer.innerHTML=`<div class="akiko-rocket"><span class="akiko-flame"></span><span class="akiko-fin fin-a"></span><span class="akiko-fin fin-b"></span><span class="akiko-porthole"><img src="${artist.mascot}" alt=""></span></div><span class="akiko-smoke s1"></span><span class="akiko-smoke s2"></span><span class="akiko-smoke s3"></span>`;
+    document.body.append(flyer);
+    requestAnimationFrame(()=>flyer.classList.add('is-flying'));
+    setTimeout(()=>flyer.remove(),6200);
+  }
+  function updateFilterButtons() {
+    document.querySelectorAll('.filter').forEach(el=>{
+      const active=el.dataset.filter===filter;el.classList.toggle('active',active);el.setAttribute('aria-pressed',String(active));
+    });
+  }
+  function renderArtists() {
+    if(!artistSwitcher)return;
+    artistSwitcher.replaceChildren();
+    artists.forEach((artist,index)=>{
+      const btn=make('button','artist-chip');btn.type='button';btn.dataset.artist=artist.id;
+      const active=artist.id===selectedArtist;btn.classList.toggle('active',active);btn.setAttribute('aria-pressed',String(active));
+      const badge=make('span','artist-chip-index',String(index+1).padStart(2,'0'));
+      const copy=make('span','artist-chip-copy');
+      copy.append(make('small','',local(artist.label)),make('strong','',local(artist.name)),make('em','',local(artist.note)));
+      if(artist.mascot){const avatar=make('span','artist-chip-avatar');const im=make('img');im.src=artist.mascot;im.alt='';im.loading='lazy';im.decoding='async';avatar.append(im);btn.append(avatar);}
+      btn.append(badge,copy);
+      btn.addEventListener('click',()=>{
+        if(selectedArtist===artist.id){motion?.burst(btn,'',5);return;}
+        selectedArtist=artist.id;filter='all';updateFilterButtons();renderArtists();renderGallery();
+        motion?.burst(btn,'',9);
+        if(artist.id==='akiko-oishi')launchAkiko();
+      });
+      artistSwitcher.append(btn);
+    });
+  }
   function renderGallery() {
     gallery.replaceChildren();
-    const visible=content.artworks.map((art,index)=>({art,index})).filter(({art})=>filter==='all'||art.category===filter);
-    const groups=new Map();
-    visible.forEach(item=>{
-      const key=local(item.art.author)||t('clubFull');
-      if(!groups.has(key))groups.set(key,[]);
-      groups.get(key).push(item);
-    });
-    groups.forEach((items,author)=>{
+    const visible=content.artworks.map((art,index)=>({art,index})).filter(({art})=>(!selectedArtist||art.artistId===selectedArtist)&&(filter==='all'||art.category===filter));
+    const artist=artists.find(a=>a.id===selectedArtist);
+    if(artist){
       const head=make('div','gallery-author');
       const label=make('span','gallery-author-kicker',document.documentElement.lang==='en'?'ARTIST':'TÁC GIẢ');
-      const title=make('h3','',author);
-      const count=make('p','',`${items.length} ${document.documentElement.lang==='en'?(items.length===1?'work':'works'):'tác phẩm'}`);
+      const title=make('h3','',`${local(artist.label)} ${local(artist.name)}`.trim());
+      const count=make('p','',`${visible.length} ${document.documentElement.lang==='en'?(visible.length===1?'work':'works'):'tác phẩm'}`);
       head.append(label,title,count);gallery.append(head);
-      items.forEach(({art,index})=>{
-        const card=make('button','gallery-card');
-        card.type='button';card.dataset.index=index;
-        card.setAttribute('aria-label',`${t('viewArt')}: ${local(art.title)}`);
-        const img=make('img');
-        img.src=art.thumb||art.image;img.alt=local(art.title);img.loading='lazy';img.decoding='async';img.width=700;img.height=700;
-        try{img.fetchPriority='low';}catch{}
-        const info=make('div','gallery-info');
-        info.append(make('h3','',local(art.title)),make('p','',local(art.description)));
-        card.append(img,info);
-        card.addEventListener('click',()=>openArtwork(index,card));
-        gallery.append(card);
-      });
+    }
+    visible.forEach(({art,index})=>{
+      const card=make('button','gallery-card');
+      card.type='button';card.dataset.index=index;
+      const label=artName(art);card.setAttribute('aria-label',`${t('viewArt')}: ${label}`);
+      const img=make('img');
+      img.src=art.thumb||art.image;img.alt=label;img.loading='lazy';img.decoding='async';img.width=700;img.height=700;
+      try{img.fetchPriority='low';}catch{}
+      const info=make('div','gallery-info');
+      const title=local(art.title)?.trim();
+      if(title)info.append(make('h3','',title));
+      info.append(make('p','',local(art.description)));
+      card.classList.toggle('gallery-card-no-title',!title);
+      card.append(img,info);
+      card.addEventListener('click',()=>openArtwork(index,card));
+      gallery.append(card);
     });
     if(!visible.length) {
       const card=make('article','gallery-card placeholder-card');
@@ -1410,14 +1452,10 @@ try {
   }
   document.querySelectorAll('.filter').forEach(button=>{
     button.addEventListener('click',()=>{
-      filter=button.dataset.filter;
-      document.querySelectorAll('.filter').forEach(el=>{
-        const active=el===button;el.classList.toggle('active',active);el.setAttribute('aria-pressed',String(active));
-      });
-      renderGallery();
-      motion?.burst(button,'',7);
+      filter=button.dataset.filter;updateFilterButtons();renderGallery();motion?.burst(button,'',7);
     });
   });
+  renderArtists();updateFilterButtons();renderGallery();
   let closing=false,closeTimer=0,closeRevision=0;
   function closeArtwork(){
     if(!lightbox.open||closing)return;
@@ -1438,16 +1476,15 @@ try {
   });
   lightbox.addEventListener('keydown',e=>{
     if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight')return;
-    const indices=content.artworks.map((a,i)=>({a,i})).filter(({a})=>filter==='all'||a.category===filter).map(({i})=>i);
+    const indices=content.artworks.map((a,i)=>({a,i})).filter(({a})=>(!selectedArtist||a.artistId===selectedArtist)&&(filter==='all'||a.category===filter)).map(({i})=>i);
     if(indices.length<2)return;
     e.preventDefault();
     const at=indices.indexOf(selectedIndex),next=(at+(e.key==='ArrowRight'?1:-1)+indices.length)%indices.length;
     paintLightbox(indices[next]);
   });
   document.addEventListener('club:language',()=>{
-    renderGallery();if(lightbox.open)paintLightbox(selectedIndex);
+    renderArtists();renderGallery();if(lightbox.open)paintLightbox(selectedIndex);
   });
-  renderGallery();
   window.ClubUIReady=true;
 })();
 
@@ -1488,4 +1525,4 @@ try {
  });
 })();
 
-window.ClubBuild='2.4.4';
+window.ClubBuild='2.5.1';

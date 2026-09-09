@@ -60,3 +60,12 @@ Gói này chưa được commit/push vào kho của cậu.
 Dành cho người kiểm tra mã: chạy `ClubDiagnostics()` trong console để xem
 phiên bản, bề ngang, chế độ chuyển động và trạng thái motor.
 Hàm này chỉ đọc trạng thái tại chỗ, không gửi dữ liệu lên mạng.
+
+## v2.5.0 — Akiko Oishi
+
+- Gallery now switches by artist.
+- Akiko Oishi has 6 Digital Art works with no individual artwork titles.
+- The seventh uploaded Akiko character is not shown as an artwork; it is used unchanged inside the rocket porthole animation when Akiko Oishi is selected.
+- The rocket flight lasts about 5.8 seconds and follows the site's existing comic-paper visual system.
+- Akiko thumbnails are lazy-loaded; full-size images load only when an artwork is opened.
+- To update GitHub Pages, replace index.html, style.css, script.js, content.js, and upload assets/gallery/akiko/ with its thumbs/ subfolder.

@@ -21,8 +21,24 @@ window.CLUB_CONTENT = {
       uri: "spotify:playlist:2Uj1N5MlAVfIf0XkSVQSWi"
     }
   ],
+  artists: [
+    {
+      id: "bao-tam",
+      name: { vi: "Trần Nguyễn Bảo Tâm", en: "Trần Nguyễn Bảo Tâm" },
+      label: { vi: "Họa sĩ", en: "Artist" },
+      note: { vi: "5 tác phẩm · Tranh cách điệu", en: "5 works · Stylized painting" }
+    },
+    {
+      id: "akiko-oishi",
+      name: { vi: "Akiko Oishi", en: "Akiko Oishi" },
+      label: { vi: "Họa sĩ Digital", en: "Digital Artist" },
+      note: { vi: "6 tác phẩm · Digital", en: "6 works · Digital" },
+      mascot: "assets/gallery/akiko/mascot-original.webp"
+    }
+  ],
   artworks: [
     {
+      artistId: "bao-tam",
       image: "assets/gallery/ba-mam-sac.webp",
       thumb: "assets/gallery/thumbs/ba-mam-sac.webp",
       category: "paintings",
@@ -31,6 +47,7 @@ window.CLUB_CONTENT = {
       description: { vi: "Tranh cách điệu · 2026", en: "Stylized painting · 2026" }
     },
     {
+      artistId: "bao-tam",
       image: "assets/gallery/no-trong-tinh-sac.webp",
       thumb: "assets/gallery/thumbs/no-trong-tinh-sac.webp",
       category: "paintings",
@@ -39,6 +56,7 @@ window.CLUB_CONTENT = {
       description: { vi: "Tranh cách điệu · 2026", en: "Stylized painting · 2026" }
     },
     {
+      artistId: "bao-tam",
       image: "assets/gallery/song-anh.webp",
       thumb: "assets/gallery/thumbs/song-anh.webp",
       category: "paintings",
@@ -47,6 +65,7 @@ window.CLUB_CONTENT = {
       description: { vi: "Tranh cách điệu · 2026", en: "Stylized painting · 2026" }
     },
     {
+      artistId: "bao-tam",
       image: "assets/gallery/mien-mong-sac.webp",
       thumb: "assets/gallery/thumbs/mien-mong-sac.webp",
       category: "paintings",
@@ -55,13 +74,20 @@ window.CLUB_CONTENT = {
       description: { vi: "Tranh cách điệu · 2026", en: "Stylized painting · 2026" }
     },
     {
+      artistId: "bao-tam",
       image: "assets/gallery/an-nhien-trong-vong-mau.webp",
       thumb: "assets/gallery/thumbs/an-nhien-trong-vong-mau.webp",
       category: "paintings",
       title: { vi: "An Toàn Thực Phẩm", en: "An Toàn Thực Phẩm" },
       author: { vi: "Họa sĩ Trần Nguyễn Bảo Tâm", en: "Artist Trần Nguyễn Bảo Tâm" },
       description: { vi: "Tranh cách điệu · 2026", en: "Stylized painting · 2026" }
-    }
+    },
+    { artistId:"akiko-oishi", image:"assets/gallery/akiko/akiko-01.webp", thumb:"assets/gallery/akiko/thumbs/akiko-01.webp", category:"digital-art", title:{vi:"",en:""}, author:{vi:"Akiko Oishi",en:"Akiko Oishi"}, description:{vi:"Digital Art",en:"Digital Art"} },
+    { artistId:"akiko-oishi", image:"assets/gallery/akiko/akiko-02.webp", thumb:"assets/gallery/akiko/thumbs/akiko-02.webp", category:"digital-art", title:{vi:"",en:""}, author:{vi:"Akiko Oishi",en:"Akiko Oishi"}, description:{vi:"Digital Art",en:"Digital Art"} },
+    { artistId:"akiko-oishi", image:"assets/gallery/akiko/akiko-03.webp", thumb:"assets/gallery/akiko/thumbs/akiko-03.webp", category:"digital-art", title:{vi:"",en:""}, author:{vi:"Akiko Oishi",en:"Akiko Oishi"}, description:{vi:"Digital Art",en:"Digital Art"} },
+    { artistId:"akiko-oishi", image:"assets/gallery/akiko/akiko-04.webp", thumb:"assets/gallery/akiko/thumbs/akiko-04.webp", category:"digital-art", title:{vi:"",en:""}, author:{vi:"Akiko Oishi",en:"Akiko Oishi"}, description:{vi:"Digital Art",en:"Digital Art"} },
+    { artistId:"akiko-oishi", image:"assets/gallery/akiko/akiko-05.webp", thumb:"assets/gallery/akiko/thumbs/akiko-05.webp", category:"digital-art", title:{vi:"",en:""}, author:{vi:"Akiko Oishi",en:"Akiko Oishi"}, description:{vi:"Digital Art",en:"Digital Art"} },
+    { artistId:"akiko-oishi", image:"assets/gallery/akiko/akiko-06.webp", thumb:"assets/gallery/akiko/thumbs/akiko-06.webp", category:"digital-art", title:{vi:"",en:""}, author:{vi:"Akiko Oishi",en:"Akiko Oishi"}, description:{vi:"Digital Art",en:"Digital Art"} }
   ],
   lyrics: {
     // LRCLIB is a third-party source, not Spotify lyrics.
