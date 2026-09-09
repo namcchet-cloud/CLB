@@ -1488,4 +1488,4 @@ try {
  });
 })();
 
-window.ClubBuild='2.3.0';
+window.ClubBuild='2.4.4';
