@@ -1,42 +1,62 @@
-# CLB Nghệ thuật — THPT Bảo Lộc
-## Comic Studio 2.1 · Motion & Vinyl
+# CLB Nghệ thuật - bản 2.3.0
 
-Bản cập nhật từ gói `ART-CLUB-Bao-Loc-comic-refresh.zip`, dành cho website HTML/CSS/JavaScript đang chạy trên GitHub Pages.
+## Cập nhật kho namcchet-cloud/CLB
 
-### Dùng ngay
+Gói vá dành cho website đang có content.js và assets/.
+Chỉ cần thay ba tệp chạy: index.html, style.css, script.js.
 
-Giải nén, sao lưu website hiện tại, rồi chép các tệp của bản này vào đúng thư mục đang chứa `index.html` của website. Commit/push như lần triển khai trước. Đừng chỉ tải nguyên tệp ZIP lên.
+1. Sao lưu kho hiện tại, sau đó giải nén gói vá.
+2. Thay cả ba tệp trên trong thư mục gốc CLB, cùng một lần commit.
+   Không chỉ tải tệp ZIP lên kho. Không tạo thư mục CLB/v23/.
+3. Khi GitHub Pages triển khai xong, mở lại trang. Bấm Chuyển động ở góc dưới:
+   cần thấy `v2.3.0 - HTML + CSS + JavaScript` với dấu kiểm tra.
+   Chọn **Đầy đủ** để thử tất cả hiệu ứng.
 
-**Giữ lại ảnh, nội dung tự thêm, `CNAME` và `.github/` của kho hiện tại.** Nếu đã bổ sung tác phẩm trong `script.js` cũ, chuyển các mục đó vào `artworks` trong `content.js` mới trước khi thay tệp.
+GIỮ NGUYÊN content.js, assets/, gallery/, lyrics/, CNAME và .github/ của cậu.
+Gói vá không thay thế nội dung, hình ảnh hay liên kết tự thêm.
+Thư mục js/ và motion.css cũ có thể giữ lại; index.html mới không gọi chúng.
 
-### Đã thay đổi
+## Cách kiểm tra
 
-- Tên CLB theo ngôn ngữ: **CLB Nghệ thuật** / **Art Club**.
-- Các nút tham gia mở Google Form đã được cung cấp.
-- Chuyển động bật/tỏa ra, trượt theo lớp, các chi tiết nổi nhẹ và vòng quay liên tục; có nút tắt chuyển động.
-- Máy đĩa lớn hơn, hai đĩa chọn được; đĩa hồng dùng ảnh do chủ website cung cấp.
-- Nút phát/tạm dừng gửi lệnh tới Spotify iFrame API. Đĩa chỉ quay sau khi có trạng thái phát từ Spotify, không giả lập âm nhạc.
-- Khung lời tìm qua LRCLIB; đồng bộ khi có bản phù hợp và mốc thời gian. Có chọn bản thu, nhập `.lrc` và đọc lời không đồng bộ.
-- Ba họ chữ theo vai trò: Barlow Condensed, Fraunces, DM Sans; tải qua Google Fonts, không kèm tệp font.
-- Việt–Anh, bàn phím, mobile, trạng thái lỗi, giảm chuyển động và cách xử lý chuyển đĩa.
+- Trên máy tính: rê chuột lên thẻ hoạt động, bấm mascot,
+  cuộn xuống rồi trở lại để xem vòng logo tiếp tục quay.
+- Trên điện thoại: kiểm tra lề hai bên, mở menu, chạm mascot,
+  đổi đĩa và xoay màn hình.
+- Bấm **Thử chuyển động - không phát nhạc** để kiểm tra
+  đĩa và kim độc lập với kết nối Spotify.
+- Nếu bảng báo thiếu/lệch phiên bản, thay lại đồng thời ba tệp.
+  Nếu chưa thấy v2.3.0, trang đang hiển thị bản cũ, chưa phải bản vá.
 
-### Các tệp cần biết
+## Chế độ chuyển động
 
-| Tệp | Chức năng |
-| --- | --- |
-| `index.html` | Bố cục, các khu vực của trang |
-| `style.css` | Màu sắc, font, responsive, chuyển động |
-| `content.js` | Form, đĩa nhạc, tác phẩm, ghép lời theo bài |
-| `js/i18n.js` | Nội dung giao diện Việt–Anh |
-| `js/motion.js` | Chuyển động và chế độ giảm chuyển động |
-| `js/player.js` | Điều khiển Spotify và trạng thái máy đĩa |
-| `js/lyrics.js` | Tìm lời, LRC, đồng bộ và lưu cục bộ |
-| `script.js` | Menu, mascot, thư viện, xem ảnh lớn |
+Theo thiết bị: tôn trọng cài đặt giảm chuyển động của hệ điều hành.
+Đầy đủ: bật rõ ràng theo lựa chọn của người xem.
+Nhẹ: chuyển động biên độ nhỏ, không nghiêng theo chuột.
+Tắt: dừng hiệu ứng trang, không tắt nhạc.
+Lựa chọn được lưu trên trình duyệt khi bộ nhớ cục bộ khả dụng.
 
-Xem **[HUONG-DAN.md](HUONG-DAN.md)** để cập nhật ảnh, nhạc và lời. Xem **[KIEM-THU.md](KIEM-THU.md)** để biết những gì đã và chưa được kiểm tra.
+## Đã sửa
 
-### Giới hạn cần biết
+Bố cục co giãn đúng bề ngang; khối chờ xuất hiện không làm nở trang.
+Vòng logo không phụ thuộc vào một lần khởi tạo quan sát duy nhất.
+Có phản hồi chuột/chạm; hiệu ứng ngoài màn hình tạm dừng.
+Đĩa tăng/giảm tốc dần; kim nâng, xoay, hạ trên trục cố định.
+Đóng ảnh lớn có cơ chế dự phòng để không kẹt cuộn trang.
+Giữ nguyên hai ngôn ngữ, Google Form, hai playlist và hình đĩa hồng.
 
-Đây vẫn là website tĩnh; không có máy chủ quản trị ảnh hoặc tài khoản biên tập. Spotify, Google Fonts và tìm lời trực tuyến cần kết nối mạng. Spotify có thể yêu cầu bấm Play trực tiếp trong khung nhúng hoặc chỉ cung cấp bản nghe thử. Không bảo đảm mọi bài đều có lời và đúng bản thu. Tệp `.lrc` nhập từ giao diện chỉ lưu trên trình duyệt hiện tại.
+## Phạm vi kiểm thử
 
-Gói mã này chưa được đẩy lên kho GitHub của chủ website. Kiểm thử giao diện và logic đã chạy trong trình duyệt Chromium cách ly với phản hồi API giả lập; chưa kiểm chứng âm thanh thực tế trên website triển khai/iPhone.
+14 bề rộng 320-1920 px, cả VI/EN; thêm kiểm tra chuột, chạm, xoay màn hình,
+chế độ giảm chuyển động, menu, ảnh lớn và khôi phục trang.
+Chi tiết nằm trong KIEM-THU-v2.3.md và ket-qua-kiem-thu.json.
+
+Bản ghi/xem trước được render cục bộ trong Chromium với font dự phòng.
+Môi trường kiểm thử chặn điều hướng mạng, nên HTML/CSS/JS được nạp
+trực tiếp vào DOM; tệp được kiểm tra đường dẫn riêng.
+Sự kiện Spotify được giả lập để kiểm tra đĩa/kim; không phải phát nhạc thật.
+Chưa kiểm thử Safari/iPhone thật, tài khoản Spotify hay bản GitHub sau cập nhật.
+Gói này chưa được commit/push vào kho của cậu.
+
+Dành cho người kiểm tra mã: chạy `ClubDiagnostics()` trong console để xem
+phiên bản, bề ngang, chế độ chuyển động và trạng thái motor.
+Hàm này chỉ đọc trạng thái tại chỗ, không gửi dữ liệu lên mạng.

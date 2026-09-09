@@ -1,0 +1,1571 @@
+{
+  "version": "2.3.0",
+  "environment": "Chromium / local DOM render / fallback fonts / external network blocked",
+  "layout": [
+    {
+      "viewport": 320,
+      "language": "vi",
+      "pass": true,
+      "state": {
+        "width": 320,
+        "innerWidth": 320,
+        "scroll": 320,
+        "header": {
+          "selector": "site-header",
+          "left": 10,
+          "right": 310,
+          "centerError": 0
+        },
+        "main": {
+          "selector": "",
+          "left": 0,
+          "right": 320,
+          "centerError": 0
+        },
+        "panels": [
+          {
+            "selector": "section gallery-section panel-wall",
+            "left": 0,
+            "right": 320,
+            "centerError": 0
+          },
+          {
+            "selector": "section activities panel-blue",
+            "left": 0,
+            "right": 320,
+            "centerError": 0
+          },
+          {
+            "selector": "section playlist-section panel-music",
+            "left": 0,
+            "right": 320,
+            "centerError": 0
+          }
+        ],
+        "hiddenText": [],
+        "modules": [],
+        "motion": "full"
+      },
+      "errors": []
+    },
+    {
+      "viewport": 320,
+      "language": "en",
+      "pass": true,
+      "state": {
+        "width": 320,
+        "innerWidth": 320,
+        "scroll": 320,
+        "header": {
+          "selector": "site-header",
+          "left": 10,
+          "right": 310,
+          "centerError": 0
+        },
+        "main": {
+          "selector": "",
+          "left": 0,
+          "right": 320,
+          "centerError": 0
+        },
+        "panels": [
+          {
+            "selector": "section gallery-section panel-wall",
+            "left": 0,
+            "right": 320,
+            "centerError": 0
+          },
+          {
+            "selector": "section activities panel-blue",
+            "left": 0,
+            "right": 320,
+            "centerError": 0
+          },
+          {
+            "selector": "section playlist-section panel-music",
+            "left": 0,
+            "right": 320,
+            "centerError": 0
+          }
+        ],
+        "hiddenText": [],
+        "modules": [],
+        "motion": "full"
+      },
+      "errors": []
+    },
+    {
+      "viewport": 360,
+      "language": "vi",
+      "pass": true,
+      "state": {
+        "width": 360,
+        "innerWidth": 360,
+        "scroll": 360,
+        "header": {
+          "selector": "site-header",
+          "left": 10,
+          "right": 350,
+          "centerError": 0
+        },
+        "main": {
+          "selector": "",
+          "left": 0,
+          "right": 360,
+          "centerError": 0
+        },
+        "panels": [
+          {
+            "selector": "section gallery-section panel-wall",
+            "left": 0,
+            "right": 360,
+            "centerError": 0
+          },
+          {
+            "selector": "section activities panel-blue",
+            "left": 0,
+            "right": 360,
+            "centerError": 0
+          },
+          {
+            "selector": "section playlist-section panel-music",
+            "left": 0,
+            "right": 360,
+            "centerError": 0
+          }
+        ],
+        "hiddenText": [],
+        "modules": [],
+        "motion": "full"
+      },
+      "errors": []
+    },
+    {
+      "viewport": 360,
+      "language": "en",
+      "pass": true,
+      "state": {
+        "width": 360,
+        "innerWidth": 360,
+        "scroll": 360,
+        "header": {
+          "selector": "site-header",
+          "left": 10,
+          "right": 350,
+          "centerError": 0
+        },
+        "main": {
+          "selector": "",
+          "left": 0,
+          "right": 360,
+          "centerError": 0
+        },
+        "panels": [
+          {
+            "selector": "section gallery-section panel-wall",
+            "left": 0,
+            "right": 360,
+            "centerError": 0
+          },
+          {
+            "selector": "section activities panel-blue",
+            "left": 0,
+            "right": 360,
+            "centerError": 0
+          },
+          {
+            "selector": "section playlist-section panel-music",
+            "left": 0,
+            "right": 360,
+            "centerError": 0
+          }
+        ],
+        "hiddenText": [],
+        "modules": [],
+        "motion": "full"
+      },
+      "errors": []
+    },
+    {
+      "viewport": 375,
+      "language": "vi",
+      "pass": true,
+      "state": {
+        "width": 375,
+        "innerWidth": 375,
+        "scroll": 375,
+        "header": {
+          "selector": "site-header",
+          "left": 10,
+          "right": 365,
+          "centerError": 0
+        },
+        "main": {
+          "selector": "",
+          "left": 0,
+          "right": 375,
+          "centerError": 0
+        },
+        "panels": [
+          {
+            "selector": "section gallery-section panel-wall",
+            "left": 0,
+            "right": 375,
+            "centerError": 0
+          },
+          {
+            "selector": "section activities panel-blue",
+            "left": 0,
+            "right": 375,
+            "centerError": 0
+          },
+          {
+            "selector": "section playlist-section panel-music",
+            "left": 0,
+            "right": 375,
+            "centerError": 0
+          }
+        ],
+        "hiddenText": [],
+        "modules": [],
+        "motion": "full"
+      },
+      "errors": []
+    },
+    {
+      "viewport": 375,
+      "language": "en",
+      "pass": true,
+      "state": {
+        "width": 375,
+        "innerWidth": 375,
+        "scroll": 375,
+        "header": {
+          "selector": "site-header",
+          "left": 10,
+          "right": 365,
+          "centerError": 0
+        },
+        "main": {
+          "selector": "",
+          "left": 0,
+          "right": 375,
+          "centerError": 0
+        },
+        "panels": [
+          {
+            "selector": "section gallery-section panel-wall",
+            "left": 0,
+            "right": 375,
+            "centerError": 0
+          },
+          {
+            "selector": "section activities panel-blue",
+            "left": 0,
+            "right": 375,
+            "centerError": 0
+          },
+          {
+            "selector": "section playlist-section panel-music",
+            "left": 0,
+            "right": 375,
+            "centerError": 0
+          }
+        ],
+        "hiddenText": [],
+        "modules": [],
+        "motion": "full"
+      },
+      "errors": []
+    },
+    {
+      "viewport": 390,
+      "language": "vi",
+      "pass": true,
+      "state": {
+        "width": 390,
+        "innerWidth": 390,
+        "scroll": 390,
+        "header": {
+          "selector": "site-header",
+          "left": 10,
+          "right": 380,
+          "centerError": 0
+        },
+        "main": {
+          "selector": "",
+          "left": 0,
+          "right": 390,
+          "centerError": 0
+        },
+        "panels": [
+          {
+            "selector": "section gallery-section panel-wall",
+            "left": 0,
+            "right": 390,
+            "centerError": 0
+          },
+          {
+            "selector": "section activities panel-blue",
+            "left": 0,
+            "right": 390,
+            "centerError": 0
+          },
+          {
+            "selector": "section playlist-section panel-music",
+            "left": 0,
+            "right": 390,
+            "centerError": 0
+          }
+        ],
+        "hiddenText": [],
+        "modules": [],
+        "motion": "full"
+      },
+      "errors": []
+    },
+    {
+      "viewport": 390,
+      "language": "en",
+      "pass": true,
+      "state": {
+        "width": 390,
+        "innerWidth": 390,
+        "scroll": 390,
+        "header": {
+          "selector": "site-header",
+          "left": 10,
+          "right": 380,
+          "centerError": 0
+        },
+        "main": {
+          "selector": "",
+          "left": 0,
+          "right": 390,
+          "centerError": 0
+        },
+        "panels": [
+          {
+            "selector": "section gallery-section panel-wall",
+            "left": 0,
+            "right": 390,
+            "centerError": 0
+          },
+          {
+            "selector": "section activities panel-blue",
+            "left": 0,
+            "right": 390,
+            "centerError": 0
+          },
+          {
+            "selector": "section playlist-section panel-music",
+            "left": 0,
+            "right": 390,
+            "centerError": 0
+          }
+        ],
+        "hiddenText": [],
+        "modules": [],
+        "motion": "full"
+      },
+      "errors": []
+    },
+    {
+      "viewport": 414,
+      "language": "vi",
+      "pass": true,
+      "state": {
+        "width": 414,
+        "innerWidth": 414,
+        "scroll": 414,
+        "header": {
+          "selector": "site-header",
+          "left": 10,
+          "right": 404,
+          "centerError": 0
+        },
+        "main": {
+          "selector": "",
+          "left": 0,
+          "right": 414,
+          "centerError": 0
+        },
+        "panels": [
+          {
+            "selector": "section gallery-section panel-wall",
+            "left": 0,
+            "right": 414,
+            "centerError": 0
+          },
+          {
+            "selector": "section activities panel-blue",
+            "left": 0,
+            "right": 414,
+            "centerError": 0
+          },
+          {
+            "selector": "section playlist-section panel-music",
+            "left": 0,
+            "right": 414,
+            "centerError": 0
+          }
+        ],
+        "hiddenText": [],
+        "modules": [],
+        "motion": "full"
+      },
+      "errors": []
+    },
+    {
+      "viewport": 414,
+      "language": "en",
+      "pass": true,
+      "state": {
+        "width": 414,
+        "innerWidth": 414,
+        "scroll": 414,
+        "header": {
+          "selector": "site-header",
+          "left": 10,
+          "right": 404,
+          "centerError": 0
+        },
+        "main": {
+          "selector": "",
+          "left": 0,
+          "right": 414,
+          "centerError": 0
+        },
+        "panels": [
+          {
+            "selector": "section gallery-section panel-wall",
+            "left": 0,
+            "right": 414,
+            "centerError": 0
+          },
+          {
+            "selector": "section activities panel-blue",
+            "left": 0,
+            "right": 414,
+            "centerError": 0
+          },
+          {
+            "selector": "section playlist-section panel-music",
+            "left": 0,
+            "right": 414,
+            "centerError": 0
+          }
+        ],
+        "hiddenText": [],
+        "modules": [],
+        "motion": "full"
+      },
+      "errors": []
+    },
+    {
+      "viewport": 430,
+      "language": "vi",
+      "pass": true,
+      "state": {
+        "width": 430,
+        "innerWidth": 430,
+        "scroll": 430,
+        "header": {
+          "selector": "site-header",
+          "left": 10,
+          "right": 420,
+          "centerError": 0
+        },
+        "main": {
+          "selector": "",
+          "left": 0,
+          "right": 430,
+          "centerError": 0
+        },
+        "panels": [
+          {
+            "selector": "section gallery-section panel-wall",
+            "left": 0,
+            "right": 430,
+            "centerError": 0
+          },
+          {
+            "selector": "section activities panel-blue",
+            "left": 0,
+            "right": 430,
+            "centerError": 0
+          },
+          {
+            "selector": "section playlist-section panel-music",
+            "left": 0,
+            "right": 430,
+            "centerError": 0
+          }
+        ],
+        "hiddenText": [],
+        "modules": [],
+        "motion": "full"
+      },
+      "errors": []
+    },
+    {
+      "viewport": 430,
+      "language": "en",
+      "pass": true,
+      "state": {
+        "width": 430,
+        "innerWidth": 430,
+        "scroll": 430,
+        "header": {
+          "selector": "site-header",
+          "left": 10,
+          "right": 420,
+          "centerError": 0
+        },
+        "main": {
+          "selector": "",
+          "left": 0,
+          "right": 430,
+          "centerError": 0
+        },
+        "panels": [
+          {
+            "selector": "section gallery-section panel-wall",
+            "left": 0,
+            "right": 430,
+            "centerError": 0
+          },
+          {
+            "selector": "section activities panel-blue",
+            "left": 0,
+            "right": 430,
+            "centerError": 0
+          },
+          {
+            "selector": "section playlist-section panel-music",
+            "left": 0,
+            "right": 430,
+            "centerError": 0
+          }
+        ],
+        "hiddenText": [],
+        "modules": [],
+        "motion": "full"
+      },
+      "errors": []
+    },
+    {
+      "viewport": 600,
+      "language": "vi",
+      "pass": true,
+      "state": {
+        "width": 600,
+        "innerWidth": 600,
+        "scroll": 600,
+        "header": {
+          "selector": "site-header",
+          "left": 12,
+          "right": 588,
+          "centerError": 0
+        },
+        "main": {
+          "selector": "",
+          "left": 0,
+          "right": 600,
+          "centerError": 0
+        },
+        "panels": [
+          {
+            "selector": "section gallery-section panel-wall",
+            "left": 0,
+            "right": 600,
+            "centerError": 0
+          },
+          {
+            "selector": "section activities panel-blue",
+            "left": 0,
+            "right": 600,
+            "centerError": 0
+          },
+          {
+            "selector": "section playlist-section panel-music",
+            "left": 0,
+            "right": 600,
+            "centerError": 0
+          }
+        ],
+        "hiddenText": [],
+        "modules": [],
+        "motion": "full"
+      },
+      "errors": []
+    },
+    {
+      "viewport": 600,
+      "language": "en",
+      "pass": true,
+      "state": {
+        "width": 600,
+        "innerWidth": 600,
+        "scroll": 600,
+        "header": {
+          "selector": "site-header",
+          "left": 12,
+          "right": 588,
+          "centerError": 0
+        },
+        "main": {
+          "selector": "",
+          "left": 0,
+          "right": 600,
+          "centerError": 0
+        },
+        "panels": [
+          {
+            "selector": "section gallery-section panel-wall",
+            "left": 0,
+            "right": 600,
+            "centerError": 0
+          },
+          {
+            "selector": "section activities panel-blue",
+            "left": 0,
+            "right": 600,
+            "centerError": 0
+          },
+          {
+            "selector": "section playlist-section panel-music",
+            "left": 0,
+            "right": 600,
+            "centerError": 0
+          }
+        ],
+        "hiddenText": [],
+        "modules": [],
+        "motion": "full"
+      },
+      "errors": []
+    },
+    {
+      "viewport": 768,
+      "language": "vi",
+      "pass": true,
+      "state": {
+        "width": 768,
+        "innerWidth": 768,
+        "scroll": 768,
+        "header": {
+          "selector": "site-header",
+          "left": 12,
+          "right": 756,
+          "centerError": 0
+        },
+        "main": {
+          "selector": "",
+          "left": 0,
+          "right": 768,
+          "centerError": 0
+        },
+        "panels": [
+          {
+            "selector": "section gallery-section panel-wall",
+            "left": 0,
+            "right": 768,
+            "centerError": 0
+          },
+          {
+            "selector": "section activities panel-blue",
+            "left": 0,
+            "right": 768,
+            "centerError": 0
+          },
+          {
+            "selector": "section playlist-section panel-music",
+            "left": 0,
+            "right": 768,
+            "centerError": 0
+          }
+        ],
+        "hiddenText": [],
+        "modules": [],
+        "motion": "full"
+      },
+      "errors": []
+    },
+    {
+      "viewport": 768,
+      "language": "en",
+      "pass": true,
+      "state": {
+        "width": 768,
+        "innerWidth": 768,
+        "scroll": 768,
+        "header": {
+          "selector": "site-header",
+          "left": 12,
+          "right": 756,
+          "centerError": 0
+        },
+        "main": {
+          "selector": "",
+          "left": 0,
+          "right": 768,
+          "centerError": 0
+        },
+        "panels": [
+          {
+            "selector": "section gallery-section panel-wall",
+            "left": 0,
+            "right": 768,
+            "centerError": 0
+          },
+          {
+            "selector": "section activities panel-blue",
+            "left": 0,
+            "right": 768,
+            "centerError": 0
+          },
+          {
+            "selector": "section playlist-section panel-music",
+            "left": 0,
+            "right": 768,
+            "centerError": 0
+          }
+        ],
+        "hiddenText": [],
+        "modules": [],
+        "motion": "full"
+      },
+      "errors": []
+    },
+    {
+      "viewport": 800,
+      "language": "vi",
+      "pass": true,
+      "state": {
+        "width": 800,
+        "innerWidth": 800,
+        "scroll": 800,
+        "header": {
+          "selector": "site-header",
+          "left": 12,
+          "right": 788,
+          "centerError": 0
+        },
+        "main": {
+          "selector": "",
+          "left": 0,
+          "right": 800,
+          "centerError": 0
+        },
+        "panels": [
+          {
+            "selector": "section gallery-section panel-wall",
+            "left": 0,
+            "right": 800,
+            "centerError": 0
+          },
+          {
+            "selector": "section activities panel-blue",
+            "left": 0,
+            "right": 800,
+            "centerError": 0
+          },
+          {
+            "selector": "section playlist-section panel-music",
+            "left": 0,
+            "right": 800,
+            "centerError": 0
+          }
+        ],
+        "hiddenText": [],
+        "modules": [],
+        "motion": "full"
+      },
+      "errors": []
+    },
+    {
+      "viewport": 800,
+      "language": "en",
+      "pass": true,
+      "state": {
+        "width": 800,
+        "innerWidth": 800,
+        "scroll": 800,
+        "header": {
+          "selector": "site-header",
+          "left": 12,
+          "right": 788,
+          "centerError": 0
+        },
+        "main": {
+          "selector": "",
+          "left": 0,
+          "right": 800,
+          "centerError": 0
+        },
+        "panels": [
+          {
+            "selector": "section gallery-section panel-wall",
+            "left": 0,
+            "right": 800,
+            "centerError": 0
+          },
+          {
+            "selector": "section activities panel-blue",
+            "left": 0,
+            "right": 800,
+            "centerError": 0
+          },
+          {
+            "selector": "section playlist-section panel-music",
+            "left": 0,
+            "right": 800,
+            "centerError": 0
+          }
+        ],
+        "hiddenText": [],
+        "modules": [],
+        "motion": "full"
+      },
+      "errors": []
+    },
+    {
+      "viewport": 820,
+      "language": "vi",
+      "pass": true,
+      "state": {
+        "width": 820,
+        "innerWidth": 820,
+        "scroll": 820,
+        "header": {
+          "selector": "site-header",
+          "left": 16,
+          "right": 804,
+          "centerError": 0
+        },
+        "main": {
+          "selector": "",
+          "left": 0,
+          "right": 820,
+          "centerError": 0
+        },
+        "panels": [
+          {
+            "selector": "section gallery-section panel-wall",
+            "left": 0,
+            "right": 820,
+            "centerError": 0
+          },
+          {
+            "selector": "section activities panel-blue",
+            "left": 0,
+            "right": 820,
+            "centerError": 0
+          },
+          {
+            "selector": "section playlist-section panel-music",
+            "left": 0,
+            "right": 820,
+            "centerError": 0
+          }
+        ],
+        "hiddenText": [],
+        "modules": [],
+        "motion": "full"
+      },
+      "errors": []
+    },
+    {
+      "viewport": 820,
+      "language": "en",
+      "pass": true,
+      "state": {
+        "width": 820,
+        "innerWidth": 820,
+        "scroll": 820,
+        "header": {
+          "selector": "site-header",
+          "left": 16,
+          "right": 804,
+          "centerError": 0
+        },
+        "main": {
+          "selector": "",
+          "left": 0,
+          "right": 820,
+          "centerError": 0
+        },
+        "panels": [
+          {
+            "selector": "section gallery-section panel-wall",
+            "left": 0,
+            "right": 820,
+            "centerError": 0
+          },
+          {
+            "selector": "section activities panel-blue",
+            "left": 0,
+            "right": 820,
+            "centerError": 0
+          },
+          {
+            "selector": "section playlist-section panel-music",
+            "left": 0,
+            "right": 820,
+            "centerError": 0
+          }
+        ],
+        "hiddenText": [],
+        "modules": [],
+        "motion": "full"
+      },
+      "errors": []
+    },
+    {
+      "viewport": 1024,
+      "language": "vi",
+      "pass": true,
+      "state": {
+        "width": 1024,
+        "innerWidth": 1024,
+        "scroll": 1024,
+        "header": {
+          "selector": "site-header",
+          "left": 16,
+          "right": 1008,
+          "centerError": 0
+        },
+        "main": {
+          "selector": "",
+          "left": 0,
+          "right": 1024,
+          "centerError": 0
+        },
+        "panels": [
+          {
+            "selector": "section gallery-section panel-wall",
+            "left": 0,
+            "right": 1024,
+            "centerError": 0
+          },
+          {
+            "selector": "section activities panel-blue",
+            "left": 0,
+            "right": 1024,
+            "centerError": 0
+          },
+          {
+            "selector": "section playlist-section panel-music",
+            "left": 0,
+            "right": 1024,
+            "centerError": 0
+          }
+        ],
+        "hiddenText": [],
+        "modules": [],
+        "motion": "full"
+      },
+      "errors": []
+    },
+    {
+      "viewport": 1024,
+      "language": "en",
+      "pass": true,
+      "state": {
+        "width": 1024,
+        "innerWidth": 1024,
+        "scroll": 1024,
+        "header": {
+          "selector": "site-header",
+          "left": 16,
+          "right": 1008,
+          "centerError": 0
+        },
+        "main": {
+          "selector": "",
+          "left": 0,
+          "right": 1024,
+          "centerError": 0
+        },
+        "panels": [
+          {
+            "selector": "section gallery-section panel-wall",
+            "left": 0,
+            "right": 1024,
+            "centerError": 0
+          },
+          {
+            "selector": "section activities panel-blue",
+            "left": 0,
+            "right": 1024,
+            "centerError": 0
+          },
+          {
+            "selector": "section playlist-section panel-music",
+            "left": 0,
+            "right": 1024,
+            "centerError": 0
+          }
+        ],
+        "hiddenText": [],
+        "modules": [],
+        "motion": "full"
+      },
+      "errors": []
+    },
+    {
+      "viewport": 1280,
+      "language": "vi",
+      "pass": true,
+      "state": {
+        "width": 1280,
+        "innerWidth": 1280,
+        "scroll": 1280,
+        "header": {
+          "selector": "site-header",
+          "left": 16,
+          "right": 1264,
+          "centerError": 0
+        },
+        "main": {
+          "selector": "",
+          "left": 0,
+          "right": 1280,
+          "centerError": 0
+        },
+        "panels": [
+          {
+            "selector": "section gallery-section panel-wall",
+            "left": 0,
+            "right": 1280,
+            "centerError": 0
+          },
+          {
+            "selector": "section activities panel-blue",
+            "left": 0,
+            "right": 1280,
+            "centerError": 0
+          },
+          {
+            "selector": "section playlist-section panel-music",
+            "left": 0,
+            "right": 1280,
+            "centerError": 0
+          }
+        ],
+        "hiddenText": [],
+        "modules": [],
+        "motion": "full"
+      },
+      "errors": []
+    },
+    {
+      "viewport": 1280,
+      "language": "en",
+      "pass": true,
+      "state": {
+        "width": 1280,
+        "innerWidth": 1280,
+        "scroll": 1280,
+        "header": {
+          "selector": "site-header",
+          "left": 16,
+          "right": 1264,
+          "centerError": 0
+        },
+        "main": {
+          "selector": "",
+          "left": 0,
+          "right": 1280,
+          "centerError": 0
+        },
+        "panels": [
+          {
+            "selector": "section gallery-section panel-wall",
+            "left": 0,
+            "right": 1280,
+            "centerError": 0
+          },
+          {
+            "selector": "section activities panel-blue",
+            "left": 0,
+            "right": 1280,
+            "centerError": 0
+          },
+          {
+            "selector": "section playlist-section panel-music",
+            "left": 0,
+            "right": 1280,
+            "centerError": 0
+          }
+        ],
+        "hiddenText": [],
+        "modules": [],
+        "motion": "full"
+      },
+      "errors": []
+    },
+    {
+      "viewport": 1440,
+      "language": "vi",
+      "pass": true,
+      "state": {
+        "width": 1440,
+        "innerWidth": 1440,
+        "scroll": 1440,
+        "header": {
+          "selector": "site-header",
+          "left": 95,
+          "right": 1345,
+          "centerError": 0
+        },
+        "main": {
+          "selector": "",
+          "left": 0,
+          "right": 1440,
+          "centerError": 0
+        },
+        "panels": [
+          {
+            "selector": "section gallery-section panel-wall",
+            "left": 0,
+            "right": 1440,
+            "centerError": 0
+          },
+          {
+            "selector": "section activities panel-blue",
+            "left": 0,
+            "right": 1440,
+            "centerError": 0
+          },
+          {
+            "selector": "section playlist-section panel-music",
+            "left": 0,
+            "right": 1440,
+            "centerError": 0
+          }
+        ],
+        "hiddenText": [],
+        "modules": [],
+        "motion": "full"
+      },
+      "errors": []
+    },
+    {
+      "viewport": 1440,
+      "language": "en",
+      "pass": true,
+      "state": {
+        "width": 1440,
+        "innerWidth": 1440,
+        "scroll": 1440,
+        "header": {
+          "selector": "site-header",
+          "left": 95,
+          "right": 1345,
+          "centerError": 0
+        },
+        "main": {
+          "selector": "",
+          "left": 0,
+          "right": 1440,
+          "centerError": 0
+        },
+        "panels": [
+          {
+            "selector": "section gallery-section panel-wall",
+            "left": 0,
+            "right": 1440,
+            "centerError": 0
+          },
+          {
+            "selector": "section activities panel-blue",
+            "left": 0,
+            "right": 1440,
+            "centerError": 0
+          },
+          {
+            "selector": "section playlist-section panel-music",
+            "left": 0,
+            "right": 1440,
+            "centerError": 0
+          }
+        ],
+        "hiddenText": [],
+        "modules": [],
+        "motion": "full"
+      },
+      "errors": []
+    },
+    {
+      "viewport": 1920,
+      "language": "vi",
+      "pass": true,
+      "state": {
+        "width": 1920,
+        "innerWidth": 1920,
+        "scroll": 1920,
+        "header": {
+          "selector": "site-header",
+          "left": 335,
+          "right": 1585,
+          "centerError": 0
+        },
+        "main": {
+          "selector": "",
+          "left": 0,
+          "right": 1920,
+          "centerError": 0
+        },
+        "panels": [
+          {
+            "selector": "section gallery-section panel-wall",
+            "left": 0,
+            "right": 1920,
+            "centerError": 0
+          },
+          {
+            "selector": "section activities panel-blue",
+            "left": 0,
+            "right": 1920,
+            "centerError": 0
+          },
+          {
+            "selector": "section playlist-section panel-music",
+            "left": 0,
+            "right": 1920,
+            "centerError": 0
+          }
+        ],
+        "hiddenText": [],
+        "modules": [],
+        "motion": "full"
+      },
+      "errors": []
+    },
+    {
+      "viewport": 1920,
+      "language": "en",
+      "pass": true,
+      "state": {
+        "width": 1920,
+        "innerWidth": 1920,
+        "scroll": 1920,
+        "header": {
+          "selector": "site-header",
+          "left": 335,
+          "right": 1585,
+          "centerError": 0
+        },
+        "main": {
+          "selector": "",
+          "left": 0,
+          "right": 1920,
+          "centerError": 0
+        },
+        "panels": [
+          {
+            "selector": "section gallery-section panel-wall",
+            "left": 0,
+            "right": 1920,
+            "centerError": 0
+          },
+          {
+            "selector": "section activities panel-blue",
+            "left": 0,
+            "right": 1920,
+            "centerError": 0
+          },
+          {
+            "selector": "section playlist-section panel-music",
+            "left": 0,
+            "right": 1920,
+            "centerError": 0
+          }
+        ],
+        "hiddenText": [],
+        "modules": [],
+        "motion": "full"
+      },
+      "errors": []
+    }
+  ],
+  "interaction": [
+    {
+      "test": "System reduced motion is respected",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "test": "Full mode explicitly overrides reduced OS preference",
+      "pass": true,
+      "detail": [
+        "matrix(0.999255, 0.0385923, -0.0385923, 0.999255, 0, 0)",
+        "matrix(0.988112, 0.153735, -0.153735, 0.988112, 0, 0)"
+      ]
+    },
+    {
+      "test": "Off mode stops the orbit",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "test": "Gentle mode is animated and explicitly selected",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "test": "Real desktop pointer tilts cards",
+      "pass": true,
+      "detail": {
+        "rx": "-0.365deg",
+        "ry": "2.766deg"
+      }
+    },
+    {
+      "test": "Hover settles smoothly back to neutral",
+      "pass": true,
+      "detail": "0.004deg"
+    },
+    {
+      "test": "Off-screen orbit pauses",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "test": "Orbit resumes when brought on screen",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "test": "Mascot opens accessible card and emits comic particles",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "test": "Escape closes mascot",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "test": "Particles are removed after animation",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "test": "Mocked Spotify controller is ready",
+      "pass": true,
+      "detail": {
+        "transport": "ready",
+        "isPaused": true,
+        "isBuffering": false,
+        "position": 0,
+        "duration": 0,
+        "record": "studio"
+      }
+    },
+    {
+      "test": "playback_started spins disc without waiting for duration",
+      "pass": true,
+      "detail": [
+        {
+          "angle": 63.54262756674841,
+          "speed": 133.24103049602215,
+          "armAngle": 10.15102717162954,
+          "lift": 1,
+          "playing": true,
+          "buffering": false,
+          "demo": false,
+          "visible": true,
+          "allowed": true
+        },
+        {
+          "angle": 117.25722431483909,
+          "speed": 159.60413001153304,
+          "armAngle": 22.15500297576413,
+          "lift": 1,
+          "playing": true,
+          "buffering": false,
+          "demo": false,
+          "visible": true,
+          "allowed": true
+        }
+      ]
+    },
+    {
+      "test": "Arm uses a fixed pivot and eased movement",
+      "pass": true,
+      "detail": {
+        "angle": 63.54262756674841,
+        "speed": 133.24103049602215,
+        "armAngle": 10.15102717162954,
+        "lift": 1,
+        "playing": true,
+        "buffering": false,
+        "demo": false,
+        "visible": true,
+        "allowed": true
+      }
+    },
+    {
+      "test": "Arm gently lands and stays down",
+      "pass": true,
+      "detail": {
+        "angle": 259.7991430587438,
+        "speed": 186.85803053420722,
+        "armAngle": 23,
+        "lift": 0,
+        "playing": true,
+        "buffering": false,
+        "demo": false,
+        "visible": true,
+        "allowed": true
+      }
+    },
+    {
+      "test": "Pausing decelerates rather than snapping to 0",
+      "pass": true,
+      "detail": {
+        "angle": 308.65702101640187,
+        "speed": 124.73907223945879,
+        "armAngle": 22.538546525652084,
+        "lift": 1,
+        "playing": false,
+        "buffering": false,
+        "demo": false,
+        "visible": true,
+        "allowed": true
+      }
+    },
+    {
+      "test": "Needle returns to its resting pivot",
+      "pass": true,
+      "detail": {
+        "angle": 39.48523352815929,
+        "speed": 9.089311234313637,
+        "armAngle": -6,
+        "lift": 0,
+        "playing": false,
+        "buffering": false,
+        "demo": false,
+        "visible": true,
+        "allowed": true
+      }
+    },
+    {
+      "test": "Changing records retires stale controller events",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "test": "Pink record uses the supplied image and playlist",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "test": "Silent demo is clearly labelled",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "test": "English brand",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "test": "Vietnamese brand",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "test": "Both join links preserve provided form",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "test": "Gallery lightbox opens",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "test": "Gallery lightbox closes and unlocks scrolling",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "test": "Runtime has no uncaught module or page errors",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "additional": [
+    {
+      "test": "Mobile portrait is exactly viewport-wide",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "test": "Mobile menu opens",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "test": "Selecting a menu link closes the mobile menu",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "test": "Actual touch opens the mascot",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "test": "Mascot interaction does not expand mobile layout",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "test": "Orientation change preserves width",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "test": "Script and style agree on the new version",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "test": "Page restore clears the paused flag and resumes",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "test": "Missing animation APIs do not hide content or crash modules",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "test": "Every local asset referenced by index.html exists",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "test": "No separate motion.css or js/ dependency remains",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "test": "Content data is byte-for-byte preserved",
+      "pass": true,
+      "detail": null
+    }
+  ],
+  "limitations": [
+    "No live Safari/iPhone test",
+    "No actual Spotify audio or authenticated playback",
+    "No post-deploy GitHub Pages verification",
+    "Source code for the fix is based on the attached v2.1/v2.2 archives. Public page and repository listing were inspected; downloading the current repository files was unavailable.",
+    "No font binaries are distributed."
+  ]
+}
