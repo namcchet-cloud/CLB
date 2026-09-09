@@ -1373,19 +1373,34 @@ try {
   }
   function renderGallery() {
     gallery.replaceChildren();
-    content.artworks.forEach((art,index)=>{
-      if(filter!=='all'&&art.category!==filter)return;
-      const card=make('button','gallery-card');
-      card.type='button';card.dataset.index=index;
-      card.setAttribute('aria-label',`${t('viewArt')}: ${local(art.title)}`);
-      const img=make('img'); img.src=art.image; img.alt=local(art.title);img.loading='lazy';img.width=700;img.height=700;
-      const info=make('div','gallery-info');
-      info.append(make('h3','',local(art.title)),make('p','',[local(art.author),local(art.description)].filter(Boolean).join(' · ')));
-      card.append(img,info);
-      card.addEventListener('click',()=>openArtwork(index,card));
-      gallery.append(card);
+    const visible=content.artworks.map((art,index)=>({art,index})).filter(({art})=>filter==='all'||art.category===filter);
+    const groups=new Map();
+    visible.forEach(item=>{
+      const key=local(item.art.author)||t('clubFull');
+      if(!groups.has(key))groups.set(key,[]);
+      groups.get(key).push(item);
     });
-    if(!gallery.children.length) {
+    groups.forEach((items,author)=>{
+      const head=make('div','gallery-author');
+      const label=make('span','gallery-author-kicker',document.documentElement.lang==='en'?'ARTIST':'TÁC GIẢ');
+      const title=make('h3','',author);
+      const count=make('p','',`${items.length} ${document.documentElement.lang==='en'?(items.length===1?'work':'works'):'tác phẩm'}`);
+      head.append(label,title,count);gallery.append(head);
+      items.forEach(({art,index})=>{
+        const card=make('button','gallery-card');
+        card.type='button';card.dataset.index=index;
+        card.setAttribute('aria-label',`${t('viewArt')}: ${local(art.title)}`);
+        const img=make('img');
+        img.src=art.thumb||art.image;img.alt=local(art.title);img.loading='lazy';img.decoding='async';img.width=700;img.height=700;
+        try{img.fetchPriority='low';}catch{}
+        const info=make('div','gallery-info');
+        info.append(make('h3','',local(art.title)),make('p','',local(art.description)));
+        card.append(img,info);
+        card.addEventListener('click',()=>openArtwork(index,card));
+        gallery.append(card);
+      });
+    });
+    if(!visible.length) {
       const card=make('article','gallery-card placeholder-card');
       const art=make('div','placeholder-art');art.innerHTML=t('moreArt');
       const info=make('div','gallery-info');info.append(make('h3','',t('comingSoon')),make('p','',t('clubFull')));

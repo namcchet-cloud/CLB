@@ -1,19 +1,16 @@
-CLB v2.4.2 - sua loi ten tac pham khong cap nhat
+CLB v2.4.3 - Gallery theo tac gia + toi uu anh
 
-Thay DONG THOI 2 tep o thu muc goc GitHub:
+Thay cung luc:
 - index.html
 - content.js
+- script.js
+- style.css
+- thu muc assets/gallery/ (bao gom thumbs/)
 
-Khong can thay style.css, script.js hay assets/.
-
-Ly do: index.html cu goi content.js?v=2.3.0 nen trinh duyet co the dung cache cu.
-Ban nay doi thanh content.js?v=2.4.2 de ep tai noi dung moi.
-
-5 ten tac pham:
-1. Ot Ngot
-2. Nam Da
-3. Sac
-4. Suc Manh Cua Nam
-5. An Toan Thuc Pham
-Phan loai: Tranh cach dieu
-Tac gia: Hoa si Tran Nguyen Bao Tam
+Thay doi:
+- Gallery gom tac pham theo tac gia; ten tac gia hien mot lan cho ca nhom.
+- 5 tac pham giu ten: Ot Ngot, Nam Da, Sac, Nam Thach Anh, An Toan Thuc Pham.
+- Tat ca: Tranh cach dieu - Hoa si Tran Nguyen Bao Tam.
+- Gallery dung thumbnail nhe; anh day du chi tai khi mo lightbox.
+- Thumbnail 5 anh ~185 KB tong, giam ~80% so voi truoc (~914 KB).
+- Anh day du cung duoc toi uu con ~547 KB tong.

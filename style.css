@@ -814,3 +814,16 @@ h1,h2,h3,.contact-list strong,.record-option strong { overflow-wrap:break-word; 
   .gallery-info { padding-top:10px; }
   .gallery-info h3 { font-size:20px; }
 }
+
+/* v2.4.3: group exhibition works by artist and keep gallery rendering light. */
+.gallery-author { grid-column:1/-1; display:grid; grid-template-columns:auto 1fr auto; align-items:end; gap:10px 18px; padding:2px 2px 8px; margin:4px 0 2px; border-bottom:1px solid #25292335; content-visibility:auto; contain-intrinsic-size:72px; }
+.gallery-author-kicker { font:700 10px/1 var(--sans); letter-spacing:.16em; color:var(--muted); }
+.gallery-author h3 { margin:0; font:700 clamp(22px,2.2vw,34px)/1 var(--display); color:var(--ink); }
+.gallery-author p { margin:0; font:700 10px/1.2 var(--sans); letter-spacing:.08em; text-transform:uppercase; color:var(--muted); white-space:nowrap; }
+.gallery-card { content-visibility:auto; contain-intrinsic-size:360px 300px; }
+.gallery-card>img { background:#eee5d2; }
+@media (max-width:700px) {
+  .gallery-author { grid-template-columns:1fr auto; gap:6px 12px; padding-bottom:10px; }
+  .gallery-author-kicker { grid-column:1/-1; }
+  .gallery-author h3 { font-size:23px; }
+}
