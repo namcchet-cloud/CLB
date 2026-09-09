@@ -13,7 +13,7 @@ Ban nay doi thanh content.js?v=2.4.2 de ep tai noi dung moi.
 1. Ot Ngot
 2. Nam Da
 3. Sac
-4. Nam Thach Anh
+4. Suc Manh Cua Nam
 5. An Toan Thuc Pham
 Phan loai: Tranh cach dieu
 Tac gia: Hoa si Tran Nguyen Bao Tam
