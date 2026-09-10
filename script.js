@@ -109,8 +109,8 @@ const copy = {
     "playbackNote": "Spotify c\u00f3 th\u1ec3 y\u00eau c\u1ea7u b\u1ea5m Play tr\u1ef1c ti\u1ebfp ho\u1eb7c ch\u1ec9 cho nghe th\u1eed. Trang kh\u00f4ng t\u1ef1 ph\u00e1t nh\u1ea1c khi v\u1eeba m\u1edf.",
     "chooseRecord": "H\u00f4m nay, nghe \u0111\u0129a n\u00e0o?",
     "recordChoices": "Ch\u1ecdn \u0111\u0129a nh\u1ea1c",
-    "crateNote": "Bấm một bìa để mở album, sau đó tự kéo đĩa ra và đặt lên mâm.",
-    "albumHint": "Bấm mở album · kéo chiếc đĩa đang ló ra",
+    "crateNote": "Bấm bìa để chọn album · giữ chiếc đĩa đang ló ra rồi kéo vào máy.",
+    "albumHint": "Bấm bìa để chọn · kéo đĩa ra bằng tay",
     "deckHint": "Kéo đĩa từ bìa và thả đúng lên mâm",
     "needDisc": "Chưa có đĩa trên mâm. Hãy mở một album, kéo đĩa ra và đặt lên máy.",
     "discLoaded": "Đĩa đã nằm trên mâm. Bây giờ cậu có thể nhấn Phát nhạc.",
@@ -283,9 +283,9 @@ const copy = {
     "playbackNote": "Spotify may require a direct Play tap or offer previews only. This page never plays music on its own.",
     "chooseRecord": "What\u2019s on your turntable?",
     "recordChoices": "Choose a record",
-    "crateNote": "Open an album, then pull the record out yourself and place it on the platter.",
-    "albumHint": "Tap to open the album · drag the exposed record",
-    "deckHint": "Drag the record out of its sleeve and drop it on the platter",
+    "crateNote": "Tap a cover to choose an album · drag the exposed record onto the deck.",
+    "albumHint": "Tap cover to select · drag the record by hand",
+    "deckHint": "Drop anywhere over the platter zone — it will snap to center",
     "needDisc": "There is no record on the platter. Open an album, pull the record out, and place it on the turntable.",
     "discLoaded": "The record is on the platter. You can press Play now.",
     "discReturn": "Missed the platter — the record slides back into its sleeve.",
@@ -840,10 +840,23 @@ try {
     window.ClubMotion?.burst(button,'',5);
   }
   function dragCenterInDeck(x,y){
-    const r=$('vinyl-stage')?.getBoundingClientRect();
-    if(!r)return false;
-    const pad=Math.min(r.width,r.height)*.12;
-    return x>=r.left+pad&&x<=r.right-pad&&y>=r.top+pad&&y<=r.bottom-pad;
+    const stage=$('vinyl-stage')?.getBoundingClientRect();
+    const deckBox=deck?.getBoundingClientRect();
+    if(!stage||!deckBox)return false;
+    // Generous drop zone: almost the whole platter half of the machine,
+    // while still excluding the control strip at the bottom.
+    const grow=Math.min(stage.width,stage.height)*.18;
+    const left=Math.max(deckBox.left,stage.left-grow);
+    const right=Math.min(deckBox.right,stage.right+grow);
+    const top=Math.max(deckBox.top,stage.top-grow*.55);
+    const bottom=Math.min(deckBox.bottom,stage.bottom+grow*.55);
+    return x>=left&&x<=right&&y>=top&&y<=bottom;
+  }
+  function platterCenter(){
+    const carrier=$('recordCarrier')?.getBoundingClientRect();
+    const stage=$('vinyl-stage')?.getBoundingClientRect();
+    const r=carrier&&carrier.width?carrier:stage;
+    return r?{x:r.left+r.width/2,y:r.top+r.height/2,size:Math.min(r.width,r.height)}:null;
   }
   function startDiscDrag(e,record,button,discSource){
     if(e.pointerType==='mouse'&&e.button!==0)return;
@@ -874,8 +887,9 @@ try {
       try{await d.ghost.animate([{transform:'scale(1)',opacity:1},{transform:`translate(${back.left+back.width/2-e.clientX}px,${back.top+back.height/2-e.clientY}px) scale(.62)`,opacity:.3}],{duration:520,easing:'cubic-bezier(.2,.8,.2,1)',fill:'forwards'}).finished}catch{}
       d.ghost.remove();announce('discReturn');renderTransport();return;
     }
-    const deckRect=$('recordCarrier').getBoundingClientRect();
-    const targetX=deckRect.left+deckRect.width/2-d.size/2,targetY=deckRect.top+deckRect.height/2-d.size/2;
+    const snap=platterCenter();
+    if(!snap){d.ghost.remove();return;}
+    const targetX=snap.x-d.size/2,targetY=snap.y-d.size/2;
     const fromX=parseFloat(d.ghost.style.left),fromY=parseFloat(d.ghost.style.top);
     try{await d.ghost.animate([
       {transform:'translate3d(0,0,0) scale(1) rotate(0deg)',filter:'drop-shadow(0 16px 15px rgba(0,0,0,.28))'},
@@ -896,17 +910,17 @@ try {
   function renderOptions() {
     options.replaceChildren();
     records.forEach((record,index)=>{
-      const button=document.createElement('button');button.className='record-option album-sleeve-option';button.type='button';button.dataset.record=record.id;button.style.setProperty('--stack-index',String(index));
+      const button=document.createElement('button');button.className='record-option album-sleeve-option';button.type='button';button.dataset.record=record.id;button.dataset.theme=record.theme;button.style.setProperty('--stack-index',String(index));
       const cover=document.createElement('span');cover.className='album-cover';cover.setAttribute('aria-hidden','true');
       const image=document.createElement('img');image.src=record.image;image.alt='';image.width=360;image.height=360;cover.append(image);
       const edge=document.createElement('span');edge.className='album-edge';
       const title=document.createElement('strong'),subtitle=document.createElement('small'),state=document.createElement('span');state.className='record-selection';
-      const spec=document.createElement('span');spec.className='album-spec';spec.textContent='LP · 33⅓ RPM · SPOTIFY';
+      const spec=document.createElement('span');spec.className='album-spec';spec.textContent=local(record.spec||{vi:'LP · 33⅓ RPM',en:'LP · 33⅓ RPM'});
       const hint=document.createElement('em');hint.className='album-hint';hint.textContent=t('albumHint');
       const pocket=document.createElement('span');pocket.className=`album-pocket-record theme-${record.theme}`;pocket.setAttribute('aria-label',local(record.name));pocket.setAttribute('role','img');
       const discImg=document.createElement('img');discImg.src=record.image;discImg.alt='';pocket.append(discImg);
       button.append(pocket,cover,edge,title,subtitle,state,spec,hint);
-      button.addEventListener('click',()=>armRecord(record,button));
+      button.addEventListener('click',e=>{if(e.target.closest('.album-pocket-record'))return;armRecord(record,button);});
       pocket.addEventListener('pointerdown',e=>startDiscDrag(e,record,button,pocket));
       pocket.addEventListener('pointermove',moveDiscDrag);pocket.addEventListener('pointerup',e=>endDiscDrag(e,false));pocket.addEventListener('pointercancel',e=>endDiscDrag(e,true));
       options.append(button);
@@ -1621,4 +1635,4 @@ try {
  });
 })();
 
-window.ClubBuild='2.7.1';
+window.ClubBuild='2.7.2';

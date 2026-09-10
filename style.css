@@ -1141,3 +1141,117 @@ html[data-haruko-visible="true"] .branch-stack path,html[data-haruko-visible="tr
 @media(max-width:820px){#livingGarden{inset:-9rem -26vw -10rem!important}.living-garden-svg{width:154%!important;margin-left:-27%!important}.wood-shadow{stroke-width:20}.wood-branch{stroke-width:14!important}.root-shadow{stroke-width:16}.root-branch{stroke-width:11!important}.album-sleeve-option.is-open{transform:translate(calc(-56% + var(--drag-x,0px)),calc(var(--stack-index)*14px - 10px + var(--drag-y,0px))) rotate(-1deg) scale(1)!important}.album-sleeve-option.is-open .album-pocket-record{transform:translateX(42%) rotate(12deg) scale(.94)}}
 @media(max-width:480px){#livingGarden{inset:-7rem -38vw -8rem!important}.living-garden-svg{width:180%!important;margin-left:-40%!important}.album-hint{font-size:8px!important;white-space:normal;width:88%!important}.record-options{min-height:292px!important}}
 [data-motion="off"] .branch-stack path,[data-motion="off"] .root-stack path,[data-motion="off"] .wood-twig{animation:none!important;stroke-dashoffset:0!important}
+
+
+/* v2.7.2 — music room interaction repair: real covers, easy selection, precise platter snap */
+:root{--club-build:272}
+
+/* Keep the music room compact on desktop. */
+.listening-room{
+  grid-template-columns:minmax(250px,300px) minmax(360px,560px)!important;
+  justify-content:center!important;
+  align-items:start!important;
+  gap:clamp(24px,4vw,54px)!important;
+}
+.turntable-column{width:300px!important;max-width:300px!important;justify-self:end}
+.turntable{width:300px!important;max-width:300px!important;padding:16px 16px 14px!important;border-radius:10px!important}
+.deck-head b{font-size:18px!important}.deck-head small{font-size:7px!important}.deck-model{font-size:8px!important}
+.vinyl-stage{aspect-ratio:1!important;margin:0 0 10px!important}
+/* Platter is centered and fully contained inside the square deck. */
+.record-carrier{width:76%!important;left:6%!important;top:12%!important;aspect-ratio:1!important}
+.vinyl-hit{width:76%!important;left:6%!important;top:12%!important}
+.tonearm{right:0!important;top:9%!important;height:72%!important;width:15%!important}
+.deck-controls{gap:8px!important;padding-top:10px!important}.play-vinyl{min-width:112px!important;min-height:38px!important;padding:7px 11px!important;font-size:11px!important}
+.deck-use-hint{margin:10px 0 5px!important;font-size:10px!important;text-align:center}
+.deck-caption{margin:12px 0 6px!important;gap:8px!important}#selectedRecordName{font-size:17px!important}.deck-caption a{font-size:8px!important}
+.player-status{margin:6px 2px 10px!important;min-height:28px!important}.spotify-shell{min-height:152px!important}.spotify-shell iframe,.embed-placeholder{min-height:152px!important;height:152px!important}
+.music-fineprint{font-size:8px!important;margin-top:7px!important}
+
+/* Album area: two true square sleeves, slightly stacked but every cover remains easy to click. */
+.music-sidebar{width:min(100%,560px)!important;max-width:560px!important}
+.record-crate{padding:18px!important;overflow:visible!important}
+.record-options{
+  position:relative!important;
+  display:block!important;
+  min-height:330px!important;
+  width:100%!important;
+  overflow:visible!important;
+}
+.album-sleeve-option{
+  position:absolute!important;
+  top:8px!important;
+  width:min(270px,58%)!important;
+  aspect-ratio:1!important;
+  height:auto!important;
+  min-height:0!important;
+  padding:0!important;
+  margin:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  overflow:visible!important;
+  transform:none!important;
+  cursor:pointer!important;
+  touch-action:manipulation!important;
+  transition:left .55s cubic-bezier(.16,.84,.2,1),top .55s cubic-bezier(.16,.84,.2,1),transform .55s cubic-bezier(.16,.84,.2,1),filter .35s ease!important;
+}
+.album-sleeve-option:nth-child(1){left:2%!important;z-index:3!important;transform:rotate(-2deg)!important}
+.album-sleeve-option:nth-child(2){left:41%!important;top:34px!important;z-index:2!important;transform:rotate(2deg)!important}
+.album-sleeve-option.is-open{z-index:12!important;transform:translateY(-6px) rotate(0deg) scale(1.025)!important;filter:drop-shadow(0 16px 15px rgba(30,28,24,.18))!important}
+.album-sleeve-option:hover,.album-sleeve-option:focus-visible{z-index:13!important;transform:translateY(-8px) rotate(0deg) scale(1.025)!important}
+.album-sleeve-option:focus-visible{outline:3px solid var(--room-accent);outline-offset:6px}
+
+/* Original cover artwork, edge-to-edge: no fake frame, no rounded corners. */
+.album-cover{position:absolute!important;inset:0!important;z-index:4!important;overflow:hidden!important;border:0!important;border-radius:0!important;background:var(--album-tone,#d8d0be)!important;box-shadow:8px 10px 20px rgba(36,32,28,.14)!important}
+.album-cover img{width:100%!important;height:100%!important;object-fit:cover!important;display:block!important;border:0!important;border-radius:0!important}
+/* Album 01: crop the source slightly so the white square corners never show around the logo artwork. */
+.album-sleeve-option[data-theme="green"] .album-cover img{transform:scale(1.13)!important;transform-origin:center!important}
+.album-sleeve-option[data-theme="green"]{--album-tone:#a8d778}
+.album-sleeve-option[data-theme="pink"]{--album-tone:#e4a2b8}
+.album-sleeve-option[data-theme="pink"] .album-cover img{transform:scale(1.035)!important}
+
+/* Colored album spine and information are part of the sleeve, not an added border. */
+.album-edge{position:absolute!important;left:0!important;top:0!important;bottom:0!important;width:18px!important;z-index:6!important;border:0!important;box-shadow:none!important;background:rgba(67,91,58,.93)!important;pointer-events:none}
+.album-sleeve-option[data-theme="pink"] .album-edge{background:rgba(139,65,91,.92)!important}
+.album-sleeve-option strong{
+  position:absolute!important;left:7px!important;top:50%!important;z-index:7!important;
+  writing-mode:vertical-rl!important;transform:translateY(-50%) rotate(180deg)!important;
+  color:#fff!important;text-shadow:0 1px 2px rgba(0,0,0,.25)!important;font:800 13px/1 var(--display)!important;
+  max-height:72%!important;overflow:hidden!important;pointer-events:none!important
+}
+.album-sleeve-option small{
+  position:absolute!important;left:28px!important;right:8px!important;bottom:8px!important;z-index:7!important;
+  margin:0!important;padding:4px 6px!important;max-width:none!important;border:0!important;border-radius:0!important;
+  background:rgba(244,237,223,.90)!important;color:#292b26!important;font:700 9px/1.2 var(--body)!important;text-align:left!important;pointer-events:none!important
+}
+.album-spec{position:absolute!important;left:28px!important;top:8px!important;z-index:7!important;background:rgba(39,42,37,.88)!important;color:#f5ebda!important;padding:4px 6px!important;font:700 8px/1.1 var(--body)!important;letter-spacing:.05em!important;pointer-events:none!important}
+.record-selection{position:absolute!important;right:8px!important;top:8px!important;z-index:8!important;background:var(--room-accent)!important;color:#fff!important;padding:4px 6px!important;border:0!important;font-size:8px!important;pointer-events:none!important}
+.album-hint{position:absolute!important;left:50%!important;bottom:-29px!important;z-index:8!important;transform:translateX(-50%)!important;width:max-content!important;max-width:94%!important;white-space:nowrap!important;background:rgba(242,234,219,.92)!important;color:#55564f!important;border:0!important;border-radius:999px!important;padding:4px 8px!important;font-size:9px!important;pointer-events:none!important}
+
+/* Disc stays behind the cover until the album is selected, then peeks out from the side. */
+.album-pocket-record{right:-2%!important;top:8%!important;width:84%!important;z-index:1!important;transform:translateX(-18%) rotate(-12deg) scale(.94)!important;opacity:0!important;pointer-events:none!important;transition:transform .68s cubic-bezier(.16,.86,.2,1),opacity .34s ease,filter .3s ease!important}
+.album-sleeve-option.is-open .album-pocket-record{z-index:3!important;transform:translateX(43%) rotate(10deg) scale(1)!important;opacity:1!important;pointer-events:auto!important;cursor:grab!important}
+.album-pocket-record img,.manual-disc-drag img{border:0!important;border-radius:50%!important;transform:scale(1.12)!important}
+.album-pocket-record.theme-green img,.manual-disc-drag.theme-green img{transform:scale(1.32)!important}
+
+/* Bigger drop affordance, but final record itself snaps to the exact platter center. */
+#playlist.disc-over-deck .turntable{box-shadow:0 0 0 8px color-mix(in srgb,var(--room-accent) 18%,transparent),9px 11px 0 #25292330,inset 0 0 0 5px #f5edde66!important}
+#playlist.disc-over-deck .vinyl-stage::after{content:"↓  THẢ ĐĨA VÀO ĐÂY";position:absolute;inset:3%;z-index:10;border:2px dashed var(--room-accent);border-radius:50%;display:grid;place-items:center;color:var(--room-accent);font:800 10px var(--body);letter-spacing:.08em;background:color-mix(in srgb,var(--room) 55%,transparent);pointer-events:none}
+.has-disc #recordCarrier{transform:none!important}
+.record-carrier.is-arriving{animation:recordSnap272 .72s cubic-bezier(.16,.86,.22,1)}
+@keyframes recordSnap272{0%{transform:scale(.82) rotate(18deg);opacity:.25}68%{transform:scale(1.03) rotate(-2deg);opacity:1}100%{transform:scale(1) rotate(0);opacity:1}}
+
+@media(max-width:820px){
+  .listening-room{display:flex!important;flex-direction:column!important;align-items:center!important}
+  .music-sidebar{order:1!important;width:min(100%,440px)!important}.turntable-column{order:2!important;justify-self:auto!important}
+  .record-options{min-height:300px!important}.album-sleeve-option{width:min(250px,62vw)!important}
+  .album-sleeve-option:nth-child(1){left:5%!important}.album-sleeve-option:nth-child(2){left:36%!important;top:28px!important}
+  .turntable{width:min(78vw,300px)!important}
+}
+@media(max-width:480px){
+  .record-options{min-height:265px!important}.album-sleeve-option{width:min(220px,64vw)!important}
+  .album-sleeve-option:nth-child(1){left:2%!important}.album-sleeve-option:nth-child(2){left:31%!important;top:24px!important}
+  .album-sleeve-option small{font-size:8px!important}.album-spec{font-size:7px!important}.album-hint{font-size:8px!important;white-space:normal!important;text-align:center!important}
+  .turntable{width:min(82vw,286px)!important}
+}
