@@ -737,305 +737,7 @@ try {
 } catch(error) { window.ClubModuleErrors.push('js/turntable.js'); console.error('js/turntable.js', error); }
 
 
-/* ===== js/lyrics.js ===== */
-try {
-/* Lyrics are fetched separately from audio. No private Spotify endpoint, token or scraper. */
-(() => {
-  'use strict';
-  const {t, storage} = window.Club;
-  const settings = window.CLUB_CONTENT.lyrics || {};
-  const $ = id => document.getElementById(id);
-  const elements = {
-    status:$('lyricsStatus'), badge:$('lyricsBadge'), lines:$('lyricsLines'),
-    viewport:$('lyricsViewport'), empty:$('lyricsEmpty'), candidates:$('lyricsCandidates'),
-    source:$('lyricsSource'), title:$('trackTitle'), artist:$('trackArtist'), link:$('currentTrackLink')
-  };
-  if(!elements.status){
-    window.ClubLyrics={setTrack(){},update(){},reset(){},parseLrc(){return[];}};
-    return;
-  }
-  let track=null, rows=[], rawRecord=null, source='', statusKey='lyricsWaiting', badgeKey='waiting';
-  let abort=null, requestNumber=0, autoAttempted='', blockUntil=0, lastRequest=0, activeLine=-1, inferred=false;
-  let playback={position:0,duration:0,isPaused:true}, sourceDuration=0;
-  const cache=new Map();
-  let saved={};
-  try { const parsed=JSON.parse(storage.get('artclub-lyrics-v2','{}')); if(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))saved=parsed; } catch {}
-  function saveMatch(uri,value) {
-    delete saved[uri]; saved[uri]=value;
-    const entries=Object.entries(saved).slice(-12);
-    saved=Object.fromEntries(entries);
-    storage.set('artclub-lyrics-v2',JSON.stringify(saved));
-  }
-  function status(key,badge='waiting') {
-    statusKey=key;badgeKey=badge;
-    elements.status.textContent=t(key);elements.badge.textContent=t(badge);
-  }
-  function normal(value) {
-    return String(value||'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim();
-  }
-  function parseLrc(text) {
-    const offset = Number((text.match(/\[offset:\s*([+-]?\d+)\]/i)||[])[1]||0);
-    const out=[];
-    for(const line of text.split(/\r?\n/)) {
-      const stamps=[...line.matchAll(/\[(\d{1,3}):(\d{2})(?:[.:](\d{1,3}))?\]/g)];
-      const content=line.replace(/\[[^\]]*\]/g,'').trim().replace(/<\d{1,3}:\d{2}(?:\.\d+)?>/g,'');
-      for(const m of stamps) {
-        if(Number(m[2])>=60)continue;
-        const frac=m[3] ? Number(`0.${m[3]}`)*1000 : 0;
-        out.push({time:Math.max(0,Number(m[1])*60000+Number(m[2])*1000+frac-offset),text:content||'♪'});
-      }
-    }
-    return out.sort((a,b)=>a.time-b.time);
-  }
-  function isCurrent(uri,number){return track?.uri===uri&&number===requestNumber;}
-  async function fetchData(url,signal,asText=false) {
-    if(Date.now()<blockUntil)throw new Error('rate');
-    const response=await fetch(url,{signal,credentials:'omit'});
-    if(response.status===429) {
-      const value=response.headers.get('Retry-After')||'60';
-      const numeric=Number(value);
-      blockUntil=Number.isFinite(numeric) ? Date.now()+Math.max(1,numeric)*1000 : Math.max(Date.now()+1000,Date.parse(value)||Date.now()+60000);
-      throw new Error('rate');
-    }
-    if(!response.ok)throw new Error(response.status===404?'missing':'network');
-    return asText ? response.text() : response.json();
-  }
-  function renderTrack() {
-    elements.title.textContent=track?.title||t(track?'trackFallback':'trackWaiting');
-    elements.artist.textContent=rawRecord?.artistName ? `LRCLIB · ${rawRecord.artistName}` : track?.artist||t('trackHint');
-    elements.link.hidden=!track;
-    if(track)elements.link.href=`https://open.spotify.com/track/${track.uri.split(':')[2]}`;
-  }
-  function resetDisplay() {
-    rows=[];rawRecord=null;source='';sourceDuration=0;activeLine=-1;inferred=false;
-    elements.lines.replaceChildren();elements.lines.hidden=true;elements.lines.classList.remove('is-plain');
-    elements.empty.hidden=false;elements.candidates.hidden=true;elements.candidates.replaceChildren();elements.source.replaceChildren();
-  }
-  function reset() {
-    abort?.abort();requestNumber++;track=null;autoAttempted='';playback={position:0,duration:0,isPaused:true};
-    resetDisplay();renderTrack();status('lyricsWaiting');
-    $('lyricsQuery').value='';$('lyricsArtistInput').value='';
-  }
-  function showSource() {
-    elements.source.replaceChildren();
-    if(!source)return;
-    if(source==='lrclib') {
-      const a=document.createElement('a');
-      a.href='https://lrclib.net/';a.target='_blank';a.rel='noopener noreferrer';a.textContent=t('lyricsProvider');
-      elements.source.append(a);
-    } else elements.source.textContent=t(source==='library'?'lyricsLibrary':'lyricsLocal');
-  }
-  function syncAllowed() {
-    if(!rows.length||!Number.isFinite(rows[0].time))return false;
-    if(playback.duration>0 && sourceDuration>0 && Math.abs(sourceDuration-playback.duration)>6000)return false;
-    if(playback.duration>0 && playback.duration<=33000 && rows.at(-1).time>playback.duration+10000)return false;
-    return true;
-  }
-  function updateStatusForLyrics() {
-    if(rawRecord?.instrumental)status('lyricsInstrumental','instrumental');
-    else if(rows.length&&Number.isFinite(rows[0].time)) {
-      if(!syncAllowed())status('lyricsPreview','plain');
-      else status(inferred?'lyricsInferred':'lyricsSynced','synced');
-    } else if(rows.length) status('lyricsPlain','plain');
-  }
-  function renderRows() {
-    elements.lines.replaceChildren();activeLine=-1;
-    elements.lines.hidden=!rows.length;elements.empty.hidden=!!rows.length;
-    const fragment=document.createDocumentFragment();
-    rows.forEach(row=>{const li=document.createElement('li');li.className='lyric-line';li.textContent=row.text;fragment.append(li);});
-    elements.lines.append(fragment);
-    elements.lines.classList.toggle('is-plain',!syncAllowed());
-    elements.viewport.scrollTop=0;
-    updateStatusForLyrics();showSource();renderTrack();syncLines();
-  }
-  function useRecord(record,remember=false,guess=false) {
-    if(!track||!record)return;
-    inferred=guess;rawRecord=record;source='lrclib';sourceDuration=Number(record.duration||0)*1000;
-    rows=record.syncedLyrics ? parseLrc(String(record.syncedLyrics).slice(0,200000)) : [];
-    if(!rows.length&&record.plainLyrics)rows=String(record.plainLyrics).slice(0,200000).split(/\r?\n/).map(text=>({time:NaN,text:text||'♪'}));
-    if(remember&&Number.isFinite(Number(record.id)))saveMatch(track.uri,{type:'lrclib',id:Number(record.id)});
-    elements.candidates.hidden=true;
-    if(!rows.length&&!record.instrumental){status('lyricsUnavailable');return;}
-    renderRows();
-  }
-  function useLrc(text,type='local') {
-    const parsed=parseLrc(text);
-    if(!parsed.length)throw new Error('lrc');
-    rawRecord=null;source=type;sourceDuration=0;inferred=false;rows=parsed;
-    elements.candidates.hidden=true;renderRows();
-  }
-  function showCandidates(matches,uri,number) {
-    elements.candidates.replaceChildren();
-    const unique=new Map();
-    matches.forEach(item=>{
-      if(!item||typeof item.trackName!=='string')return;
-      const key=`${normal(item.trackName)}|${normal(item.artistName)}|${Math.round(Number(item.duration||0))}`;
-      if(!unique.has(key)||(!unique.get(key).syncedLyrics&&item.syncedLyrics))unique.set(key,item);
-    });
-    const items=[...unique.values()].slice(0,8);
-    if(!items.length){status('lyricsUnavailable');return;}
-    for(const record of items) {
-      const button=document.createElement('button');button.type='button';button.className='lyrics-candidate';
-      const title=document.createElement('strong');title.textContent=`${record.trackName} — ${record.artistName||''}`;
-      const detail=document.createElement('small');
-      const duration=Math.floor(Number(record.duration||0));
-      detail.textContent=`${record.albumName||''} · ${Math.floor(duration/60)}:${String(duration%60).padStart(2,'0')} · `;
-      const kind=document.createElement('span');
-      kind.dataset.lyricKind=record.syncedLyrics?'synced':'plain';kind.textContent=t(kind.dataset.lyricKind);
-      detail.append(kind);
-      button.append(title,detail);
-      button.addEventListener('click',()=>{if(isCurrent(uri,number))useRecord(record,true);});
-      elements.candidates.append(button);
-    }
-    elements.candidates.hidden=false;status('lyricsChoose','chooseLyrics');
-  }
-  async function findLyrics(title,artist='',manual=false) {
-    if(!track){status('lyricsNeedTrack');return;}
-    if(!settings.onlineSearch){status('lyricsDisabled');return;}
-    if(!title?.trim()){status('lyricsNoMetadata');return;}
-    if(Date.now()<blockUntil){status('lyricsRateLimit');return;}
-    abort?.abort();abort=new AbortController();
-    const controller=abort, number=++requestNumber, uri=track.uri;
-    const timer=setTimeout(()=>controller.abort(),10000);
-    status('lyricsLoading','searching');
-    try {
-      // One request at a time; no playlist-wide scraping or background request loop.
-      const wait=Math.max(0,500-(Date.now()-lastRequest));
-      if(wait)await new Promise(resolve=>setTimeout(resolve,wait));
-      if(!isCurrent(uri,number))return;
-      const cacheKey=normal(title)+'|'+normal(artist);
-      let matches=cache.get(cacheKey);
-      if(!matches) {
-        const params=new URLSearchParams({track_name:title.trim()});
-        if(artist.trim())params.set('artist_name',artist.trim());
-        lastRequest=Date.now();
-        matches=await fetchData(`https://lrclib.net/api/search?${params}`,controller.signal);
-        if(!Array.isArray(matches))throw new Error('network');
-        cache.set(cacheKey,matches);
-        if(cache.size>24)cache.delete(cache.keys().next().value);
-      }
-      if(!isCurrent(uri,number))return;
-      const seconds=playback.duration/1000 || track.duration/1000 || 0;
-      const exact=matches.filter(r=>normal(r.trackName)===normal(title)&&seconds>35&&
-        Math.abs(Number(r.duration)-seconds)<=2.5 && (!artist||normal(r.artistName)===normal(artist)));
-      const artistGroups=new Set(exact.map(r=>normal(r.artistName)));
-      if(!manual&&exact.length&&artistGroups.size===1) {
-        exact.sort((a,b)=>Number(!!b.syncedLyrics)-Number(!!a.syncedLyrics)||Math.abs(a.duration-seconds)-Math.abs(b.duration-seconds));
-        useRecord(exact[0],false,!artist);
-      } else showCandidates(matches,uri,number);
-    } catch(error) {
-      if(!isCurrent(uri,number))return;
-      status(error.message==='rate'?'lyricsRateLimit':error.message==='missing'?'lyricsUnavailable':'lyricsNetwork');
-    } finally {clearTimeout(timer);}
-  }
-  async function loadSavedOrLibrary() {
-    if(!track)return false;
-    const uri=track.uri, record=saved[uri], entry=settings.tracks?.[uri];
-    if(!record&&!entry?.lrc&&!entry?.lrclibId)return false;
-    abort?.abort();abort=new AbortController();
-    const controller=abort,number=++requestNumber,timer=setTimeout(()=>controller.abort(),10000);
-    try {
-      status('lyricsLoading','searching');
-      if(record?.type==='lrc'&&typeof record.text==='string') {useLrc(record.text);return true;}
-      const id=record?.type==='lrclib'?record.id:entry?.lrclibId;
-      if(id!==undefined) {
-        if(!Number.isFinite(Number(id)))return false;
-        const result=await fetchData(`https://lrclib.net/api/get/${Number(id)}`,controller.signal);
-        if(isCurrent(uri,number))useRecord(result);
-        return true;
-      }
-      if(entry?.lrc) {
-        const url=new URL(entry.lrc,location.href);
-        if(url.origin!==location.origin)throw new Error('network');
-        const text=await fetchData(url.href,controller.signal,true);
-        if(text.length>200000)throw new Error('lrc');
-        if(isCurrent(uri,number))useLrc(text,'library');
-        return true;
-      }
-    } catch(error) {
-      if(isCurrent(uri,number))status(error.message==='rate'?'lyricsRateLimit':'lyricsNetwork');
-      return true; // Do not hammer the service by falling through to another request.
-    } finally {clearTimeout(timer);}
-    return false;
-  }
-  async function setTrack(next) {
-    if(!next||!/^spotify:track:[A-Za-z0-9]{22}$/.test(next.uri||'')){reset();return;}
-    const changed=track?.uri!==next.uri;
-    if(changed) {
-      abort?.abort();requestNumber++;resetDisplay();autoAttempted='';
-      playback={position:0,duration:Number(next.duration)||0,isPaused:true};
-    }
-    const mapping=settings.tracks?.[next.uri]||{};
-    track={...(changed?{}:track),...next,title:next.title||mapping.title||(!changed?track?.title:'')||'',artist:next.artist||mapping.artist||''};
-    renderTrack();
-    if(track.title)$('lyricsQuery').value=track.title;
-    if(track.artist)$('lyricsArtistInput').value=track.artist;
-    if(changed&&(saved[track.uri]||mapping.lrc||mapping.lrclibId!==undefined)) {
-      autoAttempted=track.uri;
-      await loadSavedOrLibrary();return;
-    }
-    if(rows.length)return;
-    if(track.title&&autoAttempted!==track.uri) {
-      autoAttempted=track.uri;
-      await findLyrics(track.title,track.artist);
-    } else if(!track.title)status('lyricsNoMetadata');
-  }
-  function syncLines() {
-    const valid=syncAllowed();
-    elements.lines.classList.toggle('is-plain',!valid);
-    if(!valid){if(activeLine>=0)elements.lines.children[activeLine]?.classList.remove('is-current');activeLine=-1;return;}
-    let low=0,high=rows.length-1,index=-1;
-    while(low<=high){const mid=(low+high)>>1;if(rows[mid].time<=playback.position){index=mid;low=mid+1;}else high=mid-1;}
-    if(index===activeLine)return;
-    if(activeLine>=0)elements.lines.children[activeLine]?.classList.remove('is-current');
-    activeLine=index;
-    const line=elements.lines.children[index];
-    if(line) {
-      line.classList.add('is-current');
-      const top=line.offsetTop-elements.viewport.clientHeight/2+line.offsetHeight/2;
-      elements.viewport.scrollTo({top:Math.max(0,top),behavior:window.ClubMotion?.enabled?'smooth':'auto'});
-    }
-  }
-  function update(state) {
-    const previousDuration=playback.duration;
-    playback={...playback,...state};
-    if(rows.length&&previousDuration!==playback.duration)updateStatusForLyrics();
-    syncLines();
-  }
-  $('lyricsSearch').addEventListener('submit',event=>{
-    event.preventDefault();
-    findLyrics($('lyricsQuery').value,$('lyricsArtistInput').value,true);
-  });
-  $('lrcFile').addEventListener('change',async event=>{
-    const file=event.target.files?.[0];event.target.value='';
-    if(!file)return;
-    if(!track){status('lyricsNeedTrack');return;}
-    if(file.size>200000||!/\.lrc$/i.test(file.name)){status('lyricsBadFile');return;}
-    const uri=track.uri;
-    try {
-      const text=await file.text();if(track?.uri!==uri)return;
-      abort?.abort();requestNumber++;
-      useLrc(text);
-      saveMatch(uri,{type:'lrc',text});
-    } catch {status('lyricsBadFile');}
-  });
-  $('forgetLyrics').addEventListener('click',()=>{
-    if(!track){status('lyricsNeedTrack');return;}
-    delete saved[track.uri];storage.set('artclub-lyrics-v2',JSON.stringify(saved));
-    abort?.abort();requestNumber++;resetDisplay();renderTrack();status('lyricsUnavailable');
-  });
-  document.addEventListener('club:language',()=>{
-    renderTrack();status(statusKey,badgeKey);showSource();
-    elements.candidates.querySelectorAll('[data-lyric-kind]').forEach(node=>{
-      node.textContent=t(node.dataset.lyricKind);
-    });
-  });
-  window.ClubLyrics={setTrack,update,reset,parseLrc};
-  reset();
-})();
-
-} catch(error) { window.ClubModuleErrors.push('js/lyrics.js'); console.error('js/lyrics.js', error); }
-
+/* Lyrics module removed in v2.6.2. */
 
 /* ===== js/player.js ===== */
 try {
@@ -1074,18 +776,42 @@ try {
     return `${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`;
   }
   function renderProgress() {
-    $('currentTime').textContent=clock(position);$('totalTime').textContent=clock(duration);
-    $('trackProgress').max=Math.max(1,duration);$('trackProgress').value=Math.min(position,duration);
+    const current=$('currentTime'), total=$('totalTime'), progress=$('trackProgress');
+    if(current) current.textContent=clock(position);
+    if(total) total.textContent=clock(duration);
+    if(progress){progress.max=Math.max(1,duration);progress.value=Math.min(position,duration);}
   }
   function resetPlayback() {
     isPaused=true;isBuffering=false;position=0;lastPosition=0;duration=0;lastUpdate=0;
     trackUri='';trackMetadata=null;metadataAbort?.abort();
     clearTimeout(pendingTimer);
-    window.ClubLyrics?.reset();
     renderProgress();renderTransport();
   }
+  let swapRevision=0;
+  function animateSleeveSwap(sourceButton,record){
+    if(!sourceButton||window.ClubMotion?.enabled===false||document.documentElement.dataset.motion==='off')return Promise.resolve();
+    const rev=++swapRevision, target=$('recordCarrier')?.getBoundingClientRect(), src=sourceButton.getBoundingClientRect();
+    if(!target)return Promise.resolve();
+    const layer=document.createElement('div');layer.className='disc-swap-scene';layer.setAttribute('aria-hidden','true');
+    const sleeve=document.createElement('div');sleeve.className='disc-sleeve';
+    const cover=document.createElement('img');cover.src=record.image;cover.alt='';sleeve.append(cover);
+    const disc=document.createElement('div');disc.className='disc-sleeve-vinyl';const discImg=document.createElement('img');discImg.src=record.image;discImg.alt='';disc.append(discImg);sleeve.append(disc);layer.append(sleeve);document.body.append(layer);
+    const size=Math.min(190,Math.max(118,src.width*.82));
+    const sx=src.left+src.width/2-size/2, sy=src.top+src.height/2-size/2;
+    const tx=target.left+target.width*.52-size/2, ty=target.top+target.height*.46-size/2;
+    sleeve.style.width=size+'px';sleeve.style.height=size+'px';sleeve.style.left=sx+'px';sleeve.style.top=sy+'px';
+    const ease='cubic-bezier(.18,.82,.2,1)';
+    const travel=sleeve.animate([{transform:'translate3d(0,0,0) rotate(-5deg) scale(.92)',opacity:.2},{offset:.18,opacity:1},{transform:`translate3d(${tx-sx}px,${ty-sy}px,0) rotate(2deg) scale(1)`,opacity:1}],{duration:620,easing:ease,fill:'forwards'});
+    return travel.finished.then(()=>{
+      if(rev!==swapRevision)return;
+      sleeve.classList.add('is-open');
+      return disc.animate([{transform:'translate3d(0,0,0) rotate(0deg)'},{offset:.58,transform:'translate3d(64%,3%,0) rotate(34deg)'},{transform:'translate3d(5%,16%,0) rotate(73deg) scale(1.03)'}],{duration:760,easing:'cubic-bezier(.16,.9,.24,1)',fill:'forwards'}).finished;
+    }).then(()=>{
+      if(rev!==swapRevision)return;
+      return sleeve.animate([{opacity:1,transform:sleeve.getAnimations()[0]?.effect?.getComputedTiming?getComputedStyle(sleeve).transform:'none'},{opacity:0,transform:'translate3d('+(tx-sx-24)+'px,'+(ty-sy-18)+'px,0) scale(.94)'}],{duration:260,easing:'ease-out',fill:'forwards'}).finished;
+    }).catch(()=>{}).finally(()=>{layer.remove();});
+  }
   function drawSelection(animate=false,sourceButton=null) {
-    if(animate)window.ClubMotion?.flyRecord(sourceButton?.querySelector('.mini-record'),$('recordCarrier'));
     room.dataset.theme=selected.theme;vinyl.dataset.theme=selected.theme;
 
     $('recordArtwork').src=selected.image;
@@ -1153,36 +879,8 @@ try {
     try{controller?.destroy();}catch{/* Cleanup must still run if pause failed. */}
     controller=null;ready=false;
   }
-  async function updateTrack(uri) {
-    if(!/^spotify:track:[A-Za-z0-9]{22}$/.test(uri))return;
-    if(uri===trackUri)return;
-    trackUri=uri;metadataAbort?.abort();
-    const gen=generation;
-    const mapping=window.CLUB_CONTENT.lyrics?.tracks?.[uri]||{};
-    trackMetadata={uri,title:mapping.title||'',artist:mapping.artist||'',duration};
-    window.ClubLyrics?.setTrack(trackMetadata);
-    if(metadataCache.has(uri)) {
-      trackMetadata={...trackMetadata,...metadataCache.get(uri)};
-      window.ClubLyrics?.setTrack(trackMetadata);return;
-    }
-    metadataAbort=new AbortController();
-    const request=metadataAbort,timeout=setTimeout(()=>request.abort(),9000);
-    try{
-      const url=`https://open.spotify.com/oembed?url=${encodeURIComponent('https://open.spotify.com/track/'+uri.split(':')[2])}`;
-      const response=await fetch(url,{signal:request.signal,credentials:'omit'});
-      if(!response.ok)throw new Error('metadata');
-      const data=await response.json();
-      if(gen!==generation||trackUri!==uri)return;
-      if(typeof data.title==='string'&&data.title.trim()&&data.title!=='Spotify') {
-        // oEmbed exposes the title, not guaranteed artist metadata.
-        const metadata={title:data.title.slice(0,300)};
-        metadataCache.set(uri,metadata);
-        if(metadataCache.size>30)metadataCache.delete(metadataCache.keys().next().value);
-        trackMetadata={...trackMetadata,...metadata};
-        window.ClubLyrics?.setTrack(trackMetadata);
-      }
-    }catch{/* Lyrics UI exposes manual title/artist search when oEmbed is blocked. */}
-    finally{clearTimeout(timeout);}
+  function updateTrack(uri) {
+    if(/^spotify:track:[A-Za-z0-9]{22}$/.test(uri)) trackUri=uri;
   }
   function onPlayback(event,gen) {
     if(gen!==generation)return;
@@ -1197,7 +895,6 @@ try {
     transport=newState;
     announce(isBuffering?'playerBuffering':isPaused?'playerPaused':'playerPlaying');
     if(!isPaused||isPaused&&$('playButton').getAttribute('aria-pressed')==='true')clearTimeout(pendingTimer);
-    window.ClubLyrics?.update({position,duration,isPaused,isBuffering});
     renderProgress();renderTransport();
   }
   function boot() {
@@ -1275,9 +972,10 @@ try {
     destroyController();
     selected=record;storage.set('artclub-disc',record.id);
     transport='idle';announce('playerIdle');resetPlayback();
-    drawSelection(true,button);
-    
-    boot(); // Selection loads the playlist, but does not auto-play it.
+    drawSelection(false,button);
+    options.classList.add('is-swapping');
+    animateSleeveSwap(button,record).finally(()=>options.classList.remove('is-swapping'));
+    boot(); // Prepare the playlist only; playback starts from a deliberate Play action.
   }
   document.querySelectorAll('[data-play]').forEach(button=>button.addEventListener('click',togglePlayback));
   document.addEventListener('club:language',()=>{
@@ -1302,7 +1000,7 @@ try {
     if(document.hidden||isPaused||isBuffering||!lastUpdate)return;
     const elapsed=Math.min(2000,performance.now()-lastUpdate);
     position=Math.min(duration,lastPosition+elapsed);
-    renderProgress();window.ClubLyrics?.update({position,duration,isPaused,isBuffering});
+    renderProgress();
   },250);
 })();
 
@@ -1400,30 +1098,25 @@ try {
       point(.33, .25), point(.62, .40), [width + 146 * size, top + (bottom - top) * .18]
     ]);
   }
-  const ROCKET_SVG = `<svg viewBox="0 0 240 120" class="af253-ship" aria-hidden="true" focusable="false">
+  const ROCKET_SVG = `<svg viewBox="0 0 250 150" class="af253-ship af253-ufo" aria-hidden="true" focusable="false">
     <g stroke="#34333b" stroke-linejoin="round" stroke-linecap="round">
-      <g class="af253-fire" stroke-width="2.2">
-        <path d="M49 41 C27 24 20 40 8 34 C18 50 -7 47 1 62 C-13 74 18 70 9 87 C27 76 29 92 50 78Z" fill="#d97965"/>
-        <path d="M47 46 C28 39 30 50 14 48 C27 57 12 65 19 72 C32 69 35 85 49 73Z" fill="#edc970" stroke="none"/>
-        <path d="M49 53 Q30 53 28 61 Q37 67 49 68Z" fill="#fff2ce" stroke="none"/>
+      <path class="af253-ufo-beam" d="M91 94 L55 145 L196 145 L161 94Z" fill="url(#ufoBeam)" stroke="none" opacity=".42"/>
+      <defs><linearGradient id="ufoBeam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8d7f1"/><stop offset="1" stop-color="#f0cfdd" stop-opacity="0"/></linearGradient></defs>
+      <ellipse cx="126" cy="87" rx="96" ry="34" fill="#fff0d4" stroke-width="3.4"/>
+      <path d="M38 84 Q126 119 214 84 Q201 113 126 119 Q51 113 38 84Z" fill="#d7b8ce" stroke-width="3"/>
+      <ellipse cx="126" cy="78" rx="58" ry="39" fill="#b8cfbf" stroke-width="3.2"/>
+      <path d="M83 75 Q126 41 169 75" fill="#dbe7df" stroke="none" opacity=".85"/>
+      <ellipse cx="126" cy="80" rx="45" ry="28" fill="#c9d7df" stroke-width="2.4"/>
+      <path d="M93 70 Q113 53 136 55" fill="none" stroke="#f8f5e9" stroke-width="5" opacity=".8"/>
+      <g class="af253-ufo-lights" stroke-width="1.4">
+        <circle cx="58" cy="91" r="7" fill="#e6c56d"/><circle cx="89" cy="104" r="7" fill="#cf8fa7"/><circle cx="126" cy="109" r="7" fill="#8fa7b7"/><circle cx="163" cy="104" r="7" fill="#cf8fa7"/><circle cx="194" cy="91" r="7" fill="#e6c56d"/>
       </g>
-      <path d="M78 42 L64 12 Q64 7 71 10 L120 33 M77 78 L63 108 Q62 114 71 110 L122 86" fill="#8e96b1" stroke-width="3"/>
-      <path d="M81 38 L73 20 L104 34 M80 84 L72 102 L106 86" fill="#c2c2d6" stroke="none"/>
-      <rect x="41" y="43" width="22" height="35" rx="6" fill="#68798a" stroke-width="3"/>
-      <path d="M50 48 L50 71" fill="none" stroke="#c8d3d4" stroke-width="3"/>
-      <path d="M61 35 C112 12 177 20 222 60 C177 100 112 108 61 85 L55 73 L55 47Z" fill="#fff3d8" stroke-width="3.3"/>
-      <path d="M63 74 Q135 100 208 64 L217 65 C169 102 112 104 62 83Z" fill="#e1c9bc" stroke="none"/>
-      <path d="M178 29 Q203 40 222 60 Q202 81 178 91 Q190 60 178 29Z" fill="#d58284" stroke-width="3"/>
-      <path d="M185 37 Q198 43 208 53" fill="none" stroke="#f8c7b3" stroke-width="4"/>
-      <path d="M78 38 Q115 26 150 30" fill="none" stroke="#fffef2" stroke-width="4"/>
-      <circle cx="114" cy="62" r="21" fill="#c6bbc9" stroke-width="3"/>
-      <circle cx="114" cy="62" r="15" fill="#7799a6" stroke-width="2"/>
-      <path d="M103 58 Q108 48 116 51" fill="none" stroke="#dce9e6" stroke-width="4"/>
-      <circle cx="131" cy="62" r="1.7" fill="#34333b" stroke="none"/>
-      <circle cx="97" cy="62" r="1.7" fill="#34333b" stroke="none"/>
-      <path d="M153 53 L156 59 L163 60 L158 65 L159 72 L153 68 L147 72 L148 65 L143 60 L150 59Z" fill="#edc970" stroke-width="1.6"/>
-      <path d="M70 47 L72 70 M76 45 L79 72" fill="none" stroke="#718596" stroke-width="2"/>
-      <path d="M92 85 Q105 91 118 89" fill="none" stroke-width="2"/>
+      <path d="M24 83 Q9 74 7 59 Q22 61 36 71" fill="#8ca08d" stroke-width="3"/><path d="M216 71 Q231 61 245 59 Q243 75 228 83" fill="#8ca08d" stroke-width="3"/>
+      <path d="M103 121 Q126 132 149 121 L143 136 Q126 144 109 136Z" fill="#727989" stroke-width="3"/>
+      <path d="M115 123 Q126 129 137 123" fill="none" stroke="#f0d7e0" stroke-width="3"/>
+      <g class="af253-fire"><path d="M108 135 Q126 151 144 135" fill="#ead17c" stroke-width="2"/><path d="M115 137 Q126 147 137 137" fill="#f4e7be" stroke="none"/></g>
+      <path d="M53 79 Q78 69 96 70" fill="none" stroke="#fffaf0" stroke-width="3" opacity=".8"/>
+      <path d="M181 88 l6 3 -6 3 -3 7 -3 -7 -6 -3 6 -3 3 -7Z" fill="#fff2c7" stroke-width="1.5"/>
     </g>
   </svg>`;
 
@@ -1593,11 +1286,12 @@ try {
   const root=document.documentElement, section=document.getElementById('gallery');
   let layer=null,selected=false,inView=false,active=false,petalTimer=0,lastOrigin=null;
   const flowerPath='M0 0 C-8 -2 -12 5 -9 11 C-6 17 -1 18 0 23 C1 18 6 17 9 11 C12 5 8 -2 0 0Z';
-  const clusters=[[110,40,1.03],[245,65,.82],[385,38,.96],[535,62,.86],[695,35,1.08],[850,64,.9],[1005,40,1],[1165,66,.84],[1320,42,1.02]];
+  const clusters=[[72,32,.72],[214,69,.94],[418,27,.66],[603,76,.86],[792,33,1.02],[1015,71,.74],[1248,29,.92],[1375,83,.62]];
   function cluster(x,y,scale=1){
     const flowers=[];
-    for(let r=0;r<7;r++){
-      const count=Math.max(2,5-Math.floor(r/2));
+    const rows=4+((Math.round(x/17))%4);
+    for(let r=0;r<rows;r++){
+      const count=Math.max(1,4-Math.floor(r/2)+((r+Math.round(x))%2));
       for(let c=0;c<count;c++){
         const cx=(c-(count-1)/2)*17+(r%2?4:-3),cy=r*17;
         const tone=['deep','mid','light','pale'][(r+c)%4];
@@ -1614,7 +1308,13 @@ try {
       <path class="wisteria-vine thin" pathLength="1" d="M-20 10 C170 82,320 9,510 81 S812 121,995 49 S1270 8,1465 72"/>
       <path class="wisteria-vine thin mobile-hide" pathLength="1" d="M72 0 C172 68,112 128,214 180 M1218 0 C1124 76,1222 129,1124 194"/>
       <g class="mobile-hide"><path class="wisteria-leaf" d="M70 57 Q91 38 111 58 Q89 72 70 57Z"/><path class="wisteria-leaf" d="M215 69 Q238 48 260 69 Q238 84 215 69Z"/><path class="wisteria-leaf" d="M520 53 Q546 31 570 54 Q545 69 520 53Z"/><path class="wisteria-leaf" d="M920 72 Q944 49 970 72 Q944 87 920 72Z"/><path class="wisteria-leaf" d="M1270 52 Q1294 31 1317 53 Q1293 68 1270 52Z"/></g>
-      ${clusters.map(v=>cluster(...v)).join('')}</svg><div class="wisteria-caption">HARUKO SATORU · 藤の庭</div>`;
+      ${clusters.map(v=>cluster(...v)).join('')}</svg>
+      <svg class="wisteria-sprawl" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <path class="wisteria-vine sprawl-vine" pathLength="1" d="M-3 9 C9 15,5 30,17 35 S13 53,27 59 S19 76,34 94"/>
+        <path class="wisteria-vine thin sprawl-vine" pathLength="1" d="M102 5 C91 16,99 29,86 38 S94 56,79 66 S88 83,68 102"/>
+        <path class="wisteria-vine thin sprawl-vine center-vine" pathLength="1" d="M17 -3 C25 8,39 3,45 15 S61 20,57 31 S72 39,66 53 S79 69,88 72"/>
+      </svg><div class="wisteria-caption">HARUKO SATORU · 藤の庭</div>`;
+    [['rose','4%','24%'],['white','91%','18%'],['sakura','8%','65%'],['lilac','88%','73%'],['rose','29%','84%'],['white','71%','52%']].forEach((v,i)=>layer.append(flower(v[0],v[1],v[2],`${(.2+i*.11).toFixed(2)}s`,`${-22+i*9}deg`)));
     section.prepend(layer);return layer;
   }
   function flower(kind,x,y,delay,rot){
@@ -1630,7 +1330,15 @@ try {
       const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('class','frame-vine');svg.setAttribute('viewBox','0 0 100 100');svg.setAttribute('preserveAspectRatio','none');
       const path=document.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('pathLength','1');
       path.setAttribute('d',i%2===0?'M2 96 C11 78,1 62,10 45 S7 15,28 3 M25 4 C46 8,53 0,70 5':'M98 96 C87 78,99 61,89 43 S94 14,72 3 M75 4 C55 8,48 0,31 5');svg.append(path);deco.append(svg);
-      const variants=i%3===0?[['rose','-5%','7%'],['sakura','13%','-5%'],['lilac','-2%','52%']]:i%3===1?[['white','78%','-4%'],['lilac','92%','30%'],['sakura','82%','74%']]:[['lilac','-4%','20%'],['white','10%','-5%'],['rose','88%','66%']];
+      const patterns=[
+        [['rose','-6%','12%'],['lilac','12%','-6%']],
+        [['white','79%','-5%'],['sakura','93%','45%']],
+        [['lilac','-4%','34%'],['rose','86%','78%']],
+        [['sakura','9%','-5%'],['white','90%','26%']],
+        [['rose','-4%','70%'],['white','73%','-5%']],
+        [['lilac','89%','64%'],['sakura','-5%','18%']]
+      ];
+      const variants=patterns[i%patterns.length];
       variants.forEach((v,k)=>deco.append(flower(v[0],v[1],v[2],`${(.12+i*.04+k*.12).toFixed(2)}s`,`${-15+i*7+k*11}deg`)));
       deco.append(leaf(i%2?'84%':'3%','35%',i%2?'-28deg':'28deg'),leaf(i%2?'91%':'8%','61%',i%2?'24deg':'-24deg'));
       card.append(deco);
@@ -1880,4 +1588,4 @@ try {
  });
 })();
 
-window.ClubBuild='2.6.0';
+window.ClubBuild='2.6.2';
