@@ -1,4 +1,4 @@
-/* Music v3.3.0 — vintage mechanical turntable + compact album products. */
+/* Music v3.4.1 — brighter collectible vinyl tones + vintage mechanical turntable. */
 .music-v3{
   --mv3-accent:#536f4c;
   --mv3-paper:#eee5d4;
@@ -60,8 +60,45 @@
 
 /* One physical disc node from sleeve to hand to platter. */
 .mv3-disc{position:absolute;width:var(--mv3-disc-size);height:var(--mv3-disc-size);left:calc(var(--mv3-cover-size) - var(--mv3-disc-size)*.78);top:calc((var(--mv3-cover-size) - var(--mv3-disc-size))/2);z-index:2;border-radius:50%;touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none;transition:left .42s var(--ease),filter .32s ease,opacity .2s ease}
-.mv3-disc-surface{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 37% 31%,rgba(255,255,255,.08),transparent 27%),repeating-radial-gradient(circle at center,#141715 0 3px,#292c29 4px 6px,#171a18 7px 9px);box-shadow:0 10px 19px rgba(0,0,0,.25),inset 0 0 0 2px rgba(255,255,255,.04);will-change:transform}
-.mv3-disc[data-theme="pink"] .mv3-disc-surface{background:radial-gradient(circle at 37% 31%,rgba(255,255,255,.13),transparent 27%),repeating-radial-gradient(circle at center,#76495a 0 3px,#b86f8a 4px 6px,#855166 7px 9px)}
+.mv3-disc-surface{
+  position:absolute;inset:0;border-radius:50%;
+  background:
+    radial-gradient(circle at 32% 24%,rgba(255,255,255,.30) 0 4%,rgba(255,255,255,.10) 13%,transparent 29%),
+    radial-gradient(circle at 68% 72%,rgba(245,238,205,.10),transparent 35%),
+    repeating-radial-gradient(circle at center,
+      #496c61 0 3px,
+      #6f9181 3.5px 5.5px,
+      #b7c9b8 6px 7px,
+      #587a6d 7.5px 9.5px,
+      #8ca998 10px 11px);
+  box-shadow:
+    0 10px 19px rgba(0,0,0,.20),
+    inset 0 0 0 2px rgba(255,255,255,.16),
+    inset 0 0 28px rgba(234,244,229,.10);
+  filter:saturate(1.12) brightness(1.08);
+  will-change:transform
+}
+.mv3-disc[data-theme="pink"] .mv3-disc-surface{
+  background:
+    radial-gradient(circle at 31% 23%,rgba(255,255,255,.38) 0 5%,rgba(255,255,255,.13) 15%,transparent 31%),
+    radial-gradient(circle at 70% 72%,rgba(255,238,246,.18),transparent 37%),
+    repeating-radial-gradient(circle at center,
+      #c27f9a 0 3px,
+      #e1a4bd 3.5px 5.5px,
+      #f2d9e3 6px 7px,
+      #bd7692 7.5px 9.5px,
+      #dda0b7 10px 11px);
+  box-shadow:
+    0 10px 19px rgba(90,45,65,.20),
+    inset 0 0 0 2px rgba(255,255,255,.20),
+    inset 0 0 28px rgba(255,237,245,.16);
+  filter:saturate(1.10) brightness(1.09)
+}
+.mv3-disc-surface::before{
+  content:"";position:absolute;inset:2%;border-radius:50%;pointer-events:none;
+  background:conic-gradient(from 18deg,transparent 0 9%,rgba(255,255,255,.10) 12%,transparent 17% 42%,rgba(255,255,255,.06) 46%,transparent 51% 100%);
+  mix-blend-mode:screen;opacity:.68
+}
 .mv3-album.is-selected .mv3-disc{left:calc(var(--mv3-cover-size) - var(--mv3-disc-size)*.67);filter:drop-shadow(0 7px 7px rgba(0,0,0,.15))}
 .mv3-disc:not(.is-enabled){pointer-events:none;opacity:.82}
 .mv3-disc.is-dragging{position:fixed!important;z-index:100000!important;margin:0!important;transition:none!important;cursor:grabbing!important;pointer-events:none!important;filter:drop-shadow(0 18px 18px rgba(0,0,0,.27))}
