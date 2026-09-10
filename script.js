@@ -632,7 +632,7 @@ try {
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('motionDock'))$('motionDock').open=false;});
   document.addEventListener('click',e=>{if(!$('motionDock')?.contains(e.target)&&$('motionDock'))$('motionDock').open=false;});
 
-  window.ClubMotion={version:'2.6.1',burst,flyRecord,animate,register,setChoice,get enabled(){return enabled;},get choice(){return choice;}};
+  window.ClubMotion={version:'2.7.5',burst,flyRecord,animate,register,setChoice,get enabled(){return enabled;},get choice(){return choice;}};
   window.addEventListener('pageshow',()=>{root.dataset.pageHidden='false';syncPreference();register();});
   window.addEventListener('blur',resetPointer);
   root.dataset.pageHidden=String(document.hidden);
@@ -742,7 +742,7 @@ try {
     if(visible)wake();else{cancelAnimationFrame(frame);frame=0;last=0;}
   },{rootMargin:'120px'}).observe(deck);
   window.addEventListener('pageshow',()=>wake());
-  window.ClubTurntable={version:'2.6.1',setPlayback,stopDemo,reset(){stopDemo();setPlayback({playing:false,position:0,duration:0});},get state(){return {angle,speed,armAngle,lift,playing,buffering,demo,visible,allowed};}};
+  window.ClubTurntable={version:'2.7.5',setPlayback,stopDemo,reset(){stopDemo();setPlayback({playing:false,position:0,duration:0});},get state(){return {angle,speed,armAngle,lift,playing,buffering,demo,visible,allowed};}};
   paint();
 })();
 
@@ -808,8 +808,8 @@ try {
       button.classList.toggle('is-open',open);
       button.setAttribute('aria-pressed',String(open));
       button.querySelector('strong').textContent=local(record.name);
-      button.querySelector('small').textContent=local(record.caption);
-      button.querySelector('.record-selection').textContent=t(open?'selected':'choose');
+      const small=button.querySelector('small');if(small)small.textContent=local(record.caption);
+      const selection=button.querySelector('.record-selection');if(selection)selection.textContent=t(open?'selected':'choose');
       button.querySelector('.album-hint').textContent=t('albumHint');
       button.setAttribute('aria-label',`${local(record.name)} — ${open?t('selected'):t('choose')}`);
     });
@@ -850,7 +850,7 @@ try {
     }
   }
   function dragCenterInDeck(x,y){
-    // v2.7.4: use the actual deck rectangle as the magnetic target.
+    // v2.7.5: use the actual deck rectangle as the magnetic target.
     // This is intentionally generous, while final placement still snaps to the spindle.
     const r=deck?.getBoundingClientRect();
     if(!r)return false;
@@ -858,18 +858,18 @@ try {
     return x>=r.left-padX&&x<=r.right+padX&&y>=r.top-padY&&y<=r.bottom+padY;
   }
   function platterCenter(){
-    const carrier=$('recordCarrier')?.getBoundingClientRect();
+    const target=$('platterTarget')?.getBoundingClientRect();
+    if(target&&target.width) return {x:target.left+target.width/2,y:target.top+target.height/2,size:Math.min(target.width,target.height)};
     const stage=$('vinyl-stage')?.getBoundingClientRect();
-    const r=carrier&&carrier.width?carrier:stage;
-    return r?{x:r.left+r.width/2,y:r.top+r.height/2,size:Math.min(r.width,r.height)}:null;
+    return stage?{x:stage.left+stage.width*.43,y:stage.top+stage.height*.49,size:Math.min(stage.width,stage.height)*.72}:null;
   }
   function startDiscDrag(e,record,button,discSource){
     if(e.pointerType==='mouse'&&e.button!==0)return;
     e.preventDefault();e.stopPropagation();armRecord(record,button,false);
     if(dragRecord?.ghost)dragRecord.ghost.remove();
     const r=discSource.getBoundingClientRect();
-    const size=Math.min(190,Math.max(92,r.width));
-    const scale=size/Math.max(1,r.width);
+    const size=r.width;
+    const scale=1;
     const ghost=document.createElement('div');ghost.className=`manual-disc-drag theme-${record.theme}`;ghost.setAttribute('aria-hidden','true');
     const img=document.createElement('img');img.src=record.image;img.alt='';ghost.append(img);document.body.append(ghost);
     // Start at the exact on-screen record position: it visibly comes out of the sleeve.
@@ -913,7 +913,7 @@ try {
     const pocket=oldButton?.querySelector('.album-pocket-record');
     const to=pocket?.getBoundingClientRect();
     if(from&&to&&from.width){
-      const size=Math.min(190,Math.max(86,from.width));
+      const size=from.width;
       const fly=document.createElement('div');fly.className=`manual-disc-drag returning-disc theme-${oldRecord.theme}`;fly.setAttribute('aria-hidden','true');
       const img=document.createElement('img');img.src=oldRecord.image;img.alt='';fly.append(img);document.body.append(fly);
       const sx=from.left+from.width/2-size/2, sy=from.top+from.height/2-size/2;
@@ -971,7 +971,7 @@ try {
       const hint=document.createElement('em');hint.className='album-hint';hint.textContent=t('albumHint');
       const pocket=document.createElement('span');pocket.className=`album-pocket-record theme-${record.theme}`;pocket.setAttribute('aria-label',local(record.name));pocket.setAttribute('role','img');
       const discImg=document.createElement('img');discImg.src=record.image;discImg.alt='';discImg.draggable=false;pocket.append(discImg);
-      button.append(pocket,cover,edge,title,subtitle,state,spec,hint);
+      button.append(pocket,cover,edge,title,hint);
       button.addEventListener('click',e=>{if(e.target.closest('.album-pocket-record'))return;armRecord(record,button);});
       pocket.addEventListener('pointerdown',e=>startDiscDrag(e,record,button,pocket));
       button.addEventListener('dragstart',e=>e.preventDefault());
