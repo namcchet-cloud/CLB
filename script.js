@@ -277,7 +277,9 @@ const copy = {
     "playbackNote": "Spotify may require a direct Play tap or offer previews only. This page never plays music on its own.",
     "chooseRecord": "What\u2019s on your turntable?",
     "recordChoices": "Choose a record",
-    "crateNote": "Two records, two little worlds. Switch records to switch playlists.",
+    "crateNote": "Tap or drag an album sleeve toward the turntable to choose it.",
+    "albumHint": "Drag the sleeve to pull out the record · Tap to choose",
+    "deckHint": "Place the record on the platter, then press Play",
     "selected": "Selected",
     "choose": "Choose record",
     "lyrics": "THE LYRICS",
@@ -737,7 +739,7 @@ try {
 } catch(error) { window.ClubModuleErrors.push('js/turntable.js'); console.error('js/turntable.js', error); }
 
 
-/* Lyrics module removed in v2.6.2. */
+/* Lyrics module removed in v2.7.0. */
 
 /* ===== js/player.js ===== */
 try {
@@ -790,26 +792,39 @@ try {
   let swapRevision=0;
   function animateSleeveSwap(sourceButton,record){
     if(!sourceButton||window.ClubMotion?.enabled===false||document.documentElement.dataset.motion==='off')return Promise.resolve();
-    const rev=++swapRevision, target=$('recordCarrier')?.getBoundingClientRect(), src=sourceButton.getBoundingClientRect();
+    const rev=++swapRevision,target=$('recordCarrier')?.getBoundingClientRect(),src=sourceButton.getBoundingClientRect();
     if(!target)return Promise.resolve();
     const layer=document.createElement('div');layer.className='disc-swap-scene';layer.setAttribute('aria-hidden','true');
-    const sleeve=document.createElement('div');sleeve.className='disc-sleeve';
+    const sleeve=document.createElement('div');sleeve.className='disc-sleeve deluxe-sleeve';
     const cover=document.createElement('img');cover.src=record.image;cover.alt='';sleeve.append(cover);
+    const label=document.createElement('span');label.className='swap-label';label.textContent=local(record.name);sleeve.append(label);
     const disc=document.createElement('div');disc.className='disc-sleeve-vinyl';const discImg=document.createElement('img');discImg.src=record.image;discImg.alt='';disc.append(discImg);sleeve.append(disc);layer.append(sleeve);document.body.append(layer);
-    const size=Math.min(190,Math.max(118,src.width*.82));
-    const sx=src.left+src.width/2-size/2, sy=src.top+src.height/2-size/2;
-    const tx=target.left+target.width*.52-size/2, ty=target.top+target.height*.46-size/2;
-    sleeve.style.width=size+'px';sleeve.style.height=size+'px';sleeve.style.left=sx+'px';sleeve.style.top=sy+'px';
-    const ease='cubic-bezier(.18,.82,.2,1)';
-    const travel=sleeve.animate([{transform:'translate3d(0,0,0) rotate(-5deg) scale(.92)',opacity:.2},{offset:.18,opacity:1},{transform:`translate3d(${tx-sx}px,${ty-sy}px,0) rotate(2deg) scale(1)`,opacity:1}],{duration:620,easing:ease,fill:'forwards'});
-    return travel.finished.then(()=>{
+    const size=Math.min(176,Math.max(122,src.width*.64));
+    const sx=src.left+src.width/2-size/2,sy=src.top+src.height/2-size/2;
+    const tx=target.left+target.width*.5-size/2,ty=target.top+target.height*.5-size/2;
+    sleeve.style.cssText+=`;width:${size}px;height:${size}px;left:${sx}px;top:${sy}px`;
+    const ease='cubic-bezier(.16,.86,.22,1)';
+    const arrive=sleeve.animate([
+      {transform:'translate3d(0,0,0) rotate(-3deg) scale(.94)',opacity:.15},
+      {offset:.18,opacity:1,transform:'translate3d(0,0,0) rotate(-2deg) scale(1)'},
+      {transform:`translate3d(${tx-sx-38}px,${ty-sy-6}px,0) rotate(1.5deg) scale(.98)`,opacity:1}
+    ],{duration:720,easing:ease,fill:'forwards'});
+    return arrive.finished.then(()=>{
       if(rev!==swapRevision)return;
       sleeve.classList.add('is-open');
-      return disc.animate([{transform:'translate3d(0,0,0) rotate(0deg)'},{offset:.58,transform:'translate3d(64%,3%,0) rotate(34deg)'},{transform:'translate3d(5%,16%,0) rotate(73deg) scale(1.03)'}],{duration:760,easing:'cubic-bezier(.16,.9,.24,1)',fill:'forwards'}).finished;
+      return disc.animate([
+        {transform:'translate3d(0,0,0) rotate(0deg) scale(.98)'},
+        {offset:.48,transform:'translate3d(78%,2%,0) rotate(56deg) scale(1.01)'},
+        {offset:.74,transform:'translate3d(106%,16%,0) rotate(112deg) scale(1.02)'},
+        {transform:'translate3d(24%,18%,0) rotate(168deg) scale(.98)'}
+      ],{duration:920,easing:'cubic-bezier(.18,.88,.22,1)',fill:'forwards'}).finished;
     }).then(()=>{
       if(rev!==swapRevision)return;
-      return sleeve.animate([{opacity:1,transform:sleeve.getAnimations()[0]?.effect?.getComputedTiming?getComputedStyle(sleeve).transform:'none'},{opacity:0,transform:'translate3d('+(tx-sx-24)+'px,'+(ty-sy-18)+'px,0) scale(.94)'}],{duration:260,easing:'ease-out',fill:'forwards'}).finished;
-    }).catch(()=>{}).finally(()=>{layer.remove();});
+      return Promise.all([
+        disc.animate([{filter:'drop-shadow(0 8px 8px rgba(0,0,0,.22))'},{filter:'drop-shadow(0 2px 2px rgba(0,0,0,.16))'}],{duration:360,easing:'ease-out',fill:'forwards'}).finished,
+        sleeve.animate([{opacity:1},{opacity:.94,offset:.55},{opacity:0,transform:`translate3d(${tx-sx-86}px,${ty-sy-12}px,0) rotate(-5deg) scale(.9)`}],{duration:440,easing:'ease-in-out',fill:'forwards'}).finished
+      ]);
+    }).catch(()=>{}).finally(()=>layer.remove());
   }
   function drawSelection(animate=false,sourceButton=null) {
     room.dataset.theme=selected.theme;vinyl.dataset.theme=selected.theme;
@@ -834,14 +849,23 @@ try {
   }
   function renderOptions() {
     options.replaceChildren();
-    records.forEach(record=>{
+    records.forEach((record,index)=>{
       const button=document.createElement('button');
-      button.className='record-option';button.type='button';button.dataset.record=record.id;
-      const mini=document.createElement('span');mini.className='mini-record';mini.setAttribute('aria-hidden','true');
-      const image=document.createElement('img');image.src=record.image;image.alt='';image.width=96;image.height=96;mini.append(image);
+      button.className='record-option album-sleeve-option';button.type='button';button.dataset.record=record.id;
+      button.style.setProperty('--stack-index',String(index));
+      const cover=document.createElement('span');cover.className='album-cover';cover.setAttribute('aria-hidden','true');
+      const image=document.createElement('img');image.src=record.image;image.alt='';image.width=360;image.height=360;cover.append(image);
+      const edge=document.createElement('span');edge.className='album-edge';
       const title=document.createElement('strong'),subtitle=document.createElement('small'),state=document.createElement('span');state.className='record-selection';
-      button.append(mini,title,subtitle,state);
+      const spec=document.createElement('span');spec.className='album-spec';spec.textContent='LP · 33⅓ RPM · SPOTIFY';
+      const hint=document.createElement('em');hint.className='album-hint';hint.textContent=t('albumHint');
+      button.append(cover,edge,title,subtitle,state,spec,hint);
       button.addEventListener('click',event=>selectRecord(record,button,event));
+      let drag=null;
+      button.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;drag={id:e.pointerId,x:e.clientX,y:e.clientY,moved:false};button.setPointerCapture?.(e.pointerId);button.classList.add('is-grabbing');});
+      button.addEventListener('pointermove',e=>{if(!drag||drag.id!==e.pointerId)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.hypot(dx,dy)>8)drag.moved=true;button.style.setProperty('--drag-x',dx+'px');button.style.setProperty('--drag-y',dy+'px');});
+      const endDrag=e=>{if(!drag||drag.id!==e.pointerId)return;const moved=drag.moved;drag=null;button.classList.remove('is-grabbing');button.style.removeProperty('--drag-x');button.style.removeProperty('--drag-y');if(moved){e.preventDefault();e.stopPropagation();selectRecord(record,button,e);}};
+      button.addEventListener('pointerup',endDrag);button.addEventListener('pointercancel',endDrag);
       options.append(button);
     });
     drawSelection();
@@ -970,11 +994,14 @@ try {
     window.ClubTurntable?.reset();
     generation++;intent++;bootPromise=null;
     destroyController();
+    const previousArtwork=$('recordArtwork')?.src||'';
     selected=record;storage.set('artclub-disc',record.id);
     transport='idle';announce('playerIdle');resetPlayback();
     drawSelection(false,button);
+    if(previousArtwork&&$('recordArtwork'))$('recordArtwork').src=previousArtwork;
     options.classList.add('is-swapping');
-    animateSleeveSwap(button,record).finally(()=>options.classList.remove('is-swapping'));
+    room.classList.add('is-loading-disc');
+    animateSleeveSwap(button,record).finally(()=>{options.classList.remove('is-swapping');room.classList.remove('is-loading-disc');drawSelection(true,button);});
     boot(); // Prepare the playlist only; playback starts from a deliberate Play action.
   }
   document.querySelectorAll('[data-play]').forEach(button=>button.addEventListener('click',togglePlayback));
@@ -1279,98 +1306,61 @@ try {
 
 
 
-/* v2.6.1 — Haruko Satoru botanical gallery: viewport-aware and frame-climbing. */
+/* v2.7.0 — Haruko living roots: full-section woody branches + illustrated wisteria. */
 try {
 (() => {
   'use strict';
   const root=document.documentElement, section=document.getElementById('gallery');
-  let layer=null,selected=false,inView=false,active=false,petalTimer=0,lastOrigin=null;
-  const flowerPath='M0 0 C-8 -2 -12 5 -9 11 C-6 17 -1 18 0 23 C1 18 6 17 9 11 C12 5 8 -2 0 0Z';
-  const clusters=[[72,32,.72],[214,69,.94],[418,27,.66],[603,76,.86],[792,33,1.02],[1015,71,.74],[1248,29,.92],[1375,83,.62]];
-  function cluster(x,y,scale=1){
-    const flowers=[];
-    const rows=4+((Math.round(x/17))%4);
-    for(let r=0;r<rows;r++){
-      const count=Math.max(1,4-Math.floor(r/2)+((r+Math.round(x))%2));
-      for(let c=0;c<count;c++){
-        const cx=(c-(count-1)/2)*17+(r%2?4:-3),cy=r*17;
-        const tone=['deep','mid','light','pale'][(r+c)%4];
-        flowers.push(`<path class="wisteria-bell ${tone}" d="${flowerPath}" transform="translate(${cx} ${cy}) scale(${.72+r*.035}) rotate(${(c-(count-1)/2)*8})"/>`);
-      }
-    }
-    return `<g class="wisteria-cluster" transform="translate(${x} ${y}) scale(${scale})"><path d="M0 -15 C-4 18,4 60,0 125" fill="none" stroke="#647a57" stroke-width="2.3" stroke-linecap="round"/>${flowers.join('')}</g>`;
-  }
-  function createLayer(){
-    if(layer||!section)return layer;
-    layer=document.createElement('div');layer.id='wisteriaLayer';layer.setAttribute('aria-hidden','true');
-    layer.innerHTML=`<svg class="wisteria-canopy" viewBox="0 0 1440 460" preserveAspectRatio="none" aria-hidden="true">
-      <path class="wisteria-vine" pathLength="1" d="M-40 42 C110 9,230 108,398 62 S680 7,838 69 S1130 112,1480 18"/>
-      <path class="wisteria-vine thin" pathLength="1" d="M-20 10 C170 82,320 9,510 81 S812 121,995 49 S1270 8,1465 72"/>
-      <path class="wisteria-vine thin mobile-hide" pathLength="1" d="M72 0 C172 68,112 128,214 180 M1218 0 C1124 76,1222 129,1124 194"/>
-      <g class="mobile-hide"><path class="wisteria-leaf" d="M70 57 Q91 38 111 58 Q89 72 70 57Z"/><path class="wisteria-leaf" d="M215 69 Q238 48 260 69 Q238 84 215 69Z"/><path class="wisteria-leaf" d="M520 53 Q546 31 570 54 Q545 69 520 53Z"/><path class="wisteria-leaf" d="M920 72 Q944 49 970 72 Q944 87 920 72Z"/><path class="wisteria-leaf" d="M1270 52 Q1294 31 1317 53 Q1293 68 1270 52Z"/></g>
-      ${clusters.map(v=>cluster(...v)).join('')}</svg>
-      <svg class="wisteria-sprawl" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-        <path class="wisteria-vine sprawl-vine" pathLength="1" d="M-3 9 C9 15,5 30,17 35 S13 53,27 59 S19 76,34 94"/>
-        <path class="wisteria-vine thin sprawl-vine" pathLength="1" d="M102 5 C91 16,99 29,86 38 S94 56,79 66 S88 83,68 102"/>
-        <path class="wisteria-vine thin sprawl-vine center-vine" pathLength="1" d="M17 -3 C25 8,39 3,45 15 S61 20,57 31 S72 39,66 53 S79 69,88 72"/>
-      </svg><div class="wisteria-caption">HARUKO SATORU · 藤の庭</div>`;
-    [['rose','4%','24%'],['white','91%','18%'],['sakura','8%','65%'],['lilac','88%','73%'],['rose','29%','84%'],['white','71%','52%']].forEach((v,i)=>layer.append(flower(v[0],v[1],v[2],`${(.2+i*.11).toFixed(2)}s`,`${-22+i*9}deg`)));
-    section.prepend(layer);return layer;
-  }
-  function flower(kind,x,y,delay,rot){
-    const el=document.createElement('span');el.className=`botanical-flower ${kind}`;el.style.left=x;el.style.top=y;el.style.setProperty('--delay',delay);el.style.setProperty('--rot',rot);for(let i=0;i<5;i++)el.append(document.createElement('i'));return el;
-  }
-  function leaf(x,y,r){const el=document.createElement('i');el.className='frame-leaf';el.style.left=x;el.style.top=y;el.style.setProperty('--r',r);return el;}
-  function decorate(gallery){
-    if(!gallery)return;
-    gallery.querySelectorAll('.gallery-card:not(.placeholder-card)').forEach((card,i)=>{
-      if(card.querySelector('.haruko-botany'))return;
-      card.classList.add('has-haruko-botany');
-      const deco=document.createElement('div');deco.className='haruko-botany';deco.setAttribute('aria-hidden','true');
-      const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('class','frame-vine');svg.setAttribute('viewBox','0 0 100 100');svg.setAttribute('preserveAspectRatio','none');
-      const path=document.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('pathLength','1');
-      path.setAttribute('d',i%2===0?'M2 96 C11 78,1 62,10 45 S7 15,28 3 M25 4 C46 8,53 0,70 5':'M98 96 C87 78,99 61,89 43 S94 14,72 3 M75 4 C55 8,48 0,31 5');svg.append(path);deco.append(svg);
-      const patterns=[
-        [['rose','-6%','12%'],['lilac','12%','-6%']],
-        [['white','79%','-5%'],['sakura','93%','45%']],
-        [['lilac','-4%','34%'],['rose','86%','78%']],
-        [['sakura','9%','-5%'],['white','90%','26%']],
-        [['rose','-4%','70%'],['white','73%','-5%']],
-        [['lilac','89%','64%'],['sakura','-5%','18%']]
-      ];
-      const variants=patterns[i%patterns.length];
-      variants.forEach((v,k)=>deco.append(flower(v[0],v[1],v[2],`${(.12+i*.04+k*.12).toFixed(2)}s`,`${-15+i*7+k*11}deg`)));
-      deco.append(leaf(i%2?'84%':'3%','35%',i%2?'-28deg':'28deg'),leaf(i%2?'91%':'8%','61%',i%2?'24deg':'-24deg'));
-      card.append(deco);
-    });
-  }
-  function petals(origin){
-    if(!active||root.dataset.motion==='off'||!layer)return;
-    const count=matchMedia('(max-width:700px)').matches?8:16,rect=origin?.getBoundingClientRect?.(),sec=section.getBoundingClientRect();
-    const ox=rect?rect.left+rect.width/2-sec.left:sec.width*.5,oy=rect?rect.top+rect.height/2-sec.top:70;
-    for(let i=0;i<count;i++){
-      const p=document.createElement('i');p.className='wisteria-petal';const x=ox+(Math.random()-.5)*Math.min(sec.width*.7,700),y=oy+Math.random()*34;
-      p.style.setProperty('--px',`${x}px`);p.style.setProperty('--py',`${y}px`);p.style.setProperty('--pr',`${Math.round(Math.random()*150-75)}deg`);p.style.setProperty('--drift',`${Math.round((Math.random()-.5)*150)}px`);p.style.setProperty('--fall',`${Math.round(170+Math.random()*260)}px`);p.style.setProperty('--pd',`${(3.2+Math.random()*1.8).toFixed(2)}s`);p.style.setProperty('--pdelay',`${(Math.random()*.5).toFixed(2)}s`);layer.append(p);p.addEventListener('animationend',()=>p.remove(),{once:true});
-    }
-  }
-  function show(replay=false){
-    createLayer();if(!layer)return;active=true;root.dataset.harukoVisible='true';
-    if(replay||!layer.classList.contains('is-active')){layer.classList.remove('is-active');void layer.offsetWidth;layer.classList.add('is-active');}
-    clearTimeout(petalTimer);petals(lastOrigin);petalTimer=setTimeout(()=>petals(),1150);
-  }
-  function hide(){active=false;root.dataset.harukoVisible='false';clearTimeout(petalTimer);layer?.classList.remove('is-active');layer?.querySelectorAll('.wisteria-petal').forEach(p=>p.remove());}
-  function checkViewport(){if(!section)return false;const r=section.getBoundingClientRect();return r.bottom>innerHeight*.12&&r.top<innerHeight*.88;}
-  function sync(replay=false){inView=checkViewport();if(selected&&inView)show(replay);else hide();}
-  function activate(origin,replayOnly=false){selected=true;lastOrigin=origin||lastOrigin;sync(replayOnly);}
+  let layer=null,selected=false,inView=false,raf=0,lastOrigin=null;
+  const NS='http://www.w3.org/2000/svg';
+  const branchPaths=[
+    'M-80 110 C100 22 230 170 390 92 S730 8 915 118 S1240 198 1535 28',
+    'M-60 470 C118 375 160 250 332 304 S570 468 720 336 S1010 210 1175 326 S1350 548 1518 430',
+    'M34 -40 C102 82 26 182 130 264 S205 440 108 592 S112 810 242 914',
+    'M1410 -44 C1305 58 1402 162 1304 248 S1210 425 1320 548 S1386 756 1230 940',
+    'M230 835 C406 716 504 860 674 754 S936 675 1088 786 S1322 888 1498 770',
+    'M345 86 C438 184 506 184 588 96 M720 330 C815 238 901 238 990 330 M915 690 C1040 572 1130 606 1215 516'
+  ];
+  const rootPaths=[
+    'M-35 895 C160 786 252 945 442 850 S747 820 930 900 S1240 1008 1508 866',
+    'M84 930 C185 828 168 728 266 654 M1368 938 C1264 842 1292 736 1194 654',
+    'M494 960 C515 854 632 850 690 748 M960 968 C942 858 850 836 798 745'
+  ];
+  function svgEl(tag,attrs={}){const e=document.createElementNS(NS,tag);for(const[k,v]of Object.entries(attrs))e.setAttribute(k,v);return e;}
+  function addLeaf(svg,x,y,s=1,r=0,tone=0){const g=svgEl('g',{class:'living-leaf',transform:`translate(${x} ${y}) rotate(${r}) scale(${s})`});
+    const p=svgEl('path',{d:'M0 0 C18 -20 39 -15 48 3 C30 12 12 16 0 0Z',class:`leaf-tone-${tone%3}`});
+    const vein=svgEl('path',{d:'M5 1 C18 2 30 2 42 3',class:'leaf-vein'});g.append(p,vein);svg.append(g);}
+  function addWisteria(svg,x,y,s=1,flip=1,delay=0){const g=svgEl('g',{class:'living-wisteria',transform:`translate(${x} ${y}) scale(${s*flip} ${s})`});
+    g.style.setProperty('--delay',delay+'s');
+    const stem=svgEl('path',{d:'M0 -12 C-5 22 7 56 0 98 C-5 125 3 144 1 167',class:'flower-stem'});g.append(stem);
+    const bells=[];for(let row=0;row<7;row++){const n=Math.max(1,4-Math.floor(row/2));for(let c=0;c<n;c++)bells.push([row,c,n]);}
+    bells.forEach(([row,c,n])=>{const dx=(c-(n-1)/2)*16+(row%2?5:-2),dy=row*20;const pet=svgEl('path',{d:'M0 0 C-8 -6 -15 2 -11 11 C-8 18 -2 18 0 27 C3 18 9 18 12 11 C16 2 8 -6 0 0Z',class:`bell bell-${(row+c)%4}`,transform:`translate(${dx} ${dy}) rotate(${(c-(n-1)/2)*8}) scale(${.74+row*.035})`});g.append(pet);});svg.append(g);}
+  function addBlossom(svg,x,y,s=1,r=0,t='rose',delay=0){const g=svgEl('g',{class:`living-blossom ${t}`,transform:`translate(${x} ${y}) rotate(${r}) scale(${s})`});g.style.setProperty('--delay',delay+'s');
+    for(let i=0;i<5;i++)g.append(svgEl('ellipse',{cx:0,cy:-11,rx:8,ry:13,transform:`rotate(${i*72})`,class:'petal'}));g.append(svgEl('circle',{cx:0,cy:0,r:4.2,class:'heart'}));svg.append(g);}
+  function createLayer(){if(layer||!section)return layer;layer=document.createElement('div');layer.id='livingGarden';layer.setAttribute('aria-hidden','true');
+    const svg=svgEl('svg',{viewBox:'0 0 1440 980',preserveAspectRatio:'none',class:'living-garden-svg'});
+    const branches=svgEl('g',{class:'living-branches'});branchPaths.forEach((d,i)=>branches.append(svgEl('path',{d,pathLength:'1',class:`wood-branch branch-${i}`})));
+    rootPaths.forEach((d,i)=>branches.append(svgEl('path',{d,pathLength:'1',class:`root-branch root-${i}`})));svg.append(branches);
+    [[115,115,1.1,-18,0],[255,92,.9,20,1],[421,127,1.2,-8,2],[590,62,.86,18,0],[758,104,1.18,-16,1],[960,86,.98,20,2],[1150,126,1.16,-22,0],[1310,72,.92,12,1],[103,478,1.08,38,2],[265,342,.82,-32,0],[1185,342,.95,36,1],[1330,482,1.18,-28,2],[280,816,.9,22,1],[515,824,1.02,-14,0],[920,816,.94,17,2],[1224,832,1.1,-18,1]].forEach(v=>addLeaf(svg,...v));
+    [[170,120,.78,1,.12],[360,82,1.05,-1,.24],[622,82,.86,1,.33],[848,100,1.04,-1,.42],[1095,98,.92,1,.51],[1290,105,.72,-1,.58],[78,360,.68,1,.66],[1360,330,.77,-1,.75],[280,770,.78,1,.82],[1080,770,.86,-1,.92]].forEach(v=>addWisteria(svg,...v));
+    [[246,176,.9,-14,'rose',.2],[468,118,.72,22,'sakura',.32],[745,178,.78,-12,'white',.46],[1022,164,.86,18,'lilac',.56],[1212,228,.72,-18,'rose',.68],[190,596,.76,18,'white',.74],[1265,570,.82,-12,'sakura',.84],[487,742,.7,-18,'lilac',.9],[1030,744,.82,14,'rose',1.02]].forEach(v=>addBlossom(svg,...v));
+    layer.append(svg);section.prepend(layer);return layer;}
+  function clearCardDecor(){section?.querySelectorAll('.haruko-botany').forEach(e=>e.remove());section?.querySelectorAll('.has-haruko-botany').forEach(e=>e.classList.remove('has-haruko-botany'));}
+  function petalBurst(origin){if(root.dataset.motion==='off'||!layer)return;const sec=section.getBoundingClientRect(),r=origin?.getBoundingClientRect?.();const ox=r?r.left+r.width/2-sec.left:sec.width*.5,oy=r?r.top-sec.top:90;for(let i=0;i<14;i++){const p=document.createElement('i');p.className='garden-petal';p.style.left=ox+(Math.random()-.5)*180+'px';p.style.top=oy+Math.random()*60+'px';p.style.setProperty('--x',`${(Math.random()-.5)*220}px`);p.style.setProperty('--y',`${190+Math.random()*280}px`);p.style.setProperty('--r',`${Math.random()*320-160}deg`);layer.append(p);p.addEventListener('animationend',()=>p.remove(),{once:true});}}
+  function check(){const r=section.getBoundingClientRect();return r.bottom>innerHeight*.06&&r.top<innerHeight*.94;}
+  function show(replay=false){createLayer();clearCardDecor();root.dataset.harukoVisible='true';layer?.classList.add('is-active');if(replay)petalBurst(lastOrigin);}
+  function hide(){root.dataset.harukoVisible='false';layer?.classList.remove('is-active');layer?.querySelectorAll('.garden-petal').forEach(p=>p.remove());}
+  function sync(replay=false){inView=check();if(selected&&inView)show(replay);else hide();}
+  function activate(origin,replay=false){selected=true;lastOrigin=origin||lastOrigin;sync(replay);}
   function deactivate(){selected=false;hide();}
   function replay(origin){lastOrigin=origin||lastOrigin;if(selected)sync(true);}
-  function pointer(e){if(!active||!layer||root.dataset.motion==='off')return;const r=section.getBoundingClientRect();if(e.clientY<r.top||e.clientY>r.bottom)return;const x=((e.clientX/innerWidth)-.5)*7,y=((e.clientY/innerHeight)-.5)*4;layer.style.setProperty('--wx',`${x.toFixed(1)}px`);layer.style.setProperty('--wy',`${y.toFixed(1)}px`);}
-  addEventListener('pointermove',pointer,{passive:true});
-  if(section&&'IntersectionObserver' in window)new IntersectionObserver(entries=>{inView=entries[0].isIntersecting;if(selected&&inView)show();else hide();},{rootMargin:'-10% 0px -10% 0px',threshold:.03}).observe(section);
-  addEventListener('scroll',()=>{if(selected&&!('IntersectionObserver' in window))sync();},{passive:true});
-  window.ClubWisteria={activate,deactivate,replay,decorate,get active(){return active;}};
+  function decorate(){clearCardDecor();}
+  if(section&&'IntersectionObserver'in window)new IntersectionObserver(e=>{inView=e[0].isIntersecting;sync();},{rootMargin:'-4% 0px -4% 0px',threshold:.01}).observe(section);
+  addEventListener('resize',()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>sync());},{passive:true});
+  section?.addEventListener('pointermove',e=>{if(!layer||root.dataset.harukoVisible!=='true'||root.dataset.motion==='off')return;const rr=section.getBoundingClientRect();const x=((e.clientX-rr.left)/rr.width-.5)*8,y=((e.clientY-rr.top)/rr.height-.5)*5;layer.style.setProperty('--gx',x.toFixed(1)+'px');layer.style.setProperty('--gy',y.toFixed(1)+'px');},{passive:true});
+  window.ClubWisteria={activate,deactivate,replay,decorate,get active(){return root.dataset.harukoVisible==='true';}};
 })();
-} catch(error){window.ClubModuleErrors.push('haruko-wisteria');console.error('haruko-wisteria',error);}
+} catch(error){window.ClubModuleErrors.push('haruko-living-garden');console.error('haruko-living-garden',error);}
 
 /* ===== script.js ===== */
 try {
@@ -1588,4 +1578,4 @@ try {
  });
 })();
 
-window.ClubBuild='2.6.2';
+window.ClubBuild='2.7.0';

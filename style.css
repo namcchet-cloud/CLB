@@ -1,7 +1,7 @@
 /* CLB Nghe thuat / Comic Studio 2.2
    Three type families. Motion, layout and player state are kept independent. */
 :root {
-  --club-build:262;
+  --club-build:270;
   --paper:#f2eadb; --paper-2:#e7ddca; --ink:#252923; --muted:#606254;
   --sage:#b9cba3; --sage-dark:#536b48; --rust:#a44331;
   --blue:#355972; --dusty:#5d7d91; --mustard:#e0bb58; --pink:#d990a4;
@@ -651,7 +651,7 @@ html[data-motion-level="quiet"] .float-doodle,html[data-motion-level="quiet"] .l
 }
 
 /* 2.3: contain layout overflow at its source, not by translating the page. */
-:root { --club-build:262; --gutter:clamp(18px,3vw,32px); --display:"Barlow Condensed","Arial Narrow","Liberation Sans Narrow",sans-serif; }
+:root { --club-build:270; --gutter:clamp(18px,3vw,32px); --display:"Barlow Condensed","Arial Narrow","Liberation Sans Narrow",sans-serif; }
 html { width:100%; max-width:100%; overflow-x:hidden; }
 body { width:100%; min-width:0; max-width:100%; overflow-x:hidden; }
 @supports (overflow:clip) { html,body { overflow-x:clip; } }
@@ -1062,3 +1062,40 @@ html[data-haruko-visible="true"] .gallery-card.has-haruko-botany:nth-of-type(3n)
   .record-option strong,.record-option small{text-align:center!important}
 }
 [data-motion="off"] .af253-ufo-beam,[data-motion="off"] .af253-ufo-lights circle,[data-motion="off"] .af253-hull{animation:none!important}
+
+/* v2.7.0 — living roots, compact square turntable, stacked album sleeves */
+:root{--club-build:270}
+#gallery{position:relative;overflow:visible!important;isolation:isolate}
+#livingGarden{position:absolute;inset:-9rem -5vw -10rem;pointer-events:none;z-index:2;opacity:0;transition:opacity .7s ease;overflow:visible;transform:translate3d(var(--gx,0),var(--gy,0),0);will-change:transform,opacity}
+html[data-haruko-visible="true"] #livingGarden{opacity:1}
+.living-garden-svg{width:110%;height:calc(100% + 18rem);margin-left:-5%;overflow:visible;filter:drop-shadow(0 8px 8px rgba(45,50,38,.14))}
+.wood-branch,.root-branch{fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;vector-effect:non-scaling-stroke}
+.wood-branch{stroke:#4a382c;stroke-width:13}.wood-branch:nth-child(2n){stroke:#5a4433;stroke-width:9}.wood-branch:nth-child(3n){stroke:#3e3129;stroke-width:7}
+.root-branch{stroke:#66513e;stroke-width:8;opacity:.92}
+html[data-haruko-visible="true"] .wood-branch,html[data-haruko-visible="true"] .root-branch{animation:gardenGrow 1.5s cubic-bezier(.16,.8,.24,1) forwards}
+.living-leaf{opacity:0;transform-box:fill-box;transform-origin:center;filter:drop-shadow(0 2px 1px rgba(43,54,38,.13))}.living-leaf path:first-child{stroke:#40533d;stroke-width:1.5;vector-effect:non-scaling-stroke}.leaf-tone-0{fill:#678261}.leaf-tone-1{fill:#799470}.leaf-tone-2{fill:#8ca57d}.leaf-vein{fill:none;stroke:#dbe4cf;stroke-width:1;opacity:.55;vector-effect:non-scaling-stroke}
+html[data-haruko-visible="true"] .living-leaf{animation:leafUnfurl .65s cubic-bezier(.16,1.22,.25,1) .5s forwards,gardenSway 5.8s ease-in-out 1.2s infinite alternate}
+.living-wisteria,.living-blossom{opacity:0;transform-box:fill-box;transform-origin:top center}
+html[data-haruko-visible="true"] .living-wisteria,html[data-haruko-visible="true"] .living-blossom{animation:flowerBloom .82s cubic-bezier(.16,1.08,.26,1) var(--delay,.35s) forwards,gardenSway 6.2s ease-in-out calc(var(--delay,.35s) + .9s) infinite alternate}
+.flower-stem{fill:none;stroke:#516846;stroke-width:2.3;vector-effect:non-scaling-stroke}.bell{stroke:#675879;stroke-width:.85;vector-effect:non-scaling-stroke}.bell-0{fill:#735c94}.bell-1{fill:#9a83b5}.bell-2{fill:#bca5cf}.bell-3{fill:#ddd1e5}
+.living-blossom .petal{stroke:#7b687b;stroke-width:.75;vector-effect:non-scaling-stroke}.living-blossom.rose .petal{fill:#c09bb9}.living-blossom.sakura .petal{fill:#e4bfcf}.living-blossom.white .petal{fill:#eee8df}.living-blossom.lilac .petal{fill:#ad94c4}.living-blossom .heart{fill:#e1c47f;stroke:#9c7b52;stroke-width:.6}
+.garden-petal{position:absolute;width:12px;height:18px;border-radius:75% 25% 70% 30%;background:#c3aad5;filter:drop-shadow(0 2px 1px rgba(57,48,64,.12));animation:gardenPetal 3.6s cubic-bezier(.18,.64,.3,1) forwards}
+.gallery-section>.section-heading,.gallery-section>.artist-switcher,.gallery-section>.filters,.gallery-section>#galleryGrid,.gallery-section>.gallery-hint{position:relative;z-index:4}
+.gallery-card{z-index:3}.gallery-card:hover{z-index:5}
+#wisteriaLayer,.haruko-botany{display:none!important}
+@keyframes gardenGrow{to{stroke-dashoffset:0}}@keyframes leafUnfurl{from{opacity:0;scale:.2;rotate:-15deg}to{opacity:1;scale:1;rotate:0}}@keyframes flowerBloom{0%{opacity:0;scale:.3;translate:0 -12px}70%{opacity:1;scale:1.05;translate:0 2px}100%{opacity:1;scale:1;translate:0 0}}@keyframes gardenSway{from{rotate:-1.2deg;translate:-1px 0}to{rotate:1.4deg;translate:2px 2px}}@keyframes gardenPetal{0%{opacity:0;transform:translate(0,0) rotate(0) scale(.6)}12%{opacity:.9}100%{opacity:0;transform:translate(var(--x),var(--y)) rotate(var(--r)) scale(1)}}
+
+/* Compact music desk */
+.listening-room{display:grid!important;grid-template-columns:minmax(280px,430px) minmax(300px,430px)!important;justify-content:center!important;align-items:start!important;gap:clamp(18px,3vw,42px)!important}
+.turntable-column{max-width:430px!important;width:100%!important}.turntable{width:min(100%,410px)!important;aspect-ratio:1/1!important;min-height:0!important;padding:clamp(12px,2vw,18px)!important;margin-inline:auto}.vinyl-stage{min-height:0!important;aspect-ratio:1/1!important}.deck-head{font-size:.78em}.deck-model{font-size:.78em}.deck-controls{gap:8px!important}.spotify-shell{margin-top:10px!important}.spotify-mount iframe{height:152px!important}.music-fineprint{font-size:11px!important;line-height:1.45}.deck-use-hint{text-align:center;font-size:11px;letter-spacing:.04em;margin:8px 0 4px;color:var(--muted,#6f6e65);font-style:italic}
+.music-sidebar{width:100%!important}.record-crate{padding:18px!important;min-height:0!important;background:rgba(242,234,219,.76)!important;overflow:visible!important}.record-options{display:block!important;position:relative!important;min-height:350px!important;padding-top:20px!important}.album-sleeve-option{position:absolute!important;left:50%!important;top:26px!important;width:min(310px,86%)!important;aspect-ratio:1/1!important;padding:0!important;border:2px solid #292c28!important;background:#e9ddc8!important;display:block!important;text-align:left!important;transform:translate(calc(-50% + var(--drag-x,0px)),calc(var(--stack-index)*28px + var(--drag-y,0px))) rotate(calc(-3deg + var(--stack-index)*5deg))!important;transition:transform .55s cubic-bezier(.16,.8,.2,1),box-shadow .45s ease,filter .3s ease!important;box-shadow:10px 13px 0 rgba(38,40,36,.13),0 18px 30px rgba(41,39,35,.14)!important;overflow:visible!important;touch-action:none;cursor:grab}
+.album-sleeve-option:nth-child(2){left:53%!important}.album-sleeve-option:hover,.album-sleeve-option:focus-visible{z-index:8!important;transform:translate(calc(-50% + var(--drag-x,0px)),calc(var(--stack-index)*18px - 18px + var(--drag-y,0px))) rotate(0deg) scale(1.025)!important}.album-sleeve-option.is-grabbing{transition:none!important;cursor:grabbing;z-index:12!important}.album-cover{position:absolute;inset:7%;overflow:hidden;border:1px solid rgba(40,43,39,.18);background:#ddd}.album-cover img{width:100%;height:100%;object-fit:cover;display:block}.album-edge{position:absolute;left:-23px;top:9%;bottom:9%;width:25px;background:#d9c8aa;border:2px solid #2d302c;border-right:0;box-shadow:-5px 5px 0 rgba(36,38,34,.1)}.album-sleeve-option strong{position:absolute!important;left:-20px;top:52%;writing-mode:vertical-rl;transform:translateY(-50%) rotate(180deg);font:800 14px/1.1 'Barlow Condensed',sans-serif;letter-spacing:.04em;max-height:70%;overflow:hidden}.album-sleeve-option small{position:absolute!important;right:8%;bottom:7%;background:rgba(241,231,213,.9);padding:4px 7px;font-size:10px!important;max-width:72%;border:1px solid rgba(44,45,40,.2)}.album-sleeve-option .record-selection{position:absolute!important;right:8%;top:7%;background:#2d302b;color:#f5ebda;padding:5px 8px;font-size:9px;letter-spacing:.07em}.album-hint{position:absolute;left:50%;bottom:-34px;transform:translateX(-50%);width:95%;text-align:center;font-size:10px;color:#68675f;font-style:normal;opacity:.82}.record-options.is-swapping{opacity:1!important}.record-options.is-swapping .album-sleeve-option:not(.is-grabbing){pointer-events:none}
+.disc-sleeve.deluxe-sleeve{border-radius:2px}.swap-label{position:absolute;left:8%;right:8%;bottom:7%;z-index:6;background:rgba(239,229,210,.88);border:1px solid rgba(43,44,39,.18);padding:4px 7px;font:700 10px/1.2 'DM Sans',sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+@media(max-width:820px){#livingGarden{inset:-5rem -18vw -7rem}.living-garden-svg{width:136%;margin-left:-18%}.living-wisteria:nth-of-type(n+8),.living-leaf:nth-of-type(n+13){display:none}.listening-room{display:flex!important;flex-direction:column!important;align-items:center!important}.music-sidebar{order:1!important;max-width:430px}.turntable-column{order:2!important}.record-options{min-height:330px!important}.album-sleeve-option{width:min(290px,82%)!important}.turntable{width:min(88vw,360px)!important}.spotify-mount iframe{height:152px!important}}
+@media(max-width:480px){#livingGarden{inset:-4rem -28vw -6rem}.living-garden-svg{width:156%;margin-left:-28%}.record-options{min-height:300px!important}.album-sleeve-option{width:min(250px,78%)!important}.album-hint{font-size:9px}.turntable{width:min(86vw,330px)!important}}
+[data-motion="off"] .wood-branch,[data-motion="off"] .root-branch,[data-motion="off"] .living-leaf,[data-motion="off"] .living-wisteria,[data-motion="off"] .living-blossom{animation:none!important;opacity:1;stroke-dashoffset:0!important}
+/* v2.7.0 sizing polish */
+.listening-room{grid-template-columns:minmax(250px,330px) minmax(270px,340px)!important;gap:clamp(18px,3vw,34px)!important}
+.turntable-column{max-width:330px!important}.turntable{width:min(100%,300px)!important;max-width:300px!important}.record-options{min-height:325px!important}.album-sleeve-option{width:min(285px,88%)!important}.album-spec{position:absolute;left:8%;bottom:7%;z-index:5;background:#2c302b;color:#f5ebda;padding:4px 6px;font:700 8px/1.1 'DM Sans',sans-serif;letter-spacing:.07em}.album-sleeve-option small{bottom:14%!important}.deck-caption{font-size:11px!important}.preview-motion{font-size:11px!important}.player-status{font-size:11px!important}
+@media(max-width:820px){.turntable{width:min(78vw,300px)!important}.music-sidebar{max-width:340px!important}.record-options{min-height:315px!important}}
