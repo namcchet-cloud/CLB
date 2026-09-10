@@ -1143,7 +1143,7 @@ html[data-haruko-visible="true"] .branch-stack path,html[data-haruko-visible="tr
 [data-motion="off"] .branch-stack path,[data-motion="off"] .root-stack path,[data-motion="off"] .wood-twig{animation:none!important;stroke-dashoffset:0!important}
 
 
-/* v2.7.2 — music room interaction repair: real covers, easy selection, precise platter snap */
+/* v2.7.3 — music room interaction repair: real covers, easy selection, precise platter snap */
 :root{--club-build:272}
 
 /* Keep the music room compact on desktop. */
@@ -1254,4 +1254,66 @@ html[data-haruko-visible="true"] .branch-stack path,html[data-haruko-visible="tr
   .album-sleeve-option:nth-child(1){left:2%!important}.album-sleeve-option:nth-child(2){left:31%!important;top:24px!important}
   .album-sleeve-option small{font-size:8px!important}.album-spec{font-size:7px!important}.album-hint{font-size:8px!important;white-space:normal!important;text-align:center!important}
   .turntable{width:min(82vw,286px)!important}
+}
+
+
+/* ============================================================
+   v2.7.3 MUSIC FIX — clean sleeves + physical record pull/drop
+   ============================================================ */
+#playlist .record-crate{overflow:visible!important}
+#playlist .record-options{position:relative!important;display:block!important;width:100%!important;min-height:310px!important;overflow:visible!important;isolation:isolate}
+#playlist .album-sleeve-option{
+  position:absolute!important;top:14px!important;width:min(252px,57%)!important;aspect-ratio:1/1!important;height:auto!important;
+  padding:0!important;margin:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;
+  overflow:visible!important;opacity:1!important;filter:none!important;translate:none!important;touch-action:manipulation!important
+}
+#playlist .album-sleeve-option::before,#playlist .album-sleeve-option::after,
+#playlist .album-cover::before,#playlist .album-cover::after{content:none!important;display:none!important}
+#playlist .album-sleeve-option:nth-child(1){left:5%!important;z-index:2!important;transform:rotate(-1.2deg)!important}
+#playlist .album-sleeve-option:nth-child(2){left:43%!important;top:28px!important;z-index:3!important;transform:rotate(1.2deg)!important}
+#playlist .album-sleeve-option.is-open{z-index:20!important;transform:translateY(-7px) rotate(0deg) scale(1.015)!important;filter:drop-shadow(0 13px 10px rgba(30,28,24,.15))!important}
+#playlist .album-sleeve-option:hover,#playlist .album-sleeve-option:focus-visible{z-index:21!important;transform:translateY(-7px) rotate(0deg) scale(1.015)!important}
+#playlist .album-cover{position:absolute!important;inset:0!important;z-index:5!important;overflow:hidden!important;border:0!important;border-radius:0!important;background:var(--album-tone)!important;box-shadow:6px 8px 15px rgba(36,32,28,.14)!important;opacity:1!important;filter:none!important}
+#playlist .album-cover img{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;display:block!important;object-fit:cover!important;border:0!important;border-radius:0!important;opacity:1!important;filter:none!important;mix-blend-mode:normal!important}
+#playlist .album-sleeve-option[data-theme="green"] .album-cover img{transform:scale(1.15)!important}
+#playlist .album-sleeve-option[data-theme="pink"] .album-cover img{transform:scale(1.025)!important}
+/* The spine lives OUTSIDE the square artwork, so it never covers the picture. */
+#playlist .album-edge{left:-18px!important;top:0!important;bottom:0!important;width:18px!important;z-index:7!important;border:0!important;background:#496343!important;pointer-events:none!important}
+#playlist .album-sleeve-option[data-theme="pink"] .album-edge{background:#99536f!important}
+#playlist .album-sleeve-option strong{left:-15px!important;top:50%!important;z-index:8!important;writing-mode:vertical-rl!important;transform:translateY(-50%) rotate(180deg)!important;max-height:76%!important;color:#fff!important;font:800 12px/1 var(--display)!important;letter-spacing:.015em!important;text-shadow:0 1px 2px rgba(0,0,0,.28)!important;pointer-events:none!important}
+#playlist .album-sleeve-option small{left:10px!important;right:10px!important;bottom:10px!important;z-index:8!important;width:auto!important;padding:4px 7px!important;background:rgba(246,239,225,.9)!important;color:#262924!important;font:750 9px/1.2 var(--body)!important;border:0!important;pointer-events:none!important}
+#playlist .album-spec{left:10px!important;top:10px!important;z-index:8!important;padding:4px 6px!important;font-size:8px!important;background:rgba(31,34,29,.82)!important;pointer-events:none!important}
+#playlist .record-selection{right:9px!important;top:9px!important;z-index:9!important;padding:4px 6px!important;font-size:8px!important;background:var(--room-accent)!important;pointer-events:none!important}
+#playlist .album-hint{left:50%!important;bottom:-28px!important;z-index:9!important;max-width:92%!important;padding:4px 8px!important;white-space:nowrap!important;background:rgba(242,234,219,.92)!important;border:0!important;border-radius:999px!important;color:#5b5b54!important;font-size:8px!important;pointer-events:none!important}
+/* The real record sits behind the cover. On drag it disappears only because the exact clone lifts from the same coordinates. */
+#playlist .album-pocket-record{position:absolute!important;right:-1%!important;top:8%!important;width:84%!important;aspect-ratio:1!important;z-index:4!important;opacity:0!important;pointer-events:none!important;transform:translateX(-22%) rotate(-10deg) scale(.94)!important;transition:transform .52s cubic-bezier(.18,.82,.2,1),opacity .2s ease,filter .2s ease!important;touch-action:none!important;user-select:none!important;-webkit-user-select:none!important}
+#playlist .album-sleeve-option.is-open .album-pocket-record{opacity:1!important;pointer-events:auto!important;transform:translateX(46%) rotate(8deg) scale(1)!important;cursor:grab!important;z-index:4!important}
+#playlist .album-pocket-record.is-held{opacity:0!important}
+#playlist .album-sleeve-option.is-pulling-disc .album-cover{filter:drop-shadow(0 5px 7px rgba(30,28,24,.12))!important}
+.manual-disc-drag{position:fixed!important;z-index:9999!important;pointer-events:none!important;margin:0!important;border-radius:50%!important;will-change:left,top,transform!important;touch-action:none!important}
+.manual-disc-drag.returning-disc{z-index:9998!important}
+html.is-dragging-record,html.is-dragging-record body{overscroll-behavior:none!important}
+/* Magnetic target is visually larger than the physical platter; final placement stays centered. */
+#playlist.disc-over-deck .turntable{box-shadow:0 0 0 12px color-mix(in srgb,var(--room-accent) 24%,transparent),0 0 34px color-mix(in srgb,var(--room-accent) 28%,transparent),9px 11px 0 #25292330!important}
+#playlist.disc-over-deck .vinyl-stage::after{content:"THẢ — MÁY SẼ HÚT VÀO TÂM"!important;inset:-13%!important;border:2px dashed var(--room-accent)!important;border-radius:50%!important;background:color-mix(in srgb,var(--room) 26%,transparent)!important;font-size:9px!important}
+#playlist .record-carrier{width:76%!important;left:6%!important;top:12%!important;aspect-ratio:1!important}
+#playlist .vinyl-hit{width:76%!important;left:6%!important;top:12%!important}
+
+@media(max-width:820px){
+  #playlist .record-options{min-height:292px!important;width:min(100%,430px)!important;margin-inline:auto!important}
+  #playlist .album-sleeve-option{width:min(226px,58vw)!important}
+  #playlist .album-sleeve-option:nth-child(1){left:7%!important}
+  #playlist .album-sleeve-option:nth-child(2){left:38%!important;top:29px!important}
+}
+@media(max-width:480px){
+  #playlist .record-options{min-height:250px!important;width:100%!important}
+  #playlist .album-sleeve-option{width:min(188px,56vw)!important}
+  #playlist .album-sleeve-option:nth-child(1){left:8%!important}
+  #playlist .album-sleeve-option:nth-child(2){left:39%!important;top:24px!important}
+  #playlist .album-edge{left:-14px!important;width:14px!important}
+  #playlist .album-sleeve-option strong{left:-12px!important;font-size:10px!important}
+  #playlist .album-spec{font-size:6.5px!important;left:7px!important;top:7px!important}
+  #playlist .album-sleeve-option small{font-size:7px!important;left:7px!important;right:7px!important;bottom:7px!important}
+  #playlist .record-selection{font-size:6.5px!important;right:6px!important;top:6px!important}
+  #playlist .album-hint{font-size:7px!important;bottom:-25px!important;white-space:normal!important;text-align:center!important}
 }

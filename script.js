@@ -841,16 +841,11 @@ try {
   }
   function dragCenterInDeck(x,y){
     const stage=$('vinyl-stage')?.getBoundingClientRect();
-    const deckBox=deck?.getBoundingClientRect();
-    if(!stage||!deckBox)return false;
-    // Generous drop zone: almost the whole platter half of the machine,
-    // while still excluding the control strip at the bottom.
-    const grow=Math.min(stage.width,stage.height)*.18;
-    const left=Math.max(deckBox.left,stage.left-grow);
-    const right=Math.min(deckBox.right,stage.right+grow);
-    const top=Math.max(deckBox.top,stage.top-grow*.55);
-    const bottom=Math.min(deckBox.bottom,stage.bottom+grow*.55);
-    return x>=left&&x<=right&&y>=top&&y<=bottom;
+    if(!stage)return false;
+    // v2.7.3: deliberately forgiving magnetic zone. The user's hand can be
+    // well outside the platter edge; the record still snaps to the exact spindle.
+    const pad=Math.max(72,Math.min(155,Math.min(stage.width,stage.height)*.48));
+    return x>=stage.left-pad&&x<=stage.right+pad&&y>=stage.top-pad*.72&&y<=stage.bottom+pad*.82;
   }
   function platterCenter(){
     const carrier=$('recordCarrier')?.getBoundingClientRect();
@@ -863,30 +858,69 @@ try {
     e.preventDefault();e.stopPropagation();armRecord(record,button);
     if(dragRecord?.ghost)dragRecord.ghost.remove();
     const r=discSource.getBoundingClientRect();
-    const size=Math.min(180,Math.max(96,r.width));
+    const size=Math.min(190,Math.max(92,r.width));
+    const scale=size/Math.max(1,r.width);
     const ghost=document.createElement('div');ghost.className=`manual-disc-drag theme-${record.theme}`;ghost.setAttribute('aria-hidden','true');
     const img=document.createElement('img');img.src=record.image;img.alt='';ghost.append(img);document.body.append(ghost);
-    ghost.style.width=ghost.style.height=size+'px';ghost.style.left=(e.clientX-size/2)+'px';ghost.style.top=(e.clientY-size/2)+'px';
-    discSource.classList.add('is-held');
-    dragRecord={id:e.pointerId,record,button,source:discSource,ghost,size,x:e.clientX,y:e.clientY};
-    try{discSource.setPointerCapture(e.pointerId)}catch{}
+    // Start at the exact on-screen record position: it visibly comes out of the sleeve.
+    const left=r.left+(r.width-size)/2, top=r.top+(r.height-size)/2;
+    ghost.style.width=ghost.style.height=size+'px';ghost.style.left=left+'px';ghost.style.top=top+'px';
+    discSource.classList.add('is-held');button.classList.add('is-pulling-disc');
+    dragRecord={id:e.pointerId,record,button,source:discSource,ghost,size,x:e.clientX,y:e.clientY,
+      grabX:e.clientX-left,grabY:e.clientY-top,startX:e.clientX,startY:e.clientY,moved:false,scale};
+    window.addEventListener('pointermove',moveDiscDrag,{passive:false});
+    window.addEventListener('pointerup',onGlobalDiscUp,{passive:false});
+    window.addEventListener('pointercancel',onGlobalDiscCancel,{passive:false});
     document.documentElement.classList.add('is-dragging-record');
   }
   function moveDiscDrag(e){
     const d=dragRecord;if(!d||d.id!==e.pointerId)return;
-    d.x=e.clientX;d.y=e.clientY;
-    d.ghost.style.left=(e.clientX-d.size/2)+'px';d.ghost.style.top=(e.clientY-d.size/2)+'px';
+    e.preventDefault();d.x=e.clientX;d.y=e.clientY;
+    if(!d.moved&&Math.hypot(e.clientX-d.startX,e.clientY-d.startY)>3)d.moved=true;
+    d.ghost.style.left=(e.clientX-d.grabX)+'px';d.ghost.style.top=(e.clientY-d.grabY)+'px';
     room.classList.toggle('disc-over-deck',dragCenterInDeck(e.clientX,e.clientY));
   }
+  function clearGlobalDiscEvents(){
+    window.removeEventListener('pointermove',moveDiscDrag);
+    window.removeEventListener('pointerup',onGlobalDiscUp);
+    window.removeEventListener('pointercancel',onGlobalDiscCancel);
+  }
+  function onGlobalDiscUp(e){if(dragRecord&&dragRecord.id===e.pointerId)endDiscDrag(e,false);}
+  function onGlobalDiscCancel(e){if(dragRecord&&dragRecord.id===e.pointerId)endDiscDrag(e,true);}
+  async function returnLoadedDiscHome(nextRecordId){
+    if(!discLoaded||selected.id===nextRecordId)return;
+    const carrier=$('recordCarrier');
+    const from=carrier?.getBoundingClientRect();
+    const oldButton=options.querySelector(`[data-record="${selected.id}"]`);
+    const pocket=oldButton?.querySelector('.album-pocket-record');
+    const to=pocket?.getBoundingClientRect();
+    if(from&&to&&from.width){
+      const size=Math.min(190,Math.max(86,from.width));
+      const fly=document.createElement('div');fly.className=`manual-disc-drag returning-disc theme-${selected.theme}`;fly.setAttribute('aria-hidden','true');
+      const img=document.createElement('img');img.src=selected.image;img.alt='';fly.append(img);document.body.append(fly);
+      const sx=from.left+from.width/2-size/2, sy=from.top+from.height/2-size/2;
+      const tx=to.left+to.width/2-size/2, ty=to.top+to.height/2-size/2;
+      fly.style.cssText+=`;width:${size}px;height:${size}px;left:${sx}px;top:${sy}px`;
+      carrier?.setAttribute('aria-hidden','true');room.classList.remove('has-disc');
+      try{await fly.animate([
+        {transform:'translate3d(0,0,0) scale(1) rotate(0deg)',opacity:1},
+        {offset:.58,transform:`translate3d(${(tx-sx)*.58}px,${(ty-sy)*.58-24}px,0) scale(.86) rotate(-10deg)`,opacity:1},
+        {transform:`translate3d(${tx-sx}px,${ty-sy}px,0) scale(.68) rotate(-20deg)`,opacity:.08}
+      ],{duration:620,easing:'cubic-bezier(.2,.78,.18,1)',fill:'forwards'}).finished}catch{}
+      fly.remove();
+    }
+    discLoaded=false;
+  }
   async function endDiscDrag(e,cancelled=false){
-    const d=dragRecord;if(!d||d.id!==e.pointerId)return;dragRecord=null;
-    document.documentElement.classList.remove('is-dragging-record');room.classList.remove('disc-over-deck');d.source.classList.remove('is-held');
+    const d=dragRecord;if(!d||d.id!==e.pointerId)return;dragRecord=null;clearGlobalDiscEvents();
+    document.documentElement.classList.remove('is-dragging-record');room.classList.remove('disc-over-deck');d.source.classList.remove('is-held');d.button.classList.remove('is-pulling-disc');
     const success=!cancelled&&dragCenterInDeck(e.clientX,e.clientY);
     if(!success){
       const back=d.source.getBoundingClientRect();
       try{await d.ghost.animate([{transform:'scale(1)',opacity:1},{transform:`translate(${back.left+back.width/2-e.clientX}px,${back.top+back.height/2-e.clientY}px) scale(.62)`,opacity:.3}],{duration:520,easing:'cubic-bezier(.2,.8,.2,1)',fill:'forwards'}).finished}catch{}
       d.ghost.remove();announce('discReturn');renderTransport();return;
     }
+    await returnLoadedDiscHome(d.record.id);
     const snap=platterCenter();
     if(!snap){d.ghost.remove();return;}
     const targetX=snap.x-d.size/2,targetY=snap.y-d.size/2;
@@ -922,7 +956,6 @@ try {
       button.append(pocket,cover,edge,title,subtitle,state,spec,hint);
       button.addEventListener('click',e=>{if(e.target.closest('.album-pocket-record'))return;armRecord(record,button);});
       pocket.addEventListener('pointerdown',e=>startDiscDrag(e,record,button,pocket));
-      pocket.addEventListener('pointermove',moveDiscDrag);pocket.addEventListener('pointerup',e=>endDiscDrag(e,false));pocket.addEventListener('pointercancel',e=>endDiscDrag(e,true));
       options.append(button);
     });
     drawSelection();window.ClubMotion?.register(options);
@@ -1635,4 +1668,4 @@ try {
  });
 })();
 
-window.ClubBuild='2.7.2';
+window.ClubBuild='2.7.3';
