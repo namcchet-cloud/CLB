@@ -1,4 +1,4 @@
-/* Music v3.2.0 — vintage mechanical turntable + compact album products. */
+/* Music v3.3.0 — vintage mechanical turntable + compact album products. */
 .music-v3{
   --mv3-accent:#536f4c;
   --mv3-paper:#eee5d4;
@@ -73,39 +73,54 @@
 /* Vintage plinth: wood, brass, enamel and visible mechanics. */
 .mv3-deck-panel{min-width:0}
 .mv3-turntable{
-  --arm-angle:-5deg;--arm-lift:0px;
+  --arm-angle:-16deg;--arm-lift:0px;--arm-time:900ms;--arm-ease:cubic-bezier(.22,.72,.18,1);
   position:relative;width:min(100%,382px);aspect-ratio:1/1;margin-inline:auto;
-  border:2px solid #3a2d22;border-radius:8px;
+  border:2px solid #35271f;border-radius:10px;
   background:
-    linear-gradient(90deg,rgba(255,255,255,.04),transparent 18% 82%,rgba(0,0,0,.05)),
-    repeating-linear-gradient(12deg,rgba(70,38,22,.08) 0 2px,transparent 2px 17px),
-    linear-gradient(145deg,#7a5136,#a7764f 42%,#6b432d 100%);
-  box-shadow:0 14px 26px rgba(45,35,24,.20),inset 0 0 0 6px rgba(54,34,22,.18),inset 0 0 0 8px rgba(232,202,155,.12);
+    linear-gradient(90deg,rgba(255,255,255,.035),transparent 14% 86%,rgba(0,0,0,.055)),
+    repeating-linear-gradient(10deg,rgba(76,41,24,.08) 0 2px,transparent 2px 18px),
+    linear-gradient(145deg,#70472f,#9a6845 45%,#613d2a 100%);
+  box-shadow:0 16px 28px rgba(45,35,24,.22),inset 0 0 0 5px rgba(49,29,19,.20),inset 0 0 0 8px rgba(237,205,151,.10);
   overflow:visible;isolation:isolate;
 }
-.mv3-turntable::before,.mv3-turntable::after{content:"";position:absolute;width:7px;height:7px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f7df9a,#a2732d 55%,#5f431c);box-shadow:0 0 0 1px #3f2d15;z-index:10;top:10px}.mv3-turntable::before{left:10px}.mv3-turntable::after{right:10px}
-.mv3-deck-brand{position:absolute;left:17px;top:16px;color:#f1dfb8;text-shadow:0 1px #4b2d19;z-index:8}.mv3-deck-brand strong{display:block;font:900 15px var(--display);letter-spacing:.02em}.mv3-deck-brand small{font:800 8px var(--body);letter-spacing:.13em}
-.mv3-platter-wrap{position:absolute;left:7.5%;top:24%;width:62%;aspect-ratio:1;border-radius:50%;z-index:2}
-.mv3-platter{position:absolute;inset:0;border-radius:50%;background:#1b1d1b;box-shadow:0 9px 18px rgba(0,0,0,.35),0 0 0 6px #b88a4a,0 0 0 9px #3d2b20,inset 0 0 0 4px #101210;overflow:hidden}
-.mv3-platter-surface{position:absolute;inset:8px;border-radius:50%;background:repeating-radial-gradient(circle,#171a18 0 5px,#292c29 6px 8px);will-change:transform}
+.mv3-turntable::before,.mv3-turntable::after{content:"";position:absolute;width:7px;height:7px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f9e3a4,#a67831 55%,#5a3d1b);box-shadow:0 0 0 1px #3d2a14;z-index:10;top:10px}.mv3-turntable::before{left:10px}.mv3-turntable::after{right:10px}
+.mv3-deck-brand{position:absolute;left:17px;top:16px;color:#f0ddb4;text-shadow:0 1px #412719;z-index:8}.mv3-deck-brand strong{display:block;font:900 14px var(--display);letter-spacing:.02em}.mv3-deck-brand small{font:800 7px var(--body);letter-spacing:.14em}
+
+/* Mâm được kéo gần tâm thân máy để không còn lệch và chừa đáy cho nút phát. */
+.mv3-platter-wrap{position:absolute;left:8.5%;top:20%;width:61%;aspect-ratio:1;border-radius:50%;z-index:2}
+.mv3-platter{position:absolute;inset:0;border-radius:50%;background:#191b19;box-shadow:0 10px 18px rgba(0,0,0,.34),0 0 0 5px #b68a4b,0 0 0 8px #39291f,inset 0 0 0 4px #0e100f;overflow:hidden}
+.mv3-platter-surface{position:absolute;inset:8px;border-radius:50%;background:repeating-radial-gradient(circle,#151816 0 5px,#292c29 6px 8px);will-change:transform}
 .mv3-platter-dots{position:absolute;inset:2px;border-radius:50%;background:repeating-conic-gradient(from 0deg,rgba(236,224,196,.65) 0 1deg,transparent 1deg 8deg);mask:radial-gradient(circle,transparent 0 91%,#000 92% 96%,transparent 97%);-webkit-mask:radial-gradient(circle,transparent 0 91%,#000 92% 96%,transparent 97%);opacity:.55;will-change:transform}
 .mv3-spindle{position:absolute;left:50%;top:50%;width:8px;height:8px;translate:-50% -50%;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff1c1,#a77938 58%,#4a3419);box-shadow:0 0 0 2px #151812;z-index:9}
-.mv3-drop-ring{position:absolute;inset:-16%;border:2px dashed transparent;border-radius:50%;display:grid;place-items:center;transition:.25s ease;pointer-events:none}.mv3-drop-ring span{opacity:0;padding:5px 8px;background:#f1e7d3;color:#352a20;font:900 8px var(--body);letter-spacing:.08em;box-shadow:2px 2px 0 rgba(0,0,0,.12);transition:.2s ease}.mv3-turntable.is-hot .mv3-drop-ring{border-color:#e9c571;background:rgba(238,198,108,.08);transform:scale(1.035)}.mv3-turntable.is-hot .mv3-drop-ring span{opacity:1}
+.mv3-drop-ring{position:absolute;inset:-17%;border:2px dashed transparent;border-radius:50%;display:grid;place-items:center;transition:.25s ease;pointer-events:none}.mv3-drop-ring span{opacity:0;padding:5px 8px;background:#f1e7d3;color:#352a20;font:900 8px var(--body);letter-spacing:.08em;box-shadow:2px 2px 0 rgba(0,0,0,.12);transition:.2s ease}.mv3-turntable.is-hot .mv3-drop-ring{border-color:#e9c571;background:rgba(238,198,108,.08);transform:scale(1.035)}.mv3-turntable.is-hot .mv3-drop-ring span{opacity:1}
 
-/* Mechanical tonearm assembly. JS controls angle according to track progress. */
-.mv3-tonearm{position:absolute;right:4.8%;top:14%;width:29%;height:70%;z-index:7;transform-origin:72% 11%;transform:translateY(var(--arm-lift)) rotate(var(--arm-angle));transition:transform .9s cubic-bezier(.22,.76,.2,1);filter:drop-shadow(2px 4px 3px rgba(0,0,0,.22))}
-.mv3-arm-base{position:absolute;right:7%;top:0;width:34px;height:34px;border-radius:50%;background:radial-gradient(circle at 38% 32%,#e8d8ad,#a47b43 45%,#4d3521 72%);box-shadow:0 0 0 3px #3c2a1e,0 0 0 5px #c39b5d}
-.mv3-arm-tube{position:absolute;right:18px;top:22px;width:12px;height:72%;border-radius:999px;background:linear-gradient(90deg,#463624 0 18%,#d1b16f 35%,#8d6b3f 56%,#e3c986 72%,#4a3826 100%);transform:rotate(4deg);transform-origin:top;box-shadow:inset 1px 0 rgba(255,255,255,.35)}
-.mv3-headshell{position:absolute;left:17%;bottom:5%;width:36px;height:16px;border-radius:4px 8px 5px 3px;background:linear-gradient(#4b3525,#231a14);border:1px solid #b68c4d;transform:rotate(11deg)}
-.mv3-headshell::before{content:"";position:absolute;left:5px;top:4px;width:12px;height:3px;border-radius:999px;background:#d5b56f;box-shadow:0 5px 0 #9b763f}.mv3-needle{position:absolute;right:3px;bottom:-10px;width:2px;height:11px;background:#d1b06b;transform:rotate(-9deg);transform-origin:top;transition:transform .34s ease,height .34s ease}.mv3-turntable.is-arm-lifted .mv3-needle{transform:rotate(-9deg) translateY(-4px);height:7px}
-.mv3-tonearm-rest{position:absolute;right:10.5%;top:41%;width:13px;height:34%;border-radius:999px;background:linear-gradient(90deg,#4a3423,#c5a369,#6e4d2d);box-shadow:0 2px 5px rgba(0,0,0,.3),0 0 0 1px #332318;z-index:5}
-.mv3-tonearm-rest::before{content:"";position:absolute;left:-5px;top:24%;width:22px;height:9px;border-radius:3px;background:#3b291d;box-shadow:inset 0 1px #b58c55}
+/* Cần kiểu máy cổ: pivot/counterweight ở góc phải trên, ống kim cong xuống như ảnh tham chiếu. */
+.mv3-tonearm{
+  position:absolute;right:3.2%;top:10.5%;width:45%;height:70%;z-index:7;
+  transform-origin:83% 11%;
+  transform:translateY(var(--arm-lift)) rotate(var(--arm-angle));
+  transition:transform var(--arm-time) var(--arm-ease);
+  filter:drop-shadow(2px 4px 3px rgba(0,0,0,.24));
+  will-change:transform;pointer-events:none;
+}
+.mv3-arm-base{position:absolute;right:7%;top:0;width:40px;height:40px;border-radius:50%;background:radial-gradient(circle at 38% 32%,#eadab3,#9c7442 44%,#3e2c20 72%);box-shadow:0 0 0 3px #33241b,0 0 0 6px #b88e55}
+.mv3-arm-base::before{content:"";position:absolute;left:9px;top:-20px;width:22px;height:24px;border-radius:7px 7px 3px 3px;background:linear-gradient(90deg,#3a3028,#bca471 40%,#66513b 70%,#25211d);box-shadow:0 2px 4px rgba(0,0,0,.28)}
+.mv3-arm-base::after{content:"0  1  2  3";position:absolute;left:2px;top:-31px;width:40px;text-align:center;font:700 4.5px var(--body);letter-spacing:.05em;color:#31271f;opacity:.72}
+.mv3-arm-tube{position:absolute;inset:0;background:none!important;box-shadow:none!important;transform:none!important}
+.mv3-arm-tube::before{content:"";position:absolute;right:18px;top:24px;width:9px;height:54%;border-radius:999px;background:linear-gradient(90deg,#3a332c 0 12%,#d7c186 31%,#85704c 54%,#ead9a2 72%,#3e342b 100%);box-shadow:inset 1px 0 rgba(255,255,255,.38)}
+.mv3-arm-tube::after{content:"";position:absolute;right:21px;top:51%;width:52%;height:31%;border-left:9px solid #8b744e;border-bottom:9px solid #8b744e;border-radius:0 0 0 70%;transform:skewX(-18deg) rotate(-7deg);box-shadow:-2px 2px 0 rgba(238,218,166,.26)}
+.mv3-headshell{position:absolute;left:14%;bottom:5.5%;width:40px;height:18px;border-radius:8px 4px 5px 9px;background:linear-gradient(180deg,#322b25,#161513);border:1px solid #a3875d;transform:rotate(-16deg);box-shadow:0 2px 4px rgba(0,0,0,.24)}
+.mv3-headshell::before{content:"";position:absolute;left:7px;top:5px;width:14px;height:3px;border-radius:999px;background:#d0b77a;box-shadow:0 5px 0 #7d6543}.mv3-headshell::after{content:"";position:absolute;right:-13px;top:4px;width:16px;height:5px;border-radius:2px;background:#27221d;transform:rotate(9deg)}
+.mv3-needle{position:absolute;right:2px;bottom:-10px;width:2px;height:11px;background:#d4b46f;transform:rotate(-10deg);transform-origin:top;transition:transform .28s ease,height .28s ease}.mv3-turntable.is-arm-lifted .mv3-needle{transform:rotate(-10deg) translateY(-4px);height:7px}
+.mv3-tonearm-rest{position:absolute;right:9.8%;top:47%;width:12px;height:28%;border-radius:999px;background:linear-gradient(90deg,#3c3026,#bc9e67,#65503b);box-shadow:0 2px 5px rgba(0,0,0,.3),0 0 0 1px #2b211a;z-index:5}
+.mv3-tonearm-rest::before{content:"";position:absolute;left:-5px;top:20%;width:22px;height:9px;border-radius:3px;background:#34291f;box-shadow:inset 0 1px #a98b60}
 
-/* Old-style controls */
-.mv3-control-knob{position:absolute;right:11%;bottom:15%;width:36px;height:36px;border-radius:50%;background:radial-gradient(circle at 36% 30%,#e2c683,#a77a3e 54%,#51371f 72%);box-shadow:0 0 0 3px #342319,0 4px 7px rgba(0,0,0,.28);z-index:8}.mv3-control-knob::after{content:"33⅓";position:absolute;inset:0;display:grid;place-items:center;color:#34251a;font:900 7px var(--body)}
-.mv3-speed-switch{position:absolute;right:24%;bottom:16%;width:32px;height:11px;border-radius:2px;background:#2f251d;box-shadow:0 0 0 2px #bc9457}.mv3-speed-switch::after{content:"";position:absolute;width:11px;height:15px;left:4px;top:-2px;border-radius:2px;background:linear-gradient(#dbc07d,#77552f);box-shadow:0 1px 2px #21170f}
-.mv3-power-led{position:absolute;left:18px;bottom:18px;color:#e7d7af;font:800 7px var(--body);letter-spacing:.11em;z-index:8}.mv3-power-led::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:-1px;background:#54291f;box-shadow:0 0 0 2px #372219;transition:background .35s ease,box-shadow .35s ease}.mv3-turntable.is-power-on .mv3-power-led::before{background:#f0784e;box-shadow:0 0 0 2px #4a2a1c,0 0 11px rgba(255,113,67,.9)}
-.mv3-play{position:absolute;left:18px;bottom:42px;border:1px solid #5a402b;background:#e7d2a8;color:#3a291f;padding:9px 13px;display:flex;align-items:center;gap:7px;cursor:pointer;font:850 10px var(--body);box-shadow:3px 3px 0 rgba(44,28,18,.22);transition:transform .2s ease,background .25s ease}.mv3-play:not(:disabled):active{transform:translate(2px,2px);box-shadow:1px 1px 0 rgba(44,28,18,.22)}.mv3-play:disabled{opacity:.45;cursor:not-allowed}.mv3-turntable.is-playing .mv3-play{background:#f2c98e}
+/* Điều khiển cổ: nút phát nằm hẳn ngoài mâm; đèn báo sát cạnh phải. */
+.mv3-control-knob{position:absolute;right:10%;bottom:12%;width:35px;height:35px;border-radius:50%;background:radial-gradient(circle at 36% 30%,#dec17c,#9d713b 54%,#4d351f 72%);box-shadow:0 0 0 3px #302219,0 4px 7px rgba(0,0,0,.28);z-index:8}.mv3-control-knob::after{content:"33⅓";position:absolute;inset:0;display:grid;place-items:center;color:#34251a;font:900 7px var(--body)}
+.mv3-speed-switch{position:absolute;right:21%;bottom:13.5%;width:31px;height:10px;border-radius:2px;background:#2b231d;box-shadow:0 0 0 2px #b78e54}.mv3-speed-switch::after{content:"";position:absolute;width:11px;height:14px;left:4px;top:-2px;border-radius:2px;background:linear-gradient(#d6ba76,#70502f);box-shadow:0 1px 2px #21170f}
+.mv3-power-led{position:absolute;right:8px;left:auto;top:46%;bottom:auto;display:grid;justify-items:center;gap:4px;color:#ead9b2;font:800 6px var(--body);letter-spacing:.09em;z-index:9;writing-mode:vertical-rl;transform:rotate(180deg)}
+.mv3-power-led::before{content:"";display:block;width:9px;height:9px;border-radius:50%;margin:0;background:#4c271f;box-shadow:0 0 0 2px #312018;transition:background .35s ease,box-shadow .35s ease}.mv3-turntable.is-power-on .mv3-power-led::before{background:#f17a4e;box-shadow:0 0 0 2px #4a2a1c,0 0 13px rgba(255,118,70,.95),0 0 22px rgba(255,146,82,.45)}
+.mv3-play{position:absolute;left:8%;bottom:5.8%;z-index:11;border:1px solid #503928;background:#ead3a4;color:#36271e;padding:8px 12px;display:flex;align-items:center;gap:7px;cursor:pointer;font:850 9.5px var(--body);box-shadow:3px 3px 0 rgba(44,28,18,.22);transition:transform .2s ease,background .25s ease,box-shadow .2s ease}.mv3-play:not(:disabled):active{transform:translate(2px,2px);box-shadow:1px 1px 0 rgba(44,28,18,.22)}.mv3-play:disabled{opacity:.45;cursor:not-allowed}.mv3-turntable.is-playing .mv3-play{background:#f3cb8d}
 
 /* Floating accents, restrained and hand-drawn. */
 .mv3-sound-fx{position:absolute;inset:-18%;z-index:12;pointer-events:none;overflow:visible}.mv3-note{position:absolute;opacity:0;font:900 20px/1 var(--display);color:#775b36;text-shadow:2px 2px 0 rgba(245,229,197,.88);will-change:transform,opacity}.mv3-note:nth-child(1){left:6%;top:23%}.mv3-note:nth-child(2){right:2%;top:18%}.mv3-note:nth-child(3){left:18%;bottom:2%}.mv3-note:nth-child(4){right:4%;bottom:22%}.mv3-note:nth-child(5){left:48%;top:-3%}
