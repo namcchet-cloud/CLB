@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html data-build="2.6.0" data-motion="full" data-motion-choice="auto" lang="vi">
+<html data-build="2.6.1" data-motion="full" data-motion-choice="auto" lang="vi">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
@@ -11,7 +11,7 @@
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800&amp;family=DM+Sans:wght@400;500;600;700&amp;family=Fraunces:ital,wght@0,600;0,700;1,600&amp;display=swap" rel="stylesheet"/>
-<link href="style.css?v=2.6.0" rel="stylesheet"/>
+<link href="style.css?v=2.6.1" rel="stylesheet"/>
 <script>(function(){var r=document.documentElement;var c='auto';try{c=localStorage.getItem('artclub-motion-v23')||localStorage.getItem('artclub-motion-v22')||(localStorage.getItem('artclub-motion')==='off'?'off':'auto');}catch(e){}if(['auto','full','quiet','off'].indexOf(c)<0)c='auto';var on=c==='full'||c==='quiet'||(c==='auto'&&!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches));r.dataset.motionChoice=c;r.dataset.motionLevel=c;r.dataset.motion=on?'full':'off';})();</script></head>
 <body><div hidden="" id="assetWarning" role="alert" style="padding:16px;margin:12px;background:#fff0d0;color:#382e20;border:2px solid #a44331;font:14px/1.6 system-ui;"></div><noscript>Trang cần bật JavaScript để đổi ngôn ngữ, chọn đĩa và chạy chuyển động.</noscript>
 <a class="skip-link" data-i18n="skip" href="#main">Đến nội dung chính</a>
@@ -151,30 +151,6 @@
 <div aria-label="Chọn đĩa nhạc" class="record-options" data-i18n-aria="recordChoices" id="recordOptions" role="group"></div>
 <p class="crate-note" data-i18n="crateNote">Hai chiếc đĩa, hai khoảng trời. Đổi đĩa để đổi playlist.</p>
 </section>
-<section aria-labelledby="lyricsHeading" class="lyrics-card reveal" data-reveal="right">
-<div class="lyrics-heading"><span class="section-label"><span>♪</span><b data-i18n="lyrics" id="lyricsHeading">LỜI BÀI HÁT</b></span><span class="live-indicator" data-i18n="waiting" id="lyricsBadge">ĐANG CHỜ</span></div>
-<h3 data-i18n="trackWaiting" id="trackTitle">Bài nhạc của cậu sẽ hiện ở đây.</h3>
-<div class="track-meta"><span data-i18n="trackHint" id="trackArtist">Phát một bài trong trình phát bên cạnh.</span><a data-i18n="trackOnSpotify" hidden="" id="currentTrackLink" rel="noopener noreferrer" target="_blank">Bài trên Spotify ↗</a></div>
-<div class="track-progress"><time id="currentTime">0:00</time><progress aria-label="Tiến độ phát nhạc" data-i18n-aria="progress" id="trackProgress" max="100" value="0"></progress><time id="totalTime">0:00</time></div>
-<p class="lyrics-status" data-i18n="lyricsWaiting" id="lyricsStatus" role="status">Lời sẽ được tìm theo bài đang phát. Cậu cũng có thể dùng file .lrc của mình.</p>
-<div aria-label="Lời bài hát, có thể cuộn" class="lyrics-viewport" data-i18n-aria="lyricsScroll" id="lyricsViewport" tabindex="0">
-<div class="lyrics-empty" id="lyricsEmpty"><span aria-hidden="true">♪</span><p data-i18n="lyricsEmpty">Một giai điệu.<br/>Một khoảng riêng.</p></div>
-<ol class="lyrics-lines" hidden="" id="lyricsLines"></ol>
-</div>
-<div class="lyrics-candidates" hidden="" id="lyricsCandidates"></div>
-<div class="lyrics-source" id="lyricsSource"></div>
-<details class="lyrics-tools">
-<summary data-i18n="lyricsTools">Tìm lại lời / Thêm file .lrc</summary>
-<form class="lyrics-search" id="lyricsSearch">
-<label><span data-i18n="songTitle">Tên bài hát</span><input autocomplete="off" data-i18n-placeholder="songTitle" id="lyricsQuery" maxlength="180" name="track" placeholder="Tên bài hát" required="" type="text"/></label>
-<label><span data-i18n="artist">Nghệ sĩ</span><input autocomplete="off" data-i18n-placeholder="artistOptional" id="lyricsArtistInput" maxlength="140" name="artist" placeholder="Nghệ sĩ (nên điền)" type="text"/></label>
-<button class="small-button" data-i18n="searchLyrics" id="searchLyricsButton" type="submit">Tìm lời trên LRCLIB</button>
-</form>
-<label class="file-label"><span data-i18n="importLrc">Chọn file .lrc cho bài đang phát</span><input accept=".lrc,text/plain" id="lrcFile" type="file"/></label>
-<p data-i18n="lyricsPrivacy">File .lrc chỉ được lưu trên trình duyệt này, không tải lên máy chủ. Chỉ sử dụng lời cậu có quyền chia sẻ.</p>
-<button class="text-button" data-i18n="forgetLyrics" id="forgetLyrics" type="button">Xóa lời đã ghép cho bài này</button>
-</details>
-</section>
 </aside>
 </div>
 </section>
@@ -197,15 +173,15 @@
 <div class="footer-tools"><button aria-pressed="true" class="text-button" id="motionToggle" type="button"><span aria-hidden="true">✦</span> <span data-i18n="motionOn" id="motionText">Chuyển động: Bật</span></button><a data-i18n="backTop" href="#top">↑ Lên đầu trang</a></div>
 <small>© 2026 <span data-i18n="clubName">CLB Nghệ thuật</span></small></footer>
 <dialog aria-label="Xem tác phẩm" class="lightbox" data-i18n-aria="viewArt" id="lightbox"><button aria-label="Đóng" class="lightbox-close" data-i18n-aria="close" type="button">×</button><figure><img alt="" id="lightboxImage" src="assets/logo-new.jpeg"/><figcaption id="lightboxCaption"></figcaption></figure></dialog>
-<div aria-hidden="true" id="fxLayer"></div><div aria-hidden="true" class="scroll-progress" id="scrollProgress"></div><details class="motion-dock" id="motionDock"><summary><span aria-hidden="true">✦</span><span id="motionDockStatus">Chuyển động</span></summary><div class="motion-panel"><label><strong data-i18n="motionControl">Chuyển động trên trang</strong><select id="motionMode"><option data-i18n="motionAuto" value="auto">Theo thiết bị</option><option data-i18n="motionFull" value="full">Đầy đủ</option><option data-i18n="motionQuiet" value="quiet">Nhẹ</option><option data-i18n="motionDisabled" value="off">Tắt chuyển động</option></select></label><p id="motionReason" role="status"></p><p data-i18n="motionHelp">Chế độ Theo thiết bị tôn trọng cài đặt giảm chuyển động. Chọn Đầy đủ để chủ động bật hiệu ứng.</p><p class="build-status" id="buildStatus">v2.6.0</p></div></details><script defer="" src="content.js?v=2.6.0"></script><script defer="" src="script.js?v=2.6.0"></script><script>window.addEventListener('load',function(){setTimeout(function(){
+<div aria-hidden="true" id="fxLayer"></div><div aria-hidden="true" class="scroll-progress" id="scrollProgress"></div><details class="motion-dock" id="motionDock"><summary><span aria-hidden="true">✦</span><span id="motionDockStatus">Chuyển động</span></summary><div class="motion-panel"><label><strong data-i18n="motionControl">Chuyển động trên trang</strong><select id="motionMode"><option data-i18n="motionAuto" value="auto">Theo thiết bị</option><option data-i18n="motionFull" value="full">Đầy đủ</option><option data-i18n="motionQuiet" value="quiet">Nhẹ</option><option data-i18n="motionDisabled" value="off">Tắt chuyển động</option></select></label><p id="motionReason" role="status"></p><p data-i18n="motionHelp">Chế độ Theo thiết bị tôn trọng cài đặt giảm chuyển động. Chọn Đầy đủ để chủ động bật hiệu ứng.</p><p class="build-status" id="buildStatus">v2.6.1</p></div></details><script defer="" src="content.js?v=2.6.1"></script><script defer="" src="script.js?v=2.6.1"></script><script>window.addEventListener('load',function(){setTimeout(function(){
 var r=document.documentElement,missing=[];
 if(getComputedStyle(r).getPropertyValue('--club-build').trim()!=='260')missing.push('style.css');
 if(!window.CLUB_CONTENT)missing.push('content.js');
-if(window.ClubBuild!=='2.6.0')missing.push('script.js');
+if(window.ClubBuild!=='2.6.1')missing.push('script.js');
 if(window.ClubModuleErrors&&window.ClubModuleErrors.length)missing.push(window.ClubModuleErrors.join(', '));
-window.ClubAssetCheck={version:'2.6.0',missing:missing};
+window.ClubAssetCheck={version:'2.6.1',missing:missing};
 var el=document.getElementById('assetWarning');
-if(missing.length){el.hidden=false;el.textContent='v2.6.0: '+(r.lang==='en'?'Missing or mismatched files: ':'T\u1ec7p thi\u1ebfu ho\u1eb7c ch\u01b0a \u0111\u00fang phi\u00ean b\u1ea3n: ')+missing.join(', ')+'. '+(r.lang==='en'?'Replace index.html, style.css, script.js and content.js together. Keep assets/.':'Thay c\u00f9ng l\u00fac index.html, style.css, script.js, content.js. Gi\u1eef assets/.');}
-var st=document.getElementById('buildStatus');if(st)st.textContent='v2.6.0 \u00b7 '+(missing.length?'CSS / JS: '+missing.join(', '):'HTML + CSS + JavaScript \u2713');
+if(missing.length){el.hidden=false;el.textContent='v2.6.1: '+(r.lang==='en'?'Missing or mismatched files: ':'T\u1ec7p thi\u1ebfu ho\u1eb7c ch\u01b0a \u0111\u00fang phi\u00ean b\u1ea3n: ')+missing.join(', ')+'. '+(r.lang==='en'?'Replace index.html, style.css, script.js and content.js together. Keep assets/.':'Thay c\u00f9ng l\u00fac index.html, style.css, script.js, content.js. Gi\u1eef assets/.');}
+var st=document.getElementById('buildStatus');if(st)st.textContent='v2.6.1 \u00b7 '+(missing.length?'CSS / JS: '+missing.join(', '):'HTML + CSS + JavaScript \u2713');
 },900);});</script></body>
 </html>
