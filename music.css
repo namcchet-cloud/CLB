@@ -73,7 +73,7 @@
 /* Vintage plinth: wood, brass, enamel and visible mechanics. */
 .mv3-deck-panel{min-width:0}
 .mv3-turntable{
-  --arm-angle:-16deg;--arm-lift:0px;--arm-time:900ms;--arm-ease:cubic-bezier(.22,.72,.18,1);
+  --arm-angle:-20deg;--arm-lift:0px;--arm-time:900ms;--arm-ease:cubic-bezier(.22,.72,.18,1);
   position:relative;width:min(100%,382px);aspect-ratio:1/1;margin-inline:auto;
   border:2px solid #35271f;border-radius:10px;
   background:
@@ -94,33 +94,51 @@
 .mv3-spindle{position:absolute;left:50%;top:50%;width:8px;height:8px;translate:-50% -50%;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff1c1,#a77938 58%,#4a3419);box-shadow:0 0 0 2px #151812;z-index:9}
 .mv3-drop-ring{position:absolute;inset:-17%;border:2px dashed transparent;border-radius:50%;display:grid;place-items:center;transition:.25s ease;pointer-events:none}.mv3-drop-ring span{opacity:0;padding:5px 8px;background:#f1e7d3;color:#352a20;font:900 8px var(--body);letter-spacing:.08em;box-shadow:2px 2px 0 rgba(0,0,0,.12);transition:.2s ease}.mv3-turntable.is-hot .mv3-drop-ring{border-color:#e9c571;background:rgba(238,198,108,.08);transform:scale(1.035)}.mv3-turntable.is-hot .mv3-drop-ring span{opacity:1}
 
-/* Cần kiểu máy cổ: pivot/counterweight ở góc phải trên, ống kim cong xuống như ảnh tham chiếu. */
+/* v3.4: tonearm rebuilt as one clean mechanical assembly. */
 .mv3-tonearm{
-  position:absolute;right:3.2%;top:10.5%;width:45%;height:70%;z-index:7;
-  transform-origin:83% 11%;
+  position:absolute;right:4.5%;top:12.5%;width:42%;height:54%;z-index:8;
+  transform-origin:88% 10%;
   transform:translateY(var(--arm-lift)) rotate(var(--arm-angle));
   transition:transform var(--arm-time) var(--arm-ease);
-  filter:drop-shadow(2px 4px 3px rgba(0,0,0,.24));
+  filter:drop-shadow(2px 4px 3px rgba(0,0,0,.28));
   will-change:transform;pointer-events:none;
 }
-.mv3-arm-base{position:absolute;right:7%;top:0;width:40px;height:40px;border-radius:50%;background:radial-gradient(circle at 38% 32%,#eadab3,#9c7442 44%,#3e2c20 72%);box-shadow:0 0 0 3px #33241b,0 0 0 6px #b88e55}
-.mv3-arm-base::before{content:"";position:absolute;left:9px;top:-20px;width:22px;height:24px;border-radius:7px 7px 3px 3px;background:linear-gradient(90deg,#3a3028,#bca471 40%,#66513b 70%,#25211d);box-shadow:0 2px 4px rgba(0,0,0,.28)}
-.mv3-arm-base::after{content:"0  1  2  3";position:absolute;left:2px;top:-31px;width:40px;text-align:center;font:700 4.5px var(--body);letter-spacing:.05em;color:#31271f;opacity:.72}
-.mv3-arm-tube{position:absolute;inset:0;background:none!important;box-shadow:none!important;transform:none!important}
-.mv3-arm-tube::before{content:"";position:absolute;right:18px;top:24px;width:9px;height:54%;border-radius:999px;background:linear-gradient(90deg,#3a332c 0 12%,#d7c186 31%,#85704c 54%,#ead9a2 72%,#3e342b 100%);box-shadow:inset 1px 0 rgba(255,255,255,.38)}
-.mv3-arm-tube::after{content:"";position:absolute;right:21px;top:51%;width:52%;height:31%;border-left:9px solid #8b744e;border-bottom:9px solid #8b744e;border-radius:0 0 0 70%;transform:skewX(-18deg) rotate(-7deg);box-shadow:-2px 2px 0 rgba(238,218,166,.26)}
-.mv3-headshell{position:absolute;left:14%;bottom:5.5%;width:40px;height:18px;border-radius:8px 4px 5px 9px;background:linear-gradient(180deg,#322b25,#161513);border:1px solid #a3875d;transform:rotate(-16deg);box-shadow:0 2px 4px rgba(0,0,0,.24)}
-.mv3-headshell::before{content:"";position:absolute;left:7px;top:5px;width:14px;height:3px;border-radius:999px;background:#d0b77a;box-shadow:0 5px 0 #7d6543}.mv3-headshell::after{content:"";position:absolute;right:-13px;top:4px;width:16px;height:5px;border-radius:2px;background:#27221d;transform:rotate(9deg)}
-.mv3-needle{position:absolute;right:2px;bottom:-10px;width:2px;height:11px;background:#d4b46f;transform:rotate(-10deg);transform-origin:top;transition:transform .28s ease,height .28s ease}.mv3-turntable.is-arm-lifted .mv3-needle{transform:rotate(-10deg) translateY(-4px);height:7px}
-.mv3-tonearm-rest{position:absolute;right:9.8%;top:47%;width:12px;height:28%;border-radius:999px;background:linear-gradient(90deg,#3c3026,#bc9e67,#65503b);box-shadow:0 2px 5px rgba(0,0,0,.3),0 0 0 1px #2b211a;z-index:5}
-.mv3-tonearm-rest::before{content:"";position:absolute;left:-5px;top:20%;width:22px;height:9px;border-radius:3px;background:#34291f;box-shadow:inset 0 1px #a98b60}
+.mv3-arm-base{
+  position:absolute;right:0;top:0;width:43px;height:43px;border-radius:50%;
+  background:radial-gradient(circle at 36% 31%,#e8d09a 0 12%,#a98350 36%,#60472f 63%,#2c241e 100%);
+  box-shadow:0 0 0 3px #2c211a,0 0 0 6px #a27a46,inset -4px -5px 7px rgba(0,0,0,.26);
+}
+.mv3-arm-base::before{
+  content:"";position:absolute;left:9px;top:-17px;width:25px;height:20px;border-radius:5px 5px 2px 2px;
+  background:linear-gradient(90deg,#2b2926,#9c927d 35%,#ded7c7 50%,#6c6559 72%,#262522);
+  box-shadow:0 2px 4px rgba(0,0,0,.35);
+}
+.mv3-arm-base::after{content:"";position:absolute;inset:13px;border-radius:50%;background:#302923;box-shadow:inset 0 0 0 2px #b39460}
+.mv3-arm-tube{
+  position:absolute;right:10%;top:11%;width:90%;height:7px;border-radius:999px;
+  transform-origin:right center;transform:rotate(-51deg)!important;
+  background:linear-gradient(180deg,#ede8dd 0,#8e8b83 30%,#d9d3c6 53%,#5b5954 78%,#d5cdbd 100%)!important;
+  box-shadow:0 1px 1px rgba(255,255,255,.48),0 2px 4px rgba(0,0,0,.32)!important;
+}
+.mv3-arm-tube::before,.mv3-arm-tube::after{content:none!important}
+.mv3-headshell{
+  position:absolute;left:8%;top:70%;width:39px;height:17px;border-radius:8px 3px 5px 9px;
+  background:linear-gradient(180deg,#36322d,#171614);border:1px solid #8e7a5a;
+  transform:rotate(-10deg);box-shadow:0 2px 4px rgba(0,0,0,.28);
+}
+.mv3-headshell::before{content:"";position:absolute;left:6px;top:5px;width:17px;height:3px;border-radius:999px;background:#c8b783;box-shadow:0 5px 0 #70664e}
+.mv3-headshell::after{content:"";position:absolute;right:-11px;top:5px;width:14px;height:4px;border-radius:2px;background:#25221e;transform:rotate(7deg)}
+.mv3-needle{position:absolute;right:1px;bottom:-9px;width:2px;height:10px;background:#d8bd78;transform:rotate(-8deg);transform-origin:top;transition:transform .22s ease,height .22s ease}
+.mv3-turntable.is-arm-lifted .mv3-needle{transform:rotate(-8deg) translateY(-4px);height:6px}
 
-/* Điều khiển cổ: nút phát nằm hẳn ngoài mâm; đèn báo sát cạnh phải. */
-.mv3-control-knob{position:absolute;right:10%;bottom:12%;width:35px;height:35px;border-radius:50%;background:radial-gradient(circle at 36% 30%,#dec17c,#9d713b 54%,#4d351f 72%);box-shadow:0 0 0 3px #302219,0 4px 7px rgba(0,0,0,.28);z-index:8}.mv3-control-knob::after{content:"33⅓";position:absolute;inset:0;display:grid;place-items:center;color:#34251a;font:900 7px var(--body)}
-.mv3-speed-switch{position:absolute;right:21%;bottom:13.5%;width:31px;height:10px;border-radius:2px;background:#2b231d;box-shadow:0 0 0 2px #b78e54}.mv3-speed-switch::after{content:"";position:absolute;width:11px;height:14px;left:4px;top:-2px;border-radius:2px;background:linear-gradient(#d6ba76,#70502f);box-shadow:0 1px 2px #21170f}
-.mv3-power-led{position:absolute;right:8px;left:auto;top:46%;bottom:auto;display:grid;justify-items:center;gap:4px;color:#ead9b2;font:800 6px var(--body);letter-spacing:.09em;z-index:9;writing-mode:vertical-rl;transform:rotate(180deg)}
-.mv3-power-led::before{content:"";display:block;width:9px;height:9px;border-radius:50%;margin:0;background:#4c271f;box-shadow:0 0 0 2px #312018;transition:background .35s ease,box-shadow .35s ease}.mv3-turntable.is-power-on .mv3-power-led::before{background:#f17a4e;box-shadow:0 0 0 2px #4a2a1c,0 0 13px rgba(255,118,70,.95),0 0 22px rgba(255,146,82,.45)}
-.mv3-play{position:absolute;left:8%;bottom:5.8%;z-index:11;border:1px solid #503928;background:#ead3a4;color:#36271e;padding:8px 12px;display:flex;align-items:center;gap:7px;cursor:pointer;font:850 9.5px var(--body);box-shadow:3px 3px 0 rgba(44,28,18,.22);transition:transform .2s ease,background .25s ease,box-shadow .2s ease}.mv3-play:not(:disabled):active{transform:translate(2px,2px);box-shadow:1px 1px 0 rgba(44,28,18,.22)}.mv3-play:disabled{opacity:.45;cursor:not-allowed}.mv3-turntable.is-playing .mv3-play{background:#f3cb8d}
+/* Remove the decorative pseudo-mechanics that were being mistaken for the tonearm. */
+.mv3-tonearm-rest,.mv3-control-knob,.mv3-speed-switch{display:none!important}
+
+/* Platter centred a little more, leaving a clean control lane at the right. */
+.mv3-platter-wrap{left:10%;top:20.5%;width:59%}
+.mv3-power-led{right:9px;top:42%;writing-mode:horizontal-tb;transform:none;gap:5px;font-size:5.5px}
+.mv3-power-led::before{width:10px;height:10px}
+.mv3-play{left:9%;bottom:5.4%;min-width:108px;justify-content:center}
 
 /* Floating accents, restrained and hand-drawn. */
 .mv3-sound-fx{position:absolute;inset:-18%;z-index:12;pointer-events:none;overflow:visible}.mv3-note{position:absolute;opacity:0;font:900 20px/1 var(--display);color:#775b36;text-shadow:2px 2px 0 rgba(245,229,197,.88);will-change:transform,opacity}.mv3-note:nth-child(1){left:6%;top:23%}.mv3-note:nth-child(2){right:2%;top:18%}.mv3-note:nth-child(3){left:18%;bottom:2%}.mv3-note:nth-child(4){right:4%;bottom:22%}.mv3-note:nth-child(5){left:48%;top:-3%}
