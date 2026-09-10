@@ -24,7 +24,7 @@ window.CLUB_CONTENT = {
   artists: [
     {
       id: "bao-tam",
-      name: { vi: "Trần Nguyễn Bảo Tâm", en: "Trần Nguyễn Bảo Tâm" },
+      name: { vi: "Haruko Satoru", en: "Haruko Satoru" },
       label: { vi: "Họa sĩ", en: "Artist" },
       note: { vi: "6 tác phẩm · Tranh cách điệu & Digital", en: "6 works · Stylized & Digital" }
     },
@@ -43,7 +43,7 @@ window.CLUB_CONTENT = {
       thumb: "assets/gallery/thumbs/ba-mam-sac.webp",
       category: "paintings",
       title: { vi: "Ớt Ngọt", en: "Ớt Ngọt" },
-      author: { vi: "Họa sĩ Trần Nguyễn Bảo Tâm", en: "Artist Trần Nguyễn Bảo Tâm" },
+      author: { vi: "Họa sĩ Haruko Satoru", en: "Artist Haruko Satoru" },
       description: { vi: "Tranh cách điệu · 2026", en: "Stylized painting · 2026" }
     },
     {
@@ -52,7 +52,7 @@ window.CLUB_CONTENT = {
       thumb: "assets/gallery/thumbs/no-trong-tinh-sac.webp",
       category: "paintings",
       title: { vi: "Nấm Đá", en: "Nấm Đá" },
-      author: { vi: "Họa sĩ Trần Nguyễn Bảo Tâm", en: "Artist Trần Nguyễn Bảo Tâm" },
+      author: { vi: "Họa sĩ Haruko Satoru", en: "Artist Haruko Satoru" },
       description: { vi: "Tranh cách điệu · 2026", en: "Stylized painting · 2026" }
     },
     {
@@ -61,7 +61,7 @@ window.CLUB_CONTENT = {
       thumb: "assets/gallery/thumbs/song-anh.webp",
       category: "paintings",
       title: { vi: "Sắc", en: "Sắc" },
-      author: { vi: "Họa sĩ Trần Nguyễn Bảo Tâm", en: "Artist Trần Nguyễn Bảo Tâm" },
+      author: { vi: "Họa sĩ Haruko Satoru", en: "Artist Haruko Satoru" },
       description: { vi: "Tranh cách điệu · 2026", en: "Stylized painting · 2026" }
     },
     {
@@ -70,7 +70,7 @@ window.CLUB_CONTENT = {
       thumb: "assets/gallery/thumbs/mien-mong-sac.webp",
       category: "paintings",
       title: { vi: "Sức Mạnh Của Nấm", en: "Sức Mạnh Của Nấm" },
-      author: { vi: "Họa sĩ Trần Nguyễn Bảo Tâm", en: "Artist Trần Nguyễn Bảo Tâm" },
+      author: { vi: "Họa sĩ Haruko Satoru", en: "Artist Haruko Satoru" },
       description: { vi: "Tranh cách điệu · 2026", en: "Stylized painting · 2026" }
     },
     {
@@ -79,7 +79,7 @@ window.CLUB_CONTENT = {
       thumb: "assets/gallery/thumbs/merina.webp",
       category: "digital-art",
       title: { vi: "Merina", en: "Merina" },
-      author: { vi: "Họa sĩ Trần Nguyễn Bảo Tâm", en: "Artist Trần Nguyễn Bảo Tâm" },
+      author: { vi: "Họa sĩ Haruko Satoru", en: "Artist Haruko Satoru" },
       description: {
         vi: "Digital · Tiểu thư nam tước ở biên giới. Thích làm vườn và uống trà.",
         en: "Digital · A baron's daughter from the borderlands. She loves gardening and tea."
@@ -91,7 +91,7 @@ window.CLUB_CONTENT = {
       thumb: "assets/gallery/thumbs/an-nhien-trong-vong-mau.webp",
       category: "paintings",
       title: { vi: "An Toàn Thực Phẩm", en: "An Toàn Thực Phẩm" },
-      author: { vi: "Họa sĩ Trần Nguyễn Bảo Tâm", en: "Artist Trần Nguyễn Bảo Tâm" },
+      author: { vi: "Họa sĩ Haruko Satoru", en: "Artist Haruko Satoru" },
       description: { vi: "Tranh cách điệu · 2026", en: "Stylized painting · 2026" }
     },
     { artistId:"akiko-oishi", image:"assets/gallery/akiko/akiko-01.webp", thumb:"assets/gallery/akiko/thumbs/akiko-01.webp", category:"digital-art", title:{vi:"",en:""}, author:{vi:"Akiko Oishi",en:"Akiko Oishi"}, description:{vi:"Digital Art",en:"Digital Art"} },

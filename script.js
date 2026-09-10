@@ -1581,6 +1581,85 @@ try {
 } catch (error) { window.ClubModuleErrors.push('akiko-flight'); console.error('akiko-flight', error); }
 
 
+
+/* v2.6.0 — Haruko Satoru wisteria bloom. */
+try {
+(() => {
+  'use strict';
+  const root=document.documentElement;
+  let layer=null,active=false,petalTimer=0;
+  const clusters=[
+    [150,50,1.08],[285,72,.86],[430,46,1],[590,68,.9],[735,42,1.1],[880,70,.92],[1035,48,1.02],[1190,73,.86],[1340,50,1]
+  ];
+  function flowerCluster(x,y,scale=1){
+    const bells=[];
+    for(let r=0;r<7;r++){
+      const cy=r*18, count=Math.max(2,5-Math.floor(r/2));
+      for(let c=0;c<count;c++){
+        const spread=(count-1)*8;
+        const cx=c*16-spread/2+(r%2?4:-3);
+        const cls=(r+c)%3===0?'pale':((r+c)%2?'light':'');
+        bells.push(`<ellipse class="wisteria-flower ${cls}" cx="${cx}" cy="${cy}" rx="8.5" ry="11" transform="rotate(${(c-count/2)*6} ${cx} ${cy})"/>`);
+      }
+    }
+    return `<g class="wisteria-cluster" transform="translate(${x} ${y}) scale(${scale})"><path d="M0 -14 C-4 20,3 58,0 128" fill="none" stroke="#687f5d" stroke-width="2.4" stroke-linecap="round"/>${bells.join('')}</g>`;
+  }
+  function createLayer(){
+    if(layer)return layer;
+    layer=document.createElement('div');layer.id='wisteriaLayer';layer.setAttribute('aria-hidden','true');
+    layer.innerHTML=`
+      <svg class="wisteria-svg" viewBox="0 0 1440 460" preserveAspectRatio="none" aria-hidden="true">
+        <path class="wisteria-vine" pathLength="1" d="M-30 42 C150 18,225 115,390 68 S670 8,820 70 S1110 118,1470 22"/>
+        <path class="wisteria-vine thin" pathLength="1" d="M-20 12 C190 85,320 13,505 82 S805 126,980 54 S1260 12,1460 72"/>
+        <path class="wisteria-vine thin mobile-hide" pathLength="1" d="M80 0 C180 72,110 128,210 174 M1210 0 C1125 82,1218 124,1128 188"/>
+        <g class="mobile-hide">
+          <ellipse class="wisteria-leaf" cx="92" cy="59" rx="18" ry="8" transform="rotate(-28 92 59)"/><ellipse class="wisteria-leaf" cx="228" cy="70" rx="19" ry="8" transform="rotate(24 228 70)"/>
+          <ellipse class="wisteria-leaf" cx="545" cy="54" rx="20" ry="9" transform="rotate(-21 545 54)"/><ellipse class="wisteria-leaf" cx="945" cy="72" rx="19" ry="8" transform="rotate(22 945 72)"/>
+          <ellipse class="wisteria-leaf" cx="1290" cy="54" rx="18" ry="8" transform="rotate(-25 1290 54)"/>
+        </g>
+        ${clusters.map(v=>flowerCluster(...v)).join('')}
+      </svg>
+      <div class="wisteria-side left"><i class="vine"></i><i class="mini-bloom"></i><i class="mini-bloom"></i><i class="mini-bloom"></i><i class="mini-bloom"></i></div>
+      <div class="wisteria-side right"><i class="vine"></i><i class="mini-bloom"></i><i class="mini-bloom"></i><i class="mini-bloom"></i><i class="mini-bloom"></i></div>
+      <div class="wisteria-caption">HARUKO SATORU · 藤の庭</div>`;
+    document.body.append(layer);
+    return layer;
+  }
+  function petals(origin){
+    if(root.dataset.motion==='off')return;
+    const count=matchMedia('(max-width:700px)').matches?12:24;
+    const rect=origin?.getBoundingClientRect?.();
+    const ox=rect?rect.left+rect.width/2:innerWidth*.5, oy=rect?rect.top+rect.height/2:90;
+    for(let i=0;i<count;i++){
+      const p=document.createElement('i');p.className='wisteria-petal';
+      const x=ox+(Math.random()-.5)*(rect?rect.width*1.3:innerWidth*.72), y=oy+Math.random()*45;
+      p.style.setProperty('--px',`${x}px`);p.style.setProperty('--py',`${y}px`);p.style.setProperty('--pr',`${Math.round(Math.random()*150-75)}deg`);
+      p.style.setProperty('--drift',`${Math.round((Math.random()-.5)*180)}px`);p.style.setProperty('--fall',`${Math.round(innerHeight*(.42+Math.random()*.32))}px`);
+      p.style.setProperty('--pd',`${(3.3+Math.random()*2).toFixed(2)}s`);p.style.setProperty('--pdelay',`${(Math.random()*.65).toFixed(2)}s`);
+      layer.append(p);p.addEventListener('animationend',()=>p.remove(),{once:true});
+    }
+  }
+  function replay(origin){
+    createLayer();layer.classList.remove('is-active');void layer.offsetWidth;layer.classList.add('is-active');
+    clearTimeout(petalTimer);petals(origin);petalTimer=setTimeout(()=>petals(),1200);
+  }
+  function activate(origin,replayOnly=false){
+    createLayer();active=true;root.dataset.harukoBloom='true';
+    if(replayOnly||!layer.classList.contains('is-active'))replay(origin);else petals(origin);
+  }
+  function deactivate(){
+    active=false;root.dataset.harukoBloom='false';clearTimeout(petalTimer);if(layer)layer.classList.remove('is-active');
+  }
+  function pointer(e){
+    if(!active||!layer||root.dataset.motion==='off')return;
+    const x=((e.clientX/innerWidth)-.5)*8,y=((e.clientY/innerHeight)-.5)*5;
+    layer.style.setProperty('--wx',`${x.toFixed(1)}px`);layer.style.setProperty('--wy',`${y.toFixed(1)}px`);
+  }
+  addEventListener('pointermove',pointer,{passive:true});
+  window.ClubWisteria={activate,deactivate,replay,get active(){return active;}};
+})();
+} catch(error){window.ClubModuleErrors.push('haruko-wisteria');console.error('haruko-wisteria',error);}
+
 /* ===== script.js ===== */
 try {
 (() => {
@@ -1675,15 +1754,17 @@ try {
       if(artist.mascot){btn.classList.add('artist-chip-with-avatar');const avatar=make('span','artist-chip-avatar');const im=make('img');im.src=artist.id==='akiko-oishi' ? (window.ClubAkikoFlight?.mascotURL || artist.mascot) : artist.mascot;im.alt='';im.loading='lazy';im.decoding='async';avatar.append(im);btn.append(avatar);}
       btn.append(badge,copy);
       btn.addEventListener('click',()=>{
-        if(selectedArtist===artist.id){motion?.burst(btn,'',5);if(artist.id==='akiko-oishi')launchAkiko();return;}
-        window.ClubAkikoFlight?.stop();selectedArtist=artist.id;filter='all';updateFilterButtons();renderArtists();renderGallery();
+        if(selectedArtist===artist.id){motion?.burst(btn,'',5);if(artist.id==='akiko-oishi')launchAkiko();if(artist.id==='bao-tam')window.ClubWisteria?.replay(btn);return;}
+        window.ClubAkikoFlight?.stop();window.ClubWisteria?.deactivate();selectedArtist=artist.id;filter='all';updateFilterButtons();renderArtists();renderGallery();
         motion?.burst(artistSwitcher.querySelector('[data-artist="'+artist.id+'"]'),'',9);
         if(artist.id==='akiko-oishi')launchAkiko();
+        if(artist.id==='bao-tam')window.ClubWisteria?.activate(artistSwitcher.querySelector('[data-artist=\"bao-tam\"]'),true);
       });
       artistSwitcher.append(btn);
     });
   }
   function renderGallery() {
+    document.documentElement.dataset.selectedArtist=selectedArtist||'';
     gallery.replaceChildren();
     const visible=content.artworks.map((art,index)=>({art,index})).filter(({art})=>(!selectedArtist||art.artistId===selectedArtist)&&(filter==='all'||art.category===filter));
     const artist=artists.find(a=>a.id===selectedArtist);
@@ -1723,7 +1804,7 @@ try {
       filter=button.dataset.filter;updateFilterButtons();renderGallery();motion?.burst(button,'',7);
     });
   });
-  renderArtists();updateFilterButtons();renderGallery();
+  renderArtists();updateFilterButtons();renderGallery();if(selectedArtist==='bao-tam')window.ClubWisteria?.activate(artistSwitcher?.querySelector('[data-artist=\"bao-tam\"]'),true);
   let closing=false,closeTimer=0,closeRevision=0;
   function closeArtwork(){
     if(!lightbox.open||closing)return;
@@ -1794,4 +1875,4 @@ try {
  });
 })();
 
-window.ClubBuild='2.5.3';
+window.ClubBuild='2.6.0';

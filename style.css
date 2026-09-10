@@ -1,7 +1,7 @@
 /* CLB Nghe thuat / Comic Studio 2.2
    Three type families. Motion, layout and player state are kept independent. */
 :root {
-  --club-build:253;
+  --club-build:260;
   --paper:#f2eadb; --paper-2:#e7ddca; --ink:#252923; --muted:#606254;
   --sage:#b9cba3; --sage-dark:#536b48; --rust:#a44331;
   --blue:#355972; --dusty:#5d7d91; --mustard:#e0bb58; --pink:#d990a4;
@@ -651,7 +651,7 @@ html[data-motion-level="quiet"] .float-doodle,html[data-motion-level="quiet"] .l
 }
 
 /* 2.3: contain layout overflow at its source, not by translating the page. */
-:root { --club-build:253; --gutter:clamp(18px,3vw,32px); --display:"Barlow Condensed","Arial Narrow","Liberation Sans Narrow",sans-serif; }
+:root { --club-build:260; --gutter:clamp(18px,3vw,32px); --display:"Barlow Condensed","Arial Narrow","Liberation Sans Narrow",sans-serif; }
 html { width:100%; max-width:100%; overflow-x:hidden; }
 body { width:100%; min-width:0; max-width:100%; overflow-x:hidden; }
 @supports (overflow:clip) { html,body { overflow-x:clip; } }
@@ -930,3 +930,37 @@ h1,h2,h3,.contact-list strong,.record-option strong { overflow-wrap:break-word; 
 /* Keep the author label adjacent to its avatar. */
 .artist-chip { grid-template-columns:auto minmax(0,1fr); }
 .artist-chip.artist-chip-with-avatar { grid-template-columns:auto auto minmax(0,1fr); }
+
+/* v2.6.0 — Haruko Satoru / Japanese wisteria bloom.
+   Decorative only: fixed edge canopy, no hit-testing, same comic-paper palette. */
+#wisteriaLayer{position:fixed;inset:0;z-index:58;pointer-events:none;overflow:hidden;opacity:0;visibility:hidden;transition:opacity .42s ease,visibility 0s linear .42s;--wx:0px;--wy:0px}
+#wisteriaLayer.is-active{opacity:1;visibility:visible;transition:opacity .6s ease}
+.wisteria-svg{position:absolute;inset:-2.5vh -2vw auto -2vw;width:104vw;height:min(47vh,460px);overflow:visible;filter:drop-shadow(0 7px 7px rgba(52,48,38,.13));transform:translate3d(var(--wx),var(--wy),0);transition:transform .65s cubic-bezier(.2,.8,.2,1)}
+.wisteria-vine{fill:none;stroke:#536c4f;stroke-width:7;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;opacity:.92}
+.wisteria-vine.thin{stroke-width:4;stroke:#687f5d;opacity:.8}
+#wisteriaLayer.is-active .wisteria-vine{animation:wisteriaDraw 1.15s cubic-bezier(.2,.75,.25,1) forwards}
+#wisteriaLayer.is-active .wisteria-vine.thin{animation-duration:1.45s;animation-delay:.12s}
+.wisteria-cluster{opacity:0;transform-box:fill-box;transform-origin:top center;filter:drop-shadow(0 3px 2px rgba(61,45,73,.10))}
+#wisteriaLayer.is-active .wisteria-cluster{animation:wisteriaBloom .72s cubic-bezier(.2,1.25,.3,1) forwards,wisteriaSway 4.8s ease-in-out 1.2s infinite alternate}
+.wisteria-cluster:nth-of-type(2n){animation-delay:.18s,1.38s!important}.wisteria-cluster:nth-of-type(3n){animation-delay:.34s,1.54s!important}
+.wisteria-flower{fill:#8d78ad;stroke:#6f5b8d;stroke-width:1.2}.wisteria-flower.light{fill:#b9a6ce}.wisteria-flower.pale{fill:#d4c7df}.wisteria-leaf{fill:#6f875f;stroke:#526b4b;stroke-width:1.1}
+.wisteria-side{position:absolute;top:9vh;width:180px;height:min(72vh,680px);opacity:.9;transform:translate3d(var(--wx),var(--wy),0)}
+.wisteria-side.left{left:-53px}.wisteria-side.right{right:-53px;transform:translate3d(calc(var(--wx) * -1),var(--wy),0) scaleX(-1)}
+.wisteria-side .vine{position:absolute;inset:0;background:linear-gradient(90deg,transparent 47%,#5f7857 48% 51%,transparent 52%);clip-path:polygon(48% 0,58% 9%,43% 21%,55% 34%,44% 50%,60% 65%,47% 82%,53% 100%,39% 100%,42% 81%,52% 64%,39% 49%,50% 33%,38% 20%,50% 8%,42% 0)}
+.wisteria-side .mini-bloom{position:absolute;width:54px;height:88px;border-radius:48% 52% 50% 50%;background:radial-gradient(circle at 35% 18%,#d9cce4 0 8%,transparent 9%),radial-gradient(circle at 67% 30%,#a58cbe 0 10%,transparent 11%),radial-gradient(circle at 40% 45%,#8d78ad 0 11%,transparent 12%),radial-gradient(circle at 66% 58%,#c1add2 0 10%,transparent 11%),radial-gradient(circle at 48% 75%,#8b72a5 0 9%,transparent 10%);transform-origin:top center;animation:wisteriaSideSway 5.4s ease-in-out infinite alternate}
+.wisteria-side .mini-bloom:nth-child(2){top:11%;left:63px}.wisteria-side .mini-bloom:nth-child(3){top:30%;left:91px;animation-delay:-1.4s}.wisteria-side .mini-bloom:nth-child(4){top:51%;left:48px;animation-delay:-2.6s}.wisteria-side .mini-bloom:nth-child(5){top:70%;left:88px;animation-delay:-.8s}
+.wisteria-petal{position:fixed;left:0;top:0;width:10px;height:16px;border-radius:70% 30% 70% 30%;background:#aa94c0;opacity:0;transform:translate3d(var(--px),var(--py),0) rotate(var(--pr));animation:wisteriaPetalFall var(--pd) cubic-bezier(.18,.68,.3,1) var(--pdelay) forwards;box-shadow:8px 2px 0 -3px #d0c1dc}
+.wisteria-caption{position:absolute;top:clamp(76px,11vh,116px);left:50%;transform:translateX(-50%) rotate(-1.3deg);padding:8px 14px;background:#f4ead7e8;border:1.5px solid #283128;border-radius:4px;box-shadow:4px 5px 0 #2831281c;font:700 11px/1.05 var(--sans);letter-spacing:.11em;text-transform:uppercase;color:#4b6547;opacity:0;white-space:nowrap}
+#wisteriaLayer.is-active .wisteria-caption{animation:wisteriaCaption .75s cubic-bezier(.16,1,.3,1) .7s forwards}
+html[data-selected-artist="bao-tam"] #gallery{position:relative;isolation:isolate}
+html[data-selected-artist="bao-tam"] .gallery-section .section-label b{color:#65785b}
+html[data-selected-artist="bao-tam"] .artist-chip[data-artist="bao-tam"].active{background:#e2ead9;box-shadow:inset 0 0 0 2px #6c7e60,6px 8px 0 #25292310}
+@keyframes wisteriaDraw{to{stroke-dashoffset:0}}
+@keyframes wisteriaBloom{0%{opacity:0;transform:translateY(-15px) scale(.45) rotate(-4deg)}70%{opacity:1;transform:translateY(2px) scale(1.05) rotate(1deg)}100%{opacity:1;transform:translateY(0) scale(1) rotate(0)}}
+@keyframes wisteriaSway{from{transform:rotate(-1.8deg) translateX(-2px)}to{transform:rotate(2.2deg) translateX(3px)}}
+@keyframes wisteriaSideSway{from{transform:rotate(-5deg) translateY(-2px)}to{transform:rotate(5deg) translateY(3px)}}
+@keyframes wisteriaPetalFall{0%{opacity:0;transform:translate3d(var(--px),calc(var(--py) - 18px),0) rotate(var(--pr)) scale(.6)}12%{opacity:.85}100%{opacity:0;transform:translate3d(calc(var(--px) + var(--drift)),calc(var(--py) + var(--fall)),0) rotate(calc(var(--pr) + 230deg)) scale(.9)}}
+@keyframes wisteriaCaption{0%{opacity:0;transform:translateX(-50%) translateY(-12px) rotate(-3deg) scale(.9)}100%{opacity:1;transform:translateX(-50%) translateY(0) rotate(-1.3deg) scale(1)}}
+@media (max-width:700px){.wisteria-svg{height:34vh;min-height:240px}.wisteria-side{width:116px;top:11vh;opacity:.72}.wisteria-side.left{left:-58px}.wisteria-side.right{right:-58px}.wisteria-side .mini-bloom{width:42px;height:70px}.wisteria-caption{top:83px;font-size:9px;padding:7px 10px}.wisteria-svg .mobile-hide{display:none}}
+[data-motion="off"] #wisteriaLayer .wisteria-vine,[data-motion="off"] #wisteriaLayer .wisteria-cluster,[data-motion="off"] #wisteriaLayer .mini-bloom,[data-motion="off"] #wisteriaLayer .wisteria-caption{animation:none!important}
+[data-motion="off"] #wisteriaLayer.is-active .wisteria-vine{stroke-dashoffset:0}[data-motion="off"] #wisteriaLayer.is-active .wisteria-cluster,[data-motion="off"] #wisteriaLayer.is-active .wisteria-caption{opacity:1}
