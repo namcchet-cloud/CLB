@@ -1,0 +1,32 @@
+V3.0.0 LÀ BẢN FULL — KHÔNG GHI ĐÈ CHỒNG LÊN BỘ CŨ.
+
+TRÊN GITHUB:
+1) Sao lưu repo cũ nếu cần.
+2) Xóa toàn bộ file/folder cũ trong repo.
+3) Upload toàn bộ nội dung bên trong CLB-v3.0.0-FULL vào ROOT repo.
+4) Commit một lần.
+
+Repo mới chỉ cần:
+.nojekyll
+index.html
+style.css
+music.css
+script.js
+content.js
+README.md
+ARCHITECTURE.md
+GITHUB-REPLACE.txt
+assets/
+js/music-v3.js
+
+KHÔNG đưa lại các file cũ sau:
+site/
+js/player.js
+js/turntable.js
+js/lyrics.js
+js/i18n.js
+js/motion.js
+lyrics/
+HUONG-DAN-v2.*
+KIEM-THU-v2.*
+README-v2.*
