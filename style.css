@@ -1099,3 +1099,45 @@ html[data-haruko-visible="true"] .living-wisteria,html[data-haruko-visible="true
 .listening-room{grid-template-columns:minmax(250px,330px) minmax(270px,340px)!important;gap:clamp(18px,3vw,34px)!important}
 .turntable-column{max-width:330px!important}.turntable{width:min(100%,300px)!important;max-width:300px!important}.record-options{min-height:325px!important}.album-sleeve-option{width:min(285px,88%)!important}.album-spec{position:absolute;left:8%;bottom:7%;z-index:5;background:#2c302b;color:#f5ebda;padding:4px 6px;font:700 8px/1.1 'DM Sans',sans-serif;letter-spacing:.07em}.album-sleeve-option small{bottom:14%!important}.deck-caption{font-size:11px!important}.preview-motion{font-size:11px!important}.player-status{font-size:11px!important}
 @media(max-width:820px){.turntable{width:min(78vw,300px)!important}.music-sidebar{max-width:340px!important}.record-options{min-height:315px!important}}
+
+
+/* v2.7.1 — sculpted interwoven wood + hands-on vinyl ritual */
+:root{--club-build:271}
+#livingGarden{inset:-13rem -11vw -13rem!important;z-index:2!important}
+.living-garden-svg{width:124%!important;height:calc(100% + 26rem)!important;margin-left:-12%!important;filter:drop-shadow(0 11px 9px rgba(34,31,25,.18))!important}
+.branch-stack path,.root-stack path,.wood-twig{fill:none;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;stroke-dasharray:1;stroke-dashoffset:1}
+.wood-shadow{stroke:#241c17;stroke-width:25;opacity:.52}.wood-branch{stroke:#5a3d2b!important;stroke-width:18!important}.wood-ridge{stroke:#9a6d49;stroke-width:5;opacity:.72}
+.branch-stack:nth-child(2n) .wood-branch{stroke:#493426!important;stroke-width:15!important}.branch-stack:nth-child(3n) .wood-ridge{stroke:#b08358;opacity:.58}.branch-stack:nth-child(4n) .wood-shadow{stroke-width:21}
+.root-shadow{stroke:#2e241c;stroke-width:19;opacity:.42}.root-branch{stroke:#71523b!important;stroke-width:13!important}.root-ridge{stroke:#b58a60;stroke-width:3.5;opacity:.62}
+.wood-twig{stroke:#4b3426;stroke-width:7;opacity:.95}
+html[data-haruko-visible="true"] .branch-stack path,html[data-haruko-visible="true"] .root-stack path,html[data-haruko-visible="true"] .wood-twig{animation:gardenGrow 1.55s cubic-bezier(.16,.8,.24,1) forwards}
+.branch-stack:nth-child(2n){filter:brightness(.92)}.branch-stack:nth-child(3n){filter:brightness(1.06)}
+/* Let a few front roots cross gaps, while cards stay readable above them. */
+.gallery-section>#galleryGrid{z-index:4!important}.gallery-card{z-index:4!important}.gallery-card:hover{z-index:7!important}
+
+/* Albums are covers first; the actual vinyl is exposed only after opening one. */
+.record-options{min-height:330px!important}
+.album-sleeve-option{cursor:pointer!important;touch-action:manipulation!important;transition:transform .65s cubic-bezier(.16,.84,.2,1),box-shadow .5s ease,filter .35s ease!important}
+.album-sleeve-option.is-open{z-index:11!important;transform:translate(calc(-58% + var(--drag-x,0px)),calc(var(--stack-index)*16px - 16px + var(--drag-y,0px))) rotate(-1deg) scale(1.02)!important;box-shadow:14px 18px 0 rgba(38,40,36,.13),0 24px 34px rgba(41,39,35,.18)!important}
+.album-pocket-record{position:absolute;z-index:-1;right:9%;top:9%;width:82%;aspect-ratio:1;border-radius:50%;background:repeating-radial-gradient(circle,#171a18 0 2px,#2d312d 3px 4px,#1d201e 5px 6px);box-shadow:0 9px 18px rgba(0,0,0,.28);transform:translateX(0) rotate(-22deg) scale(.96);transition:transform .78s cubic-bezier(.16,.86,.2,1),filter .4s ease,opacity .35s;opacity:.96;touch-action:none;cursor:grab;overflow:hidden}
+.album-pocket-record::before{content:"";position:absolute;inset:8%;border-radius:50%;border:1px solid rgba(255,255,255,.09);box-shadow:inset 0 0 0 16px rgba(255,255,255,.012),inset 0 0 0 30px rgba(255,255,255,.008)}
+.album-pocket-record img{position:absolute;left:35%;top:35%;width:30%;height:30%;border-radius:50%;object-fit:cover;border:2px solid #eadfc9;z-index:2}
+.album-pocket-record.theme-pink{background:repeating-radial-gradient(circle,#9c6079 0 2px,#c37d98 3px 4px,#7e4d63 5px 6px)}
+.album-sleeve-option.is-open .album-pocket-record{z-index:0;transform:translateX(49%) rotate(14deg) scale(1);filter:drop-shadow(0 10px 9px rgba(0,0,0,.24))}
+.album-pocket-record:hover{filter:brightness(1.06) drop-shadow(0 11px 10px rgba(0,0,0,.26))}.album-pocket-record:active,.album-pocket-record.is-held{cursor:grabbing;opacity:.2}
+.album-cover{z-index:2!important;background:#ddd}.album-edge,.album-sleeve-option strong,.album-sleeve-option small,.album-sleeve-option .record-selection,.album-spec,.album-hint{z-index:4!important}
+.album-hint{bottom:-38px!important;font-size:10px!important;background:rgba(242,234,219,.78);padding:4px 8px;border-radius:999px;width:auto!important;white-space:nowrap}
+.manual-disc-drag{position:fixed;z-index:220;pointer-events:none;border-radius:50%;background:repeating-radial-gradient(circle,#171a18 0 2px,#2d312d 3px 4px,#1d201e 5px 6px);box-shadow:0 18px 26px rgba(0,0,0,.28);will-change:left,top,transform;overflow:hidden;transform:rotate(0deg)}
+.manual-disc-drag.theme-pink{background:repeating-radial-gradient(circle,#9c6079 0 2px,#c37d98 3px 4px,#7e4d63 5px 6px)}
+.manual-disc-drag::before{content:"";position:absolute;inset:8%;border-radius:50%;border:1px solid rgba(255,255,255,.09);box-shadow:inset 0 0 0 16px rgba(255,255,255,.012),inset 0 0 0 30px rgba(255,255,255,.008)}
+.manual-disc-drag img{position:absolute;left:35%;top:35%;width:30%;height:30%;border-radius:50%;object-fit:cover;border:2px solid #eadfc9}
+.awaiting-disc #recordCarrier{opacity:0!important;transform:scale(.84)!important;pointer-events:none}.has-disc #recordCarrier{opacity:1;transition:opacity .38s ease,transform .7s cubic-bezier(.16,.84,.22,1)}
+.disc-over-deck .vinyl-stage{box-shadow:inset 0 0 0 3px rgba(159,116,183,.5),0 0 0 8px rgba(159,116,183,.10)!important;transform:scale(1.015)}.vinyl-stage{transition:box-shadow .3s ease,transform .35s cubic-bezier(.16,.84,.22,1)}
+.need-disc-nudge .record-crate{animation:needDiscNudge .62s ease}@keyframes needDiscNudge{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}55%{transform:translateX(5px)}80%{transform:translateX(-2px)}}
+.just-loaded{animation:albumSettle .65s cubic-bezier(.16,.86,.22,1)}@keyframes albumSettle{0%{filter:brightness(1.18)}100%{filter:none}}
+/* Disable legacy automatic sleeve-flight scene. */
+.disc-swap-scene{display:none!important}
+
+@media(max-width:820px){#livingGarden{inset:-9rem -26vw -10rem!important}.living-garden-svg{width:154%!important;margin-left:-27%!important}.wood-shadow{stroke-width:20}.wood-branch{stroke-width:14!important}.root-shadow{stroke-width:16}.root-branch{stroke-width:11!important}.album-sleeve-option.is-open{transform:translate(calc(-56% + var(--drag-x,0px)),calc(var(--stack-index)*14px - 10px + var(--drag-y,0px))) rotate(-1deg) scale(1)!important}.album-sleeve-option.is-open .album-pocket-record{transform:translateX(42%) rotate(12deg) scale(.94)}}
+@media(max-width:480px){#livingGarden{inset:-7rem -38vw -8rem!important}.living-garden-svg{width:180%!important;margin-left:-40%!important}.album-hint{font-size:8px!important;white-space:normal;width:88%!important}.record-options{min-height:292px!important}}
+[data-motion="off"] .branch-stack path,[data-motion="off"] .root-stack path,[data-motion="off"] .wood-twig{animation:none!important;stroke-dashoffset:0!important}
