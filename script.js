@@ -632,7 +632,7 @@ try {
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('motionDock'))$('motionDock').open=false;});
   document.addEventListener('click',e=>{if(!$('motionDock')?.contains(e.target)&&$('motionDock'))$('motionDock').open=false;});
 
-  window.ClubMotion={version:'2.7.5',burst,flyRecord,animate,register,setChoice,get enabled(){return enabled;},get choice(){return choice;}};
+  window.ClubMotion={version:'2.7.6',burst,flyRecord,animate,register,setChoice,get enabled(){return enabled;},get choice(){return choice;}};
   window.addEventListener('pageshow',()=>{root.dataset.pageHidden='false';syncPreference();register();});
   window.addEventListener('blur',resetPointer);
   root.dataset.pageHidden=String(document.hidden);
@@ -742,7 +742,7 @@ try {
     if(visible)wake();else{cancelAnimationFrame(frame);frame=0;last=0;}
   },{rootMargin:'120px'}).observe(deck);
   window.addEventListener('pageshow',()=>wake());
-  window.ClubTurntable={version:'2.7.5',setPlayback,stopDemo,reset(){stopDemo();setPlayback({playing:false,position:0,duration:0});},get state(){return {angle,speed,armAngle,lift,playing,buffering,demo,visible,allowed};}};
+  window.ClubTurntable={version:'2.7.6',setPlayback,stopDemo,reset(){stopDemo();setPlayback({playing:false,position:0,duration:0});},get state(){return {angle,speed,armAngle,lift,playing,buffering,demo,visible,allowed};}};
   paint();
 })();
 
@@ -850,7 +850,7 @@ try {
     }
   }
   function dragCenterInDeck(x,y){
-    // v2.7.5: use the actual deck rectangle as the magnetic target.
+    // v2.7.6: use the actual deck rectangle as the magnetic target.
     // This is intentionally generous, while final placement still snaps to the spindle.
     const r=deck?.getBoundingClientRect();
     if(!r)return false;
@@ -1688,4 +1688,4 @@ try {
  });
 })();
 
-window.ClubBuild='2.7.4';
+window.ClubBuild='2.7.6';

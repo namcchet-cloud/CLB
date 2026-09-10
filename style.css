@@ -1352,3 +1352,47 @@ html.is-dragging-record,html.is-dragging-record body{overscroll-behavior:none!im
 #playlist.disc-over-deck .vinyl-stage::after{inset:5%!important;background:transparent!important;border:2px dashed var(--room-accent)!important}
 @media(max-width:820px){#playlist{--physical-disc-size:clamp(132px,36vw,170px)}}
 @media(max-width:480px){#playlist{--physical-disc-size:clamp(126px,39vw,154px)}}
+
+/* ============================================================
+   v2.7.6 EMERGENCY DISC VISIBILITY FIX
+   ============================================================ */
+:root{--club-build:276}
+#playlist .album-pocket-record{
+  display:block!important;
+  visibility:visible!important;
+  width:var(--physical-disc-size)!important;
+  height:var(--physical-disc-size)!important;
+  right:calc(var(--physical-disc-size) * -.26)!important;
+  top:50%!important;
+  translate:0 -50%!important;
+  transform:rotate(5deg)!important;
+  z-index:7!important;
+  opacity:0!important;
+  pointer-events:none!important;
+  overflow:hidden!important;
+  border-radius:50%!important;
+  clip-path:inset(0 0 0 46% round 50%)!important;
+  filter:drop-shadow(0 10px 10px rgba(0,0,0,.23))!important;
+  transition:opacity .2s ease,transform .42s cubic-bezier(.2,.8,.2,1),right .42s cubic-bezier(.2,.8,.2,1)!important;
+}
+#playlist .album-sleeve-option.is-open .album-pocket-record{
+  opacity:1!important;
+  pointer-events:auto!important;
+  cursor:grab!important;
+  right:calc(var(--physical-disc-size) * -.34)!important;
+  transform:rotate(7deg)!important;
+}
+#playlist .album-pocket-record.is-held{opacity:0!important;pointer-events:none!important}
+#playlist .album-pocket-record img{
+  display:block!important;width:100%!important;height:100%!important;
+  object-fit:cover!important;border-radius:50%!important;pointer-events:none!important;
+}
+/* Keep the sleeve itself static and non-draggable. */
+#playlist .album-cover,#playlist .album-cover img{pointer-events:none!important;-webkit-user-drag:none!important;user-select:none!important}
+#playlist .album-sleeve-option{cursor:pointer!important;touch-action:manipulation!important}
+/* The exposed half is the only drag handle. */
+#playlist .album-sleeve-option.is-open .album-pocket-record{touch-action:none!important}
+@media(max-width:820px){
+  #playlist .album-pocket-record{right:calc(var(--physical-disc-size) * -.20)!important;clip-path:inset(0 0 0 43% round 50%)!important}
+  #playlist .album-sleeve-option.is-open .album-pocket-record{right:calc(var(--physical-disc-size) * -.28)!important}
+}
