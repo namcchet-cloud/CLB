@@ -850,7 +850,7 @@ try {
     }
   }
   function dragCenterInDeck(x,y){
-    // v2.7.6: use the actual deck rectangle as the magnetic target.
+    // v2.7.7: use the actual deck rectangle as the magnetic target.
     // This is intentionally generous, while final placement still snaps to the spindle.
     const r=deck?.getBoundingClientRect();
     if(!r)return false;
