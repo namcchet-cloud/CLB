@@ -834,18 +834,28 @@ try {
       clearTimeout(artTimer);artTimer=setTimeout(()=>carrier.classList.remove('is-arriving'),1100);
     }
   }
-  function armRecord(record,button){
+  function armRecord(record,button,returnOld=true){
+    const changingLoadedDisc=returnOld&&discLoaded&&selected.id!==record.id;
     armed=record;updateAlbumState();
     options.querySelectorAll('.record-option').forEach(b=>b.style.zIndex=b===button?'10':'');
     window.ClubMotion?.burst(button,'',5);
+    // Choosing another sleeve while a record is on the deck returns the old
+    // record home automatically. Selecting the same sleeve leaves it in place.
+    if(changingLoadedDisc){
+      returnLoadedDiscHome(record.id).then(()=>{
+        drawSelection(false);
+        announce('needDisc');
+        renderTransport();
+      });
+    }
   }
   function dragCenterInDeck(x,y){
-    const stage=$('vinyl-stage')?.getBoundingClientRect();
-    if(!stage)return false;
-    // v2.7.3: deliberately forgiving magnetic zone. The user's hand can be
-    // well outside the platter edge; the record still snaps to the exact spindle.
-    const pad=Math.max(72,Math.min(155,Math.min(stage.width,stage.height)*.48));
-    return x>=stage.left-pad&&x<=stage.right+pad&&y>=stage.top-pad*.72&&y<=stage.bottom+pad*.82;
+    // v2.7.4: use the actual deck rectangle as the magnetic target.
+    // This is intentionally generous, while final placement still snaps to the spindle.
+    const r=deck?.getBoundingClientRect();
+    if(!r)return false;
+    const padX=Math.max(70,r.width*.34),padY=Math.max(58,r.height*.28);
+    return x>=r.left-padX&&x<=r.right+padX&&y>=r.top-padY&&y<=r.bottom+padY;
   }
   function platterCenter(){
     const carrier=$('recordCarrier')?.getBoundingClientRect();
@@ -855,7 +865,7 @@ try {
   }
   function startDiscDrag(e,record,button,discSource){
     if(e.pointerType==='mouse'&&e.button!==0)return;
-    e.preventDefault();e.stopPropagation();armRecord(record,button);
+    e.preventDefault();e.stopPropagation();armRecord(record,button,false);
     if(dragRecord?.ghost)dragRecord.ghost.remove();
     const r=discSource.getBoundingClientRect();
     const size=Math.min(190,Math.max(92,r.width));
@@ -878,7 +888,8 @@ try {
     e.preventDefault();d.x=e.clientX;d.y=e.clientY;
     if(!d.moved&&Math.hypot(e.clientX-d.startX,e.clientY-d.startY)>3)d.moved=true;
     d.ghost.style.left=(e.clientX-d.grabX)+'px';d.ghost.style.top=(e.clientY-d.grabY)+'px';
-    room.classList.toggle('disc-over-deck',dragCenterInDeck(e.clientX,e.clientY));
+    const gl=parseFloat(d.ghost.style.left)||0,gt=parseFloat(d.ghost.style.top)||0;
+    room.classList.toggle('disc-over-deck',dragCenterInDeck(gl+d.size/2,gt+d.size/2));
   }
   function clearGlobalDiscEvents(){
     window.removeEventListener('pointermove',moveDiscDrag);
@@ -889,15 +900,22 @@ try {
   function onGlobalDiscCancel(e){if(dragRecord&&dragRecord.id===e.pointerId)endDiscDrag(e,true);}
   async function returnLoadedDiscHome(nextRecordId){
     if(!discLoaded||selected.id===nextRecordId)return;
+    const oldRecord=selected;
+    // Clear the loaded state immediately so a quick second drag cannot spawn
+    // two records or leave the previous one logically on the platter.
+    discLoaded=false;
+    window.ClubTurntable?.reset();
+    generation++;intent++;bootPromise=null;destroyController();
+    isPaused=true;isBuffering=false;position=0;duration=0;transport='idle';
     const carrier=$('recordCarrier');
     const from=carrier?.getBoundingClientRect();
-    const oldButton=options.querySelector(`[data-record="${selected.id}"]`);
+    const oldButton=options.querySelector(`[data-record="${oldRecord.id}"]`);
     const pocket=oldButton?.querySelector('.album-pocket-record');
     const to=pocket?.getBoundingClientRect();
     if(from&&to&&from.width){
       const size=Math.min(190,Math.max(86,from.width));
-      const fly=document.createElement('div');fly.className=`manual-disc-drag returning-disc theme-${selected.theme}`;fly.setAttribute('aria-hidden','true');
-      const img=document.createElement('img');img.src=selected.image;img.alt='';fly.append(img);document.body.append(fly);
+      const fly=document.createElement('div');fly.className=`manual-disc-drag returning-disc theme-${oldRecord.theme}`;fly.setAttribute('aria-hidden','true');
+      const img=document.createElement('img');img.src=oldRecord.image;img.alt='';fly.append(img);document.body.append(fly);
       const sx=from.left+from.width/2-size/2, sy=from.top+from.height/2-size/2;
       const tx=to.left+to.width/2-size/2, ty=to.top+to.height/2-size/2;
       fly.style.cssText+=`;width:${size}px;height:${size}px;left:${sx}px;top:${sy}px`;
@@ -909,12 +927,12 @@ try {
       ],{duration:620,easing:'cubic-bezier(.2,.78,.18,1)',fill:'forwards'}).finished}catch{}
       fly.remove();
     }
-    discLoaded=false;
   }
   async function endDiscDrag(e,cancelled=false){
     const d=dragRecord;if(!d||d.id!==e.pointerId)return;dragRecord=null;clearGlobalDiscEvents();
     document.documentElement.classList.remove('is-dragging-record');room.classList.remove('disc-over-deck');d.source.classList.remove('is-held');d.button.classList.remove('is-pulling-disc');
-    const success=!cancelled&&dragCenterInDeck(e.clientX,e.clientY);
+    const gl=parseFloat(d.ghost.style.left)||0,gt=parseFloat(d.ghost.style.top)||0;
+    const success=!cancelled&&dragCenterInDeck(gl+d.size/2,gt+d.size/2);
     if(!success){
       const back=d.source.getBoundingClientRect();
       try{await d.ghost.animate([{transform:'scale(1)',opacity:1},{transform:`translate(${back.left+back.width/2-e.clientX}px,${back.top+back.height/2-e.clientY}px) scale(.62)`,opacity:.3}],{duration:520,easing:'cubic-bezier(.2,.8,.2,1)',fill:'forwards'}).finished}catch{}
@@ -946,16 +964,18 @@ try {
     records.forEach((record,index)=>{
       const button=document.createElement('button');button.className='record-option album-sleeve-option';button.type='button';button.dataset.record=record.id;button.dataset.theme=record.theme;button.style.setProperty('--stack-index',String(index));
       const cover=document.createElement('span');cover.className='album-cover';cover.setAttribute('aria-hidden','true');
-      const image=document.createElement('img');image.src=record.image;image.alt='';image.width=360;image.height=360;cover.append(image);
+      const image=document.createElement('img');image.src=record.image;image.alt='';image.width=360;image.height=360;image.draggable=false;cover.append(image);
       const edge=document.createElement('span');edge.className='album-edge';
       const title=document.createElement('strong'),subtitle=document.createElement('small'),state=document.createElement('span');state.className='record-selection';
       const spec=document.createElement('span');spec.className='album-spec';spec.textContent=local(record.spec||{vi:'LP · 33⅓ RPM',en:'LP · 33⅓ RPM'});
       const hint=document.createElement('em');hint.className='album-hint';hint.textContent=t('albumHint');
       const pocket=document.createElement('span');pocket.className=`album-pocket-record theme-${record.theme}`;pocket.setAttribute('aria-label',local(record.name));pocket.setAttribute('role','img');
-      const discImg=document.createElement('img');discImg.src=record.image;discImg.alt='';pocket.append(discImg);
+      const discImg=document.createElement('img');discImg.src=record.image;discImg.alt='';discImg.draggable=false;pocket.append(discImg);
       button.append(pocket,cover,edge,title,subtitle,state,spec,hint);
       button.addEventListener('click',e=>{if(e.target.closest('.album-pocket-record'))return;armRecord(record,button);});
       pocket.addEventListener('pointerdown',e=>startDiscDrag(e,record,button,pocket));
+      button.addEventListener('dragstart',e=>e.preventDefault());
+      pocket.addEventListener('dragstart',e=>e.preventDefault());
       options.append(button);
     });
     drawSelection();window.ClubMotion?.register(options);
@@ -1668,4 +1688,4 @@ try {
  });
 })();
 
-window.ClubBuild='2.7.3';
+window.ClubBuild='2.7.4';
