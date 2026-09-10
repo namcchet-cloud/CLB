@@ -1451,65 +1451,77 @@ html.is-dragging-record,html.is-dragging-record body{overscroll-behavior:none!im
 
 
 /* ============================================================
-   v2.7.8 DISC VISIBILITY HARD FIX
-   Fresh cache key + no mask/clip + explicit exposed-disc geometry.
+   v2.8.0 MUSIC MODULE REBUILD — explicit album slots, visible real vinyl
    ============================================================ */
-:root{--club-build:278}
-#playlist{--physical-disc-size:clamp(132px,18vw,176px)}
-#playlist .album-sleeve-option{overflow:visible!important}
-#playlist .album-cover{z-index:20!important;overflow:hidden!important}
+:root{--club-build:280}
+#playlist{--physical-disc-size:clamp(142px,13vw,166px)}
+#playlist .record-options{
+  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:clamp(18px,3vw,32px)!important;align-items:start!important;
+  min-height:0!important;overflow:visible!important;position:relative!important
+}
+#playlist .album-slot{
+  position:relative!important;min-width:0!important;aspect-ratio:1/1!important;
+  overflow:visible!important;isolation:isolate!important;z-index:1
+}
+#playlist .album-slot.is-open{z-index:20!important}
+#playlist .album-sleeve-option{
+  position:absolute!important;inset:0!important;width:100%!important;height:100%!important;
+  aspect-ratio:1/1!important;padding:0!important;margin:0!important;border:0!important;border-radius:0!important;
+  background:transparent!important;overflow:visible!important;transform:none!important;box-shadow:none!important;
+  z-index:3!important;cursor:pointer!important;touch-action:manipulation!important
+}
+#playlist .album-sleeve-option:hover,#playlist .album-sleeve-option:focus-visible,#playlist .album-sleeve-option.is-open{
+  transform:translateY(-4px)!important;filter:none!important
+}
+#playlist .album-cover{
+  position:absolute!important;inset:0!important;z-index:3!important;display:block!important;
+  overflow:hidden!important;border:0!important;border-radius:0!important;background:transparent!important;
+  box-shadow:7px 9px 18px rgba(35,32,28,.14)!important;pointer-events:none!important
+}
+#playlist .album-cover img{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;border:0!important;border-radius:0!important;pointer-events:none!important}
+#playlist .album-edge,#playlist .album-sleeve-option small,#playlist .album-spec,#playlist .record-selection{display:none!important}
+#playlist .album-sleeve-option strong{
+  left:8px!important;top:50%!important;z-index:4!important;color:#fff!important;
+  text-shadow:0 1px 3px rgba(0,0,0,.45)!important;pointer-events:none!important
+}
+#playlist .album-hint{
+  left:50%!important;bottom:-24px!important;z-index:5!important;transform:translateX(-50%)!important;
+  width:max-content!important;max-width:94%!important;background:transparent!important;padding:0!important;border:0!important;
+  color:#5d6058!important;font-size:9px!important;white-space:nowrap!important;pointer-events:none!important
+}
+/* The vinyl is a sibling of the sleeve, so no cover/button stacking context can hide it. */
 #playlist .album-pocket-record{
-  display:block!important;
-  visibility:visible!important;
-  opacity:1!important;
-  position:absolute!important;
-  width:var(--physical-disc-size)!important;
-  height:var(--physical-disc-size)!important;
-  min-width:var(--physical-disc-size)!important;
-  min-height:var(--physical-disc-size)!important;
-  top:50%!important;
-  right:calc(var(--physical-disc-size) * -.46)!important;
-  translate:0 -50%!important;
-  transform:rotate(7deg)!important;
-  clip-path:none!important;
-  -webkit-clip-path:none!important;
-  mask:none!important;
-  -webkit-mask:none!important;
-  border-radius:50%!important;
-  overflow:hidden!important;
-  z-index:19!important;
-  pointer-events:auto!important;
-  touch-action:none!important;
-  cursor:grab!important;
-  background:repeating-radial-gradient(circle,#151816 0 2px,#292d29 3px 4px,#1a1d1b 5px 6px)!important;
-  box-shadow:0 10px 18px rgba(0,0,0,.28)!important;
+  display:block!important;visibility:visible!important;position:absolute!important;
+  width:var(--physical-disc-size)!important;height:var(--physical-disc-size)!important;
+  right:calc(var(--physical-disc-size) * -.22)!important;top:50%!important;translate:0 -50%!important;
+  z-index:2!important;opacity:.16!important;pointer-events:none!important;border-radius:50%!important;overflow:hidden!important;
+  transform:rotate(4deg)!important;clip-path:none!important;-webkit-clip-path:none!important;mask:none!important;-webkit-mask:none!important;
+  box-shadow:0 10px 18px rgba(0,0,0,.24)!important;
+  transition:right .4s cubic-bezier(.2,.8,.2,1),opacity .22s ease,transform .4s cubic-bezier(.2,.8,.2,1)!important
 }
-#playlist .album-pocket-record.theme-pink{
-  background:repeating-radial-gradient(circle,#90556e 0 2px,#c17a96 3px 4px,#704357 5px 6px)!important
-}
-#playlist .album-sleeve-option:not(.is-open) .album-pocket-record{
-  right:calc(var(--physical-disc-size) * -.34)!important;
-  opacity:.72!important;
-}
-#playlist .album-sleeve-option.is-open .album-pocket-record{
-  right:calc(var(--physical-disc-size) * -.50)!important;
-  opacity:1!important;
-  pointer-events:auto!important;
+#playlist .album-slot.is-open .album-pocket-record{
+  right:calc(var(--physical-disc-size) * -.46)!important;opacity:1!important;pointer-events:auto!important;
+  cursor:grab!important;touch-action:none!important;transform:rotate(7deg)!important
 }
 #playlist .album-pocket-record.is-held{opacity:0!important;pointer-events:none!important}
 #playlist .album-pocket-record img{
-  position:absolute!important;
-  left:35%!important;top:35%!important;
-  width:30%!important;height:30%!important;
-  border:0!important;border-radius:50%!important;
-  object-fit:cover!important;pointer-events:none!important;
-  transform:none!important
+  position:absolute!important;left:35%!important;top:35%!important;width:30%!important;height:30%!important;
+  object-fit:cover!important;border-radius:50%!important;border:0!important;transform:none!important;pointer-events:none!important
 }
+#playlist .album-pocket-record.theme-green{background:repeating-radial-gradient(circle,#171a18 0 2px,#303730 3px 4px,#1b201c 5px 6px)!important}
+#playlist .album-pocket-record.theme-pink{background:repeating-radial-gradient(circle,#985c76 0 2px,#c17b97 3px 4px,#7c4b61 5px 6px)!important}
+#playlist .manual-disc-drag{width:var(--physical-disc-size)!important;height:var(--physical-disc-size)!important}
+/* One physical size and one true platter center for album -> drag -> deck. */
+#playlist #platterTarget,#playlist #recordCarrier,#playlist .vinyl-hit{
+  width:var(--physical-disc-size)!important;height:var(--physical-disc-size)!important;
+  left:43%!important;top:49%!important;translate:-50% -50%!important
+}
+#playlist #recordCarrier .vinyl{width:100%!important;height:100%!important}
+#playlist .record-crate{overflow:visible!important}
 @media(max-width:820px){
-  #playlist{--physical-disc-size:clamp(126px,34vw,160px)}
-  #playlist .album-pocket-record{right:calc(var(--physical-disc-size) * -.42)!important}
-  #playlist .album-sleeve-option.is-open .album-pocket-record{right:calc(var(--physical-disc-size) * -.48)!important}
-}
-@media(max-width:480px){
-  #playlist{--physical-disc-size:clamp(118px,36vw,146px)}
+  #playlist{--physical-disc-size:clamp(128px,32vw,152px)}
+  #playlist .record-options{grid-template-columns:1fr!important;gap:48px!important}
+  #playlist .album-slot{width:min(78vw,300px)!important;justify-self:center!important}
+  #playlist .album-slot.is-open .album-pocket-record{right:calc(var(--physical-disc-size) * -.42)!important}
 }

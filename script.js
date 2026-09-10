@@ -632,7 +632,7 @@ try {
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('motionDock'))$('motionDock').open=false;});
   document.addEventListener('click',e=>{if(!$('motionDock')?.contains(e.target)&&$('motionDock'))$('motionDock').open=false;});
 
-  window.ClubMotion={version:'2.7.8',burst,flyRecord,animate,register,setChoice,get enabled(){return enabled;},get choice(){return choice;}};
+  window.ClubMotion={version:'2.7.6',burst,flyRecord,animate,register,setChoice,get enabled(){return enabled;},get choice(){return choice;}};
   window.addEventListener('pageshow',()=>{root.dataset.pageHidden='false';syncPreference();register();});
   window.addEventListener('blur',resetPointer);
   root.dataset.pageHidden=String(document.hidden);
@@ -742,7 +742,7 @@ try {
     if(visible)wake();else{cancelAnimationFrame(frame);frame=0;last=0;}
   },{rootMargin:'120px'}).observe(deck);
   window.addEventListener('pageshow',()=>wake());
-  window.ClubTurntable={version:'2.7.8',setPlayback,stopDemo,reset(){stopDemo();setPlayback({playing:false,position:0,duration:0});},get state(){return {angle,speed,armAngle,lift,playing,buffering,demo,visible,allowed};}};
+  window.ClubTurntable={version:'2.7.6',setPlayback,stopDemo,reset(){stopDemo();setPlayback({playing:false,position:0,duration:0});},get state(){return {angle,speed,armAngle,lift,playing,buffering,demo,visible,allowed};}};
   paint();
 })();
 
@@ -806,6 +806,7 @@ try {
       const record=records.find(r=>r.id===button.dataset.record);
       const open=record.id===armed.id;
       button.classList.toggle('is-open',open);
+      button.closest('.album-slot')?.classList.toggle('is-open',open);
       button.setAttribute('aria-pressed',String(open));
       button.querySelector('strong').textContent=local(record.name);
       const small=button.querySelector('small');if(small)small.textContent=local(record.caption);
@@ -837,7 +838,7 @@ try {
   function armRecord(record,button,returnOld=true){
     const changingLoadedDisc=returnOld&&discLoaded&&selected.id!==record.id;
     armed=record;updateAlbumState();
-    options.querySelectorAll('.record-option').forEach(b=>b.style.zIndex=b===button?'10':'');
+    options.querySelectorAll('.album-slot').forEach(slot=>slot.style.zIndex=slot.contains(button)?'10':'');
     window.ClubMotion?.burst(button,'',5);
     // Choosing another sleeve while a record is on the deck returns the old
     // record home automatically. Selecting the same sleeve leaves it in place.
@@ -850,7 +851,7 @@ try {
     }
   }
   function dragCenterInDeck(x,y){
-    // v2.7.8: use the actual deck rectangle as the magnetic target.
+    // v2.7.7: use the actual deck rectangle as the magnetic target.
     // This is intentionally generous, while final placement still snaps to the spindle.
     const r=deck?.getBoundingClientRect();
     if(!r)return false;
@@ -909,8 +910,8 @@ try {
     isPaused=true;isBuffering=false;position=0;duration=0;transport='idle';
     const carrier=$('recordCarrier');
     const from=carrier?.getBoundingClientRect();
-    const oldButton=options.querySelector(`[data-record="${oldRecord.id}"]`);
-    const pocket=oldButton?.querySelector('.album-pocket-record');
+    const oldButton=options.querySelector(`.record-option[data-record="${oldRecord.id}"]`);
+    const pocket=options.querySelector(`.album-slot[data-record="${oldRecord.id}"] .album-pocket-record`);
     const to=pocket?.getBoundingClientRect();
     if(from&&to&&from.width){
       const size=from.width;
@@ -962,21 +963,21 @@ try {
   function renderOptions() {
     options.replaceChildren();
     records.forEach((record,index)=>{
-      const button=document.createElement('button');button.className='record-option album-sleeve-option';button.type='button';button.dataset.record=record.id;button.dataset.theme=record.theme;button.style.setProperty('--stack-index',String(index));
+      const slot=document.createElement('div');slot.className='album-slot';slot.dataset.record=record.id;slot.dataset.theme=record.theme;slot.style.setProperty('--stack-index',String(index));
+      const button=document.createElement('button');button.className='record-option album-sleeve-option';button.type='button';button.dataset.record=record.id;button.dataset.theme=record.theme;
       const cover=document.createElement('span');cover.className='album-cover';cover.setAttribute('aria-hidden','true');
       const image=document.createElement('img');image.src=record.image;image.alt='';image.width=360;image.height=360;image.draggable=false;cover.append(image);
       const edge=document.createElement('span');edge.className='album-edge';
-      const title=document.createElement('strong'),subtitle=document.createElement('small'),state=document.createElement('span');state.className='record-selection';
-      const spec=document.createElement('span');spec.className='album-spec';spec.textContent=local(record.spec||{vi:'LP · 33⅓ RPM',en:'LP · 33⅓ RPM'});
-      const hint=document.createElement('em');hint.className='album-hint';hint.textContent=t('albumHint');
+      const title=document.createElement('strong'),hint=document.createElement('em');hint.className='album-hint';hint.textContent=t('albumHint');
       const pocket=document.createElement('span');pocket.className=`album-pocket-record theme-${record.theme}`;pocket.setAttribute('aria-label',local(record.name));pocket.setAttribute('role','img');
       const discImg=document.createElement('img');discImg.src=record.image;discImg.alt='';discImg.draggable=false;pocket.append(discImg);
-      button.append(pocket,cover,edge,title,hint);
-      button.addEventListener('click',e=>{if(e.target.closest('.album-pocket-record'))return;armRecord(record,button);});
+      button.append(cover,edge,title,hint);
+      button.addEventListener('click',()=>armRecord(record,button));
       pocket.addEventListener('pointerdown',e=>startDiscDrag(e,record,button,pocket));
       button.addEventListener('dragstart',e=>e.preventDefault());
       pocket.addEventListener('dragstart',e=>e.preventDefault());
-      options.append(button);
+      slot.append(pocket,button);
+      options.append(slot);
     });
     drawSelection();window.ClubMotion?.register(options);
   }
@@ -1688,4 +1689,4 @@ try {
  });
 })();
 
-window.ClubBuild='2.7.8';
+window.ClubBuild='2.8.0';
