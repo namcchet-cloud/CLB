@@ -26,14 +26,11 @@ export function initGallery(content) {
   const ensureEffectsCSS = () => cssReady ||= loadCSS(effectsCSS).catch(e => { cssReady = null; throw e; });
   async function effect(replay = false) {
     const rev = ++effectRevision;
-    window.ClubAkikoFlight?.stop(); window.ClubWisteria?.deactivate();
+    window.ClubAkikoFlight?.stop();
     try {
       await ensureEffectsCSS();
       const btn = switcher.querySelector(`[data-artist="${artistId}"]`);
-      if (artistId === 'bao-tam') {
-        const garden = await start('garden', async () => (await import('./garden.js?v=4.0.1')).initGarden());
-        if (rev === effectRevision && artistId === 'bao-tam') garden.activate(btn, replay);
-      } else if (artistId === 'akiko-oishi' && replay && motion?.enabled) {
+      if (artistId === 'akiko-oishi' && replay && motion?.enabled) {
         const akiko = await start('akiko', async () => (await import('./akiko.js?v=4.0.1')).initAkiko());
         if (rev === effectRevision && artistId === 'akiko-oishi') await akiko.launch(btn);
       }
