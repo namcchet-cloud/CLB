@@ -1,4 +1,4 @@
-/* Music v3.4.1 — brighter collectible vinyl tones + vintage mechanical turntable. */
+/* Music v3.5.0 — brighter collectible vinyl tones + vintage mechanical turntable. */
 .music-v3{
   --mv3-accent:#536f4c;
   --mv3-paper:#eee5d4;
@@ -131,51 +131,51 @@
 .mv3-spindle{position:absolute;left:50%;top:50%;width:8px;height:8px;translate:-50% -50%;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff1c1,#a77938 58%,#4a3419);box-shadow:0 0 0 2px #151812;z-index:9}
 .mv3-drop-ring{position:absolute;inset:-17%;border:2px dashed transparent;border-radius:50%;display:grid;place-items:center;transition:.25s ease;pointer-events:none}.mv3-drop-ring span{opacity:0;padding:5px 8px;background:#f1e7d3;color:#352a20;font:900 8px var(--body);letter-spacing:.08em;box-shadow:2px 2px 0 rgba(0,0,0,.12);transition:.2s ease}.mv3-turntable.is-hot .mv3-drop-ring{border-color:#e9c571;background:rgba(238,198,108,.08);transform:scale(1.035)}.mv3-turntable.is-hot .mv3-drop-ring span{opacity:1}
 
-/* v3.4: tonearm rebuilt as one clean mechanical assembly. */
+/* v3.5: classic tonearm — fixed pivot/counterweight, only the arm itself moves. */
 .mv3-tonearm{
-  position:absolute;right:4.5%;top:12.5%;width:42%;height:54%;z-index:8;
-  transform-origin:88% 10%;
-  transform:translateY(var(--arm-lift)) rotate(var(--arm-angle));
-  transition:transform var(--arm-time) var(--arm-ease);
-  filter:drop-shadow(2px 4px 3px rgba(0,0,0,.28));
-  will-change:transform;pointer-events:none;
+  position:absolute;right:3.2%;top:11.2%;width:43%;height:65%;z-index:8;
+  pointer-events:none;filter:drop-shadow(2px 4px 3px rgba(0,0,0,.25));
 }
 .mv3-arm-base{
-  position:absolute;right:0;top:0;width:43px;height:43px;border-radius:50%;
-  background:radial-gradient(circle at 36% 31%,#e8d09a 0 12%,#a98350 36%,#60472f 63%,#2c241e 100%);
-  box-shadow:0 0 0 3px #2c211a,0 0 0 6px #a27a46,inset -4px -5px 7px rgba(0,0,0,.26);
+  position:absolute;right:2%;top:1%;width:46px;height:46px;border-radius:50%;z-index:4;
+  background:radial-gradient(circle at 35% 30%,#ead7a7 0 12%,#ab8753 38%,#64503a 66%,#2c2722 100%);
+  box-shadow:0 0 0 3px #2a211b,0 0 0 6px #9f7a46,inset -4px -5px 8px rgba(0,0,0,.25);
 }
-.mv3-arm-base::before{
-  content:"";position:absolute;left:9px;top:-17px;width:25px;height:20px;border-radius:5px 5px 2px 2px;
-  background:linear-gradient(90deg,#2b2926,#9c927d 35%,#ded7c7 50%,#6c6559 72%,#262522);
+.mv3-arm-base::after{content:"";position:absolute;inset:13px;border-radius:50%;background:#282522;box-shadow:inset 0 0 0 2px #c3a36d}
+.mv3-counterweight{
+  position:absolute;left:11px;top:-24px;width:26px;height:25px;border-radius:6px 6px 3px 3px;
+  background:linear-gradient(90deg,#2c2b29 0,#938b78 28%,#ded8c9 48%,#7e7769 70%,#292824 100%);
   box-shadow:0 2px 4px rgba(0,0,0,.35);
 }
-.mv3-arm-base::after{content:"";position:absolute;inset:13px;border-radius:50%;background:#302923;box-shadow:inset 0 0 0 2px #b39460}
-.mv3-arm-tube{
-  position:absolute;right:10%;top:11%;width:90%;height:7px;border-radius:999px;
-  transform-origin:right center;transform:rotate(-51deg)!important;
-  background:linear-gradient(180deg,#ede8dd 0,#8e8b83 30%,#d9d3c6 53%,#5b5954 78%,#d5cdbd 100%)!important;
-  box-shadow:0 1px 1px rgba(255,255,255,.48),0 2px 4px rgba(0,0,0,.32)!important;
+.mv3-arm-motion{
+  position:absolute;inset:0;z-index:5;
+  transform-origin:89% 8.5%;
+  transform:translateY(var(--arm-lift)) rotate(var(--arm-angle));
+  transition:transform var(--arm-time) var(--arm-ease);
+  will-change:transform;
 }
-.mv3-arm-tube::before,.mv3-arm-tube::after{content:none!important}
+.mv3-arm-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.mv3-arm-shadow{fill:none;stroke:rgba(31,25,20,.45);stroke-width:8.5;stroke-linecap:round;stroke-linejoin:round;transform:translate(2px,3px)}
+.mv3-arm-metal{fill:none;stroke:#c8c2b4;stroke-width:6.2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 1px 0 rgba(255,255,255,.55))}
 .mv3-headshell{
-  position:absolute;left:8%;top:70%;width:39px;height:17px;border-radius:8px 3px 5px 9px;
-  background:linear-gradient(180deg,#36322d,#171614);border:1px solid #8e7a5a;
-  transform:rotate(-10deg);box-shadow:0 2px 4px rgba(0,0,0,.28);
+  position:absolute;left:10.5%;bottom:3.2%;width:43px;height:19px;border-radius:9px 3px 4px 10px;
+  background:linear-gradient(180deg,#3b3833,#171615);border:1px solid #8d7a5a;
+  transform:rotate(-28deg);transform-origin:78% 50%;box-shadow:0 2px 4px rgba(0,0,0,.3);
 }
-.mv3-headshell::before{content:"";position:absolute;left:6px;top:5px;width:17px;height:3px;border-radius:999px;background:#c8b783;box-shadow:0 5px 0 #70664e}
-.mv3-headshell::after{content:"";position:absolute;right:-11px;top:5px;width:14px;height:4px;border-radius:2px;background:#25221e;transform:rotate(7deg)}
-.mv3-needle{position:absolute;right:1px;bottom:-9px;width:2px;height:10px;background:#d8bd78;transform:rotate(-8deg);transform-origin:top;transition:transform .22s ease,height .22s ease}
-.mv3-turntable.is-arm-lifted .mv3-needle{transform:rotate(-8deg) translateY(-4px);height:6px}
+.mv3-headshell::before{content:"";position:absolute;left:7px;top:5px;width:20px;height:3px;border-radius:999px;background:#d1c18b;box-shadow:0 6px 0 #75694f}
+.mv3-headshell::after{content:"";position:absolute;right:-11px;top:6px;width:14px;height:4px;border-radius:3px;background:#24211e;transform:rotate(7deg)}
+.mv3-needle{position:absolute;right:-1px;bottom:-10px;width:2px;height:11px;background:#d8bd78;transform:rotate(-10deg);transform-origin:top;transition:transform .24s ease,height .24s ease}
+.mv3-turntable.is-arm-lifted .mv3-headshell{filter:drop-shadow(0 5px 3px rgba(0,0,0,.24))}
+.mv3-turntable.is-arm-lifted .mv3-needle{transform:rotate(-10deg) translateY(-4px);height:7px}
+.mv3-tonearm-rest,.mv3-control-knob,.mv3-speed-switch,.mv3-arm-tube{display:none!important}
 
-/* Remove the decorative pseudo-mechanics that were being mistaken for the tonearm. */
-.mv3-tonearm-rest,.mv3-control-knob,.mv3-speed-switch{display:none!important}
-
-/* Platter centred a little more, leaving a clean control lane at the right. */
+/* Keep the platter central and reserve the bottom strip for real controls. */
 .mv3-platter-wrap{left:10%;top:20.5%;width:59%}
-.mv3-power-led{right:9px;top:42%;writing-mode:horizontal-tb;transform:none;gap:5px;font-size:5.5px}
-.mv3-power-led::before{width:10px;height:10px}
-.mv3-play{left:9%;bottom:5.4%;min-width:108px;justify-content:center}
+.mv3-bottom-controls{position:absolute;left:8.5%;right:7%;bottom:4.8%;display:flex;align-items:center;justify-content:space-between;gap:16px;z-index:11;pointer-events:none}
+.mv3-play{position:relative!important;left:auto!important;bottom:auto!important;min-width:112px;justify-content:center;pointer-events:auto}
+.mv3-power-led{position:relative!important;right:auto!important;top:auto!important;writing-mode:horizontal-tb!important;transform:none!important;display:flex;align-items:center;gap:7px;font-size:6px;letter-spacing:.14em;color:#ead8b2;pointer-events:none}
+.mv3-power-led::before{width:11px;height:11px;flex:none}
+.mv3-deck-brand{background:none!important;border:0!important;border-radius:0!important;padding:0!important;box-shadow:none!important;backdrop-filter:none!important}
 
 /* Floating accents, restrained and hand-drawn. */
 .mv3-sound-fx{position:absolute;inset:-18%;z-index:12;pointer-events:none;overflow:visible}.mv3-note{position:absolute;opacity:0;font:900 20px/1 var(--display);color:#775b36;text-shadow:2px 2px 0 rgba(245,229,197,.88);will-change:transform,opacity}.mv3-note:nth-child(1){left:6%;top:23%}.mv3-note:nth-child(2){right:2%;top:18%}.mv3-note:nth-child(3){left:18%;bottom:2%}.mv3-note:nth-child(4){right:4%;bottom:22%}.mv3-note:nth-child(5){left:48%;top:-3%}
@@ -189,3 +189,27 @@
 @media(max-width:640px){.music-v3{--mv3-cover-size:min(54vw,214px)}.mv3-albums{display:flex;gap:22px;overflow-x:auto;overflow-y:visible;margin-inline:calc(50% - 50vw);padding:10px max(20px,calc((100vw - var(--mv3-cover-size))/2 - 42px)) 22px;scroll-snap-type:x proximity;scrollbar-width:none;-webkit-overflow-scrolling:touch}.mv3-albums::-webkit-scrollbar{display:none}.mv3-album{flex:0 0 calc(var(--mv3-cover-size) + var(--mv3-disc-size)*.20);scroll-snap-align:center}.mv3-turntable{width:min(84vw,322px)}}
 @media(max-width:390px){.music-v3{--mv3-cover-size:min(52vw,198px)}.mv3-turntable{width:min(88vw,306px)}}
 @media(prefers-reduced-motion:reduce){.mv3-disc,.mv3-cover-button,.mv3-tonearm,.mv3-drop-ring,.mv3-play{transition:none!important}.mv3-note{animation:none!important}.mv3-turntable.is-playing .mv3-note{opacity:.5}}
+
+/* v3.5 control strip — explicit styles so generic site button rules cannot distort the deck. */
+.mv3-play{
+  appearance:none;border:1.5px solid rgba(48,35,27,.72);border-radius:7px;
+  background:linear-gradient(180deg,#f3dfb7,#d7b77b);color:#3b2a20;
+  min-height:37px;padding:0 16px;display:inline-flex;align-items:center;gap:8px;
+  font:800 10px var(--body);letter-spacing:.02em;box-shadow:0 3px 0 rgba(46,31,22,.28),inset 0 1px rgba(255,255,255,.55);
+  cursor:pointer;transition:transform .2s ease,filter .2s ease,box-shadow .2s ease;
+}
+.mv3-play:hover:not(:disabled){transform:translateY(-1px);filter:brightness(1.035)}
+.mv3-play:active:not(:disabled){transform:translateY(1px);box-shadow:0 1px 0 rgba(46,31,22,.28),inset 0 1px rgba(255,255,255,.5)}
+.mv3-play:disabled{opacity:.48;cursor:not-allowed}
+.mv3-play span{font-size:11px}.mv3-play b{font:inherit}
+.mv3-power-led::before{content:"";display:block;border-radius:50%;background:#512e25;box-shadow:inset 0 0 0 2px #32231d,0 0 0 1px rgba(236,205,145,.25);transition:background .35s ease,box-shadow .35s ease}
+.mv3-turntable.is-power-on .mv3-power-led::before{background:#e8a34a;box-shadow:inset 0 0 0 2px #74451f,0 0 7px #f2bd62,0 0 13px rgba(243,183,83,.55)}
+.mv3-turntable.is-power-on .mv3-power-led{color:#f4dfb4}
+
+@media(max-width:390px){
+  .mv3-tonearm{right:2.2%;top:11.5%;width:44%;height:64%}
+  .mv3-headshell{width:39px;height:18px}
+  .mv3-bottom-controls{left:8%;right:6.5%;bottom:4.2%}
+  .mv3-play{min-width:102px;min-height:34px;padding-inline:13px}
+}
+@media(prefers-reduced-motion:reduce){.mv3-arm-motion{transition:none!important}}

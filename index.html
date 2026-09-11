@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html data-build="3.4.1" data-motion="full" data-motion-choice="auto" lang="vi">
+<html data-build="3.5.0" data-motion="full" data-motion-choice="auto" lang="vi">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
@@ -11,8 +11,8 @@
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800&amp;family=DM+Sans:wght@400;500;600;700&amp;family=Fraunces:ital,wght@0,600;0,700;1,600&amp;display=swap" rel="stylesheet"/>
-<link href="style.css?v=3.4.1" rel="stylesheet"/>
-<link href="music.css?v=3.4.1" rel="stylesheet"/>
+<link href="style.css?v=3.5.0" rel="stylesheet"/>
+<link href="music.css?v=3.5.0" rel="stylesheet"/>
 <script>(function(){var r=document.documentElement;var c='auto';try{c=localStorage.getItem('artclub-motion-v23')||localStorage.getItem('artclub-motion-v22')||(localStorage.getItem('artclub-motion')==='off'?'off':'auto');}catch(e){}if(['auto','full','quiet','off'].indexOf(c)<0)c='auto';var on=c==='full'||c==='quiet'||(c==='auto'&&!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches));r.dataset.motionChoice=c;r.dataset.motionLevel=c;r.dataset.motion=on?'full':'off';})();</script></head>
 <body><div hidden="" id="assetWarning" role="alert" style="padding:16px;margin:12px;background:#fff0d0;color:#382e20;border:2px solid #a44331;font:14px/1.6 system-ui;"></div><noscript>Trang cần bật JavaScript để đổi ngôn ngữ, chọn đĩa và chạy chuyển động.</noscript>
 <a class="skip-link" data-i18n="skip" href="#main">Đến nội dung chính</a>
@@ -126,8 +126,21 @@
           <div class="mv3-platter" id="mv3Platter"><span class="mv3-platter-surface" id="mv3PlatterSurface" aria-hidden="true"></span><span class="mv3-platter-dots" id="mv3PlatterDots" aria-hidden="true"></span><span class="mv3-spindle" aria-hidden="true"></span></div>
           <div class="mv3-drop-ring" aria-hidden="true"><span>THẢ ĐĨA VÀO ĐÂY</span></div>
         </div>
-        <div class="mv3-tonearm" aria-hidden="true"><span class="mv3-arm-base"></span><span class="mv3-arm-tube"></span><span class="mv3-headshell"><i class="mv3-needle"></i></span></div><div class="mv3-power-led" aria-hidden="true">POWER</div><div class="mv3-sound-fx" aria-hidden="true"><span class="mv3-note">♪</span><span class="mv3-note">♫</span><span class="mv3-note">✦</span></div>
-        <button class="mv3-play" id="mv3Play" type="button" disabled><span aria-hidden="true">▶</span><b>Phát nhạc</b></button>
+        <div class="mv3-tonearm" aria-hidden="true">
+          <span class="mv3-arm-base"><i class="mv3-counterweight"></i></span>
+          <span class="mv3-arm-motion">
+            <svg class="mv3-arm-svg" viewBox="0 0 140 250" preserveAspectRatio="none" focusable="false" aria-hidden="true">
+              <path class="mv3-arm-shadow" d="M122 20 C121 72 109 126 80 177 C67 199 52 215 35 228"/>
+              <path class="mv3-arm-metal" d="M122 20 C121 72 109 126 80 177 C67 199 52 215 35 228"/>
+            </svg>
+            <span class="mv3-headshell"><i class="mv3-needle"></i></span>
+          </span>
+        </div>
+        <div class="mv3-sound-fx" aria-hidden="true"><span class="mv3-note">♪</span><span class="mv3-note">♫</span><span class="mv3-note">✦</span></div>
+        <div class="mv3-bottom-controls">
+          <button class="mv3-play" id="mv3Play" type="button" disabled><span aria-hidden="true">▶</span><b>Phát nhạc</b></button>
+          <div class="mv3-power-led" aria-hidden="true">POWER</div>
+        </div>
       </div>
       <div class="mv3-now">
         <div><span id="mv3NowLabel">Chưa có đĩa trên mâm</span><strong id="mv3NowTitle">—</strong></div>
@@ -157,5 +170,5 @@
 <div class="footer-tools"><button aria-pressed="true" class="text-button" id="motionToggle" type="button"><span aria-hidden="true">✦</span> <span data-i18n="motionOn" id="motionText">Chuyển động: Bật</span></button><a data-i18n="backTop" href="#top">↑ Lên đầu trang</a></div>
 <small>© 2026 <span data-i18n="clubName">CLB Nghệ thuật</span></small></footer>
 <dialog aria-label="Xem tác phẩm" class="lightbox" data-i18n-aria="viewArt" id="lightbox"><button aria-label="Đóng" class="lightbox-close" data-i18n-aria="close" type="button">×</button><figure><img alt="" id="lightboxImage" src="assets/logo-new.jpeg"/><figcaption id="lightboxCaption"></figcaption></figure></dialog>
-<div aria-hidden="true" id="fxLayer"></div><div aria-hidden="true" class="scroll-progress" id="scrollProgress"></div><details class="motion-dock" id="motionDock"><summary><span aria-hidden="true">✦</span><span id="motionDockStatus">Chuyển động</span></summary><div class="motion-panel"><label><strong data-i18n="motionControl">Chuyển động trên trang</strong><select id="motionMode"><option data-i18n="motionAuto" value="auto">Theo thiết bị</option><option data-i18n="motionFull" value="full">Đầy đủ</option><option data-i18n="motionQuiet" value="quiet">Nhẹ</option><option data-i18n="motionDisabled" value="off">Tắt chuyển động</option></select></label><p id="motionReason" role="status"></p><p data-i18n="motionHelp">Chế độ Theo thiết bị tôn trọng cài đặt giảm chuyển động. Chọn Đầy đủ để chủ động bật hiệu ứng.</p><p class="build-status" id="buildStatus">v3.4.1</p></div></details><script defer src="content.js?v=3.4.1"></script><script defer src="script.js?v=3.4.1"></script><script defer src="js/music-v3.js?v=3.4.1"></script><script>window.addEventListener('load',function(){setTimeout(function(){var r=document.documentElement,missing=[];if(getComputedStyle(r).getPropertyValue('--club-build').trim()!=='341')missing.push('style.css');if(!window.CLUB_CONTENT)missing.push('content.js');if(window.ClubBuild!=='3.4.1')missing.push('script.js');if(!window.ClubMusicV3)missing.push('js/music-v3.js');if(window.ClubModuleErrors&&window.ClubModuleErrors.length)missing.push(window.ClubModuleErrors.join(', '));window.ClubAssetCheck={version:'3.4.1',missing:missing};var el=document.getElementById('assetWarning');if(missing.length){el.hidden=false;el.textContent='v3.4.1: '+(r.lang==='en'?'Missing or mismatched files: ':'Tệp thiếu hoặc chưa đúng phiên bản: ')+missing.join(', ')+'.';}var st=document.getElementById('buildStatus');if(st)st.textContent='v3.4.1 · '+(missing.length?'Lỗi: '+missing.join(', '):'HTML + CSS + JavaScript ✓');},900);});</script></body>
+<div aria-hidden="true" id="fxLayer"></div><div aria-hidden="true" class="scroll-progress" id="scrollProgress"></div><details class="motion-dock" id="motionDock"><summary><span aria-hidden="true">✦</span><span id="motionDockStatus">Chuyển động</span></summary><div class="motion-panel"><label><strong data-i18n="motionControl">Chuyển động trên trang</strong><select id="motionMode"><option data-i18n="motionAuto" value="auto">Theo thiết bị</option><option data-i18n="motionFull" value="full">Đầy đủ</option><option data-i18n="motionQuiet" value="quiet">Nhẹ</option><option data-i18n="motionDisabled" value="off">Tắt chuyển động</option></select></label><p id="motionReason" role="status"></p><p data-i18n="motionHelp">Chế độ Theo thiết bị tôn trọng cài đặt giảm chuyển động. Chọn Đầy đủ để chủ động bật hiệu ứng.</p><p class="build-status" id="buildStatus">v3.5.0</p></div></details><script defer src="content.js?v=3.5.0"></script><script defer src="script.js?v=3.5.0"></script><script defer src="js/music-v3.js?v=3.5.0"></script><script>window.addEventListener('load',function(){setTimeout(function(){var r=document.documentElement,missing=[];if(getComputedStyle(r).getPropertyValue('--club-build').trim()!=='350')missing.push('style.css');if(!window.CLUB_CONTENT)missing.push('content.js');if(window.ClubBuild!=='3.5.0')missing.push('script.js');if(!window.ClubMusicV3)missing.push('js/music-v3.js');if(window.ClubModuleErrors&&window.ClubModuleErrors.length)missing.push(window.ClubModuleErrors.join(', '));window.ClubAssetCheck={version:'3.5.0',missing:missing};var el=document.getElementById('assetWarning');if(missing.length){el.hidden=false;el.textContent='v3.5.0: '+(r.lang==='en'?'Missing or mismatched files: ':'Tệp thiếu hoặc chưa đúng phiên bản: ')+missing.join(', ')+'.';}var st=document.getElementById('buildStatus');if(st)st.textContent='v3.5.0 · '+(missing.length?'Lỗi: '+missing.join(', '):'HTML + CSS + JavaScript ✓');},900);});</script></body>
 </html>

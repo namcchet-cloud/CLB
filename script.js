@@ -632,7 +632,7 @@ try {
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('motionDock'))$('motionDock').open=false;});
   document.addEventListener('click',e=>{if(!$('motionDock')?.contains(e.target)&&$('motionDock'))$('motionDock').open=false;});
 
-  window.ClubMotion={version:'3.4.1',burst,flyRecord,animate,register,setChoice,get enabled(){return enabled;},get choice(){return choice;}};
+  window.ClubMotion={version:'3.5.0',burst,flyRecord,animate,register,setChoice,get enabled(){return enabled;},get choice(){return choice;}};
   window.addEventListener('pageshow',()=>{root.dataset.pageHidden='false';syncPreference();register();});
   window.addEventListener('blur',resetPointer);
   root.dataset.pageHidden=String(document.hidden);
@@ -1203,4 +1203,4 @@ try {
  });
 })();
 
-window.ClubBuild='3.4.1';
+window.ClubBuild='3.5.0';
