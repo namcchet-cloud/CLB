@@ -1,4 +1,4 @@
-import { imageVariant } from '../core/images.js?v=4.0.1';
+import { imageVariant } from '../core/images.js?v=5.0.0';
 /** Original mascot pixels; finite UFO flight. Loaded on demand. */
 export function initAkiko() {
   'use strict';

@@ -1,174 +1,211 @@
-/* Opening signature — fixed overlay only; never participates in page layout. */
-.intro-signature {
+/* v5 opening sequence: isolated overlay, never participates in page layout. */
+.art-intro {
   position: fixed;
   inset: 0;
-  z-index: 12000;
+  z-index: 1200;
   display: grid;
   place-items: center;
-  overflow: clip;
-  pointer-events: auto;
-  background:
-    radial-gradient(circle at 50% 46%, rgba(255,255,255,.97) 0 20%, rgba(242,234,219,.985) 52%, rgba(231,221,202,.99) 100%);
-  opacity: 1;
+  overflow: hidden;
+  pointer-events: none;
   isolation: isolate;
-  contain: strict;
+  background: rgba(246, 241, 230, .16);
+  -webkit-backdrop-filter: blur(15px) saturate(.78) brightness(.97);
+  backdrop-filter: blur(15px) saturate(.78) brightness(.97);
+  opacity: 1;
+  visibility: visible;
+  transition:
+    backdrop-filter 1.05s cubic-bezier(.22,.76,.28,1),
+    -webkit-backdrop-filter 1.05s cubic-bezier(.22,.76,.28,1),
+    background-color 1.05s ease,
+    opacity .42s ease;
 }
-.intro-signature::before {
+
+.art-intro::before {
   content: "";
   position: absolute;
-  inset: -8%;
-  opacity: .18;
-  background-image:
-    radial-gradient(circle at 15% 20%, rgba(37,41,35,.14) 0 1px, transparent 1.6px),
-    radial-gradient(circle at 72% 64%, rgba(164,67,49,.09) 0 1px, transparent 1.5px);
-  background-size: 19px 21px, 27px 29px;
-  transform: rotate(-2deg);
-}
-.intro-signature.is-leaving { pointer-events: none; }
-.intro-signature.is-gone { display: none; }
-
-.intro-stage {
-  position: relative;
-  width: min(76vw, 520px);
-  aspect-ratio: 1 / .78;
-  display: grid;
-  place-items: center;
-  transform: translateZ(0);
-}
-.intro-watercolor {
-  position: absolute;
-  inset: 8% 9% 3%;
-  opacity: 0;
-  filter: blur(7px) saturate(.9);
-  transform: scale(.72) rotate(-3deg);
-  background:
-    radial-gradient(ellipse at 33% 42%, rgba(185,203,163,.78) 0 22%, transparent 51%),
-    radial-gradient(ellipse at 64% 43%, rgba(217,144,164,.45) 0 20%, transparent 48%),
-    radial-gradient(ellipse at 53% 66%, rgba(224,187,88,.38) 0 18%, transparent 47%),
-    radial-gradient(ellipse at 44% 39%, rgba(93,125,145,.34) 0 17%, transparent 43%);
-  mix-blend-mode: multiply;
-  animation: introWash .72s .52s var(--motion-ease, cubic-bezier(.16,1,.3,1)) forwards;
-}
-.intro-drawn-logo {
-  position: relative;
-  z-index: 3;
-  width: min(86%, 430px);
-  height: auto;
-  overflow: visible;
-  filter: drop-shadow(0 2px 0 rgba(255,255,255,.75));
-}
-.intro-drawn-logo path {
-  fill: none;
-  stroke: var(--ink,#252923);
-  stroke-width: 10;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
-  pathLength: 1;
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-  animation: introDraw .42s var(--motion-ease,cubic-bezier(.16,1,.3,1)) forwards;
-}
-.intro-drawn-logo path:nth-child(1){animation-delay:.05s}
-.intro-drawn-logo path:nth-child(2){animation-delay:.14s}
-.intro-drawn-logo path:nth-child(3){animation-delay:.23s}
-.intro-drawn-logo path:nth-child(4){animation-delay:.32s}
-.intro-drawn-logo path:nth-child(5){animation-delay:.41s}
-.intro-drawn-logo path:nth-child(6){animation-delay:.50s}
-.intro-drawn-logo path:nth-child(7){animation-delay:.59s}
-
-.intro-pencil-echo {
-  position: absolute;
-  z-index: 2;
-  width: 82%;
-  height: 46%;
-  border: 2px solid rgba(37,41,35,.1);
-  border-radius: 48% 52% 45% 55%;
-  transform: rotate(-2deg) scale(.96);
-  opacity: 0;
-  animation: introEcho .55s .2s ease-out forwards;
-}
-
-.intro-emblem {
-  position: absolute;
-  z-index: 4;
   left: 50%;
-  top: 54%;
-  width: clamp(150px,31vw,230px);
+  top: 50%;
+  width: min(72vw, 650px);
   aspect-ratio: 1;
-  transform: translate(-50%,-50%) scale(.9);
-  opacity: 0;
+  translate: -50% -50%;
   border-radius: 50%;
-  box-shadow: 0 10px 30px rgba(37,41,35,.08);
-  will-change: transform, opacity;
+  background:
+    radial-gradient(circle at 31% 38%, rgba(152, 191, 139, .56), transparent 36%),
+    radial-gradient(circle at 69% 37%, rgba(218, 141, 177, .30), transparent 34%),
+    radial-gradient(circle at 54% 69%, rgba(82, 133, 153, .22), transparent 35%);
+  filter: blur(34px);
+  opacity: 0;
+  transform: scale(.68);
+  transition: opacity 1.25s ease, transform 1.6s cubic-bezier(.2,.75,.2,1);
 }
-.intro-emblem img {
-  display: block;
+
+.art-intro.is-drawing::before {
+  opacity: .78;
+  transform: scale(1);
+}
+
+.art-intro.is-handoff {
+  background: rgba(246, 241, 230, 0);
+  -webkit-backdrop-filter: blur(0) saturate(1) brightness(1);
+  backdrop-filter: blur(0) saturate(1) brightness(1);
+}
+
+.art-intro.is-finished {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.art-intro-logo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: clamp(230px, 34vw, 390px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -49%);
+  transform-origin: 50% 50%;
+  will-change: transform, opacity;
+  filter: drop-shadow(0 20px 32px rgba(48, 52, 43, .10));
+}
+
+.art-intro-logo canvas {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  border-radius: inherit;
-}
-.intro-signature.is-colored .intro-drawn-logo {
-  animation: introInkSet .42s ease forwards;
-}
-.intro-signature.is-colored .intro-emblem {
-  animation: introEmblemIn .42s var(--motion-ease,cubic-bezier(.16,1,.3,1)) forwards;
+  display: block;
 }
 
-.intro-sticker {
+.art-intro-ring {
   position: absolute;
-  z-index: 5;
-  display: grid;
-  place-items: center;
-  color: var(--ink,#252923);
+  inset: -7%;
+  border: 2px solid rgba(37, 43, 34, .14);
+  border-radius: 50%;
   opacity: 0;
-  transform: scale(.2) rotate(var(--r,0deg));
-  filter: drop-shadow(2px 3px 0 rgba(37,41,35,.12));
-  animation: introSticker .46s var(--spring,cubic-bezier(.22,1.45,.38,1)) forwards,
-             introStickerFloat 1.4s 1.02s ease-in-out infinite alternate;
+  transform: scale(.88) rotate(-8deg);
+  transition: opacity .8s ease, transform .95s cubic-bezier(.2,.8,.2,1);
 }
-.intro-sticker.s1 { left: 5%; top: 18%; font-size: clamp(28px,6vw,46px); color: var(--mustard,#e0bb58); --r:-14deg; animation-delay:.56s,1.02s; }
-.intro-sticker.s2 { right: 4%; top: 20%; font-size: clamp(26px,5.5vw,43px); color: var(--rust,#a44331); --r:12deg; animation-delay:.66s,1.06s; }
-.intro-sticker.s3 { left: 14%; bottom: 9%; font-size: clamp(23px,5vw,39px); color: var(--blue,#355972); --r:8deg; animation-delay:.74s,1.12s; }
-.intro-sticker.s4 { right: 13%; bottom: 8%; width: clamp(52px,11vw,82px); height: 34px; --r:-10deg; animation-delay:.82s,1.16s; }
-.intro-sticker.s4::before,
-.intro-sticker.s4::after {
-  content: "";
+
+.art-intro.is-colored .art-intro-ring {
+  opacity: 1;
+  transform: scale(1) rotate(0);
+}
+
+.art-intro-sticker {
+  --tx: 0px;
+  --ty: 0px;
+  --rot: 0deg;
   position: absolute;
-  left: 0;
-  right: 0;
-  height: 4px;
-  border-radius: 999px;
-  background: var(--pink,#d990a4);
-  transform: rotate(6deg);
-}
-.intro-sticker.s4::after { top: 18px; width: 72%; left: 15%; transform: rotate(-8deg); }
-
-.intro-signature.is-handoff .intro-sticker {
-  animation: introStickerOut .38s ease-in forwards;
-}
-.intro-signature.is-handoff .intro-watercolor,
-.intro-signature.is-handoff .intro-pencil-echo,
-.intro-signature.is-handoff .intro-drawn-logo { opacity: 0; transition: opacity .28s ease; }
-
-@keyframes introDraw { to { stroke-dashoffset: 0; } }
-@keyframes introWash { 0%{opacity:0;transform:scale(.72) rotate(-3deg)} 55%{opacity:.85} 100%{opacity:.68;transform:scale(1) rotate(0)} }
-@keyframes introEcho { from{opacity:0;transform:rotate(-4deg) scale(.86)} to{opacity:.55;transform:rotate(-2deg) scale(1)} }
-@keyframes introInkSet { to { opacity:.16; transform: scale(1.02); } }
-@keyframes introEmblemIn { from{opacity:0;transform:translate(-50%,-50%) scale(.82)} to{opacity:1;transform:translate(-50%,-50%) scale(1)} }
-@keyframes introSticker { 0%{opacity:0;transform:scale(.1) rotate(calc(var(--r) - 18deg))} 70%{opacity:1;transform:scale(1.12) rotate(calc(var(--r) + 3deg))} 100%{opacity:.92;transform:scale(1) rotate(var(--r))} }
-@keyframes introStickerFloat { to { translate: 0 -6px; rotate: 2deg; } }
-@keyframes introStickerOut { to { opacity:0; transform:translate(var(--ox,0),var(--oy,-28px)) scale(.72) rotate(calc(var(--r) + 9deg)); } }
-
-@media (max-width:700px) {
-  .intro-stage { width: min(88vw,430px); }
-  .intro-emblem { width: clamp(138px,41vw,190px); }
-  .intro-drawn-logo path { stroke-width: 8; }
+  left: 50%;
+  top: 50%;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(.25) rotate(var(--rot));
+  transform-origin: center;
+  will-change: transform, opacity;
+  filter: drop-shadow(0 5px 0 rgba(36, 39, 32, .07));
 }
 
-html[data-motion="off"] .intro-signature { display:none !important; }
+.art-intro-sticker.star {
+  --tx: -235px; --ty: -126px; --rot: -9deg;
+  width: 50px; height: 50px;
+  background: #dfb43c;
+  clip-path: polygon(50% 0,61% 35%,98% 37%,69% 58%,80% 95%,50% 73%,20% 95%,31% 58%,2% 37%,39% 35%);
+}
+
+.art-intro-sticker.bolt {
+  --tx: 242px; --ty: -122px; --rot: 12deg;
+  width: 38px; height: 72px;
+  background: #efa10b;
+  clip-path: polygon(57% 0,14% 48%,45% 48%,28% 100%,86% 38%,55% 38%);
+}
+
+.art-intro-sticker.spark {
+  --tx: 226px; --ty: 128px; --rot: 8deg;
+  width: 43px; height: 43px;
+  background: #d782a7;
+  clip-path: polygon(50% 0,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0 50%,39% 39%);
+}
+
+.art-intro-sticker.scribble {
+  --tx: -238px; --ty: 137px; --rot: -18deg;
+  width: 92px; height: 50px;
+  border: 6px solid #496a86;
+  border-color: #496a86 transparent transparent #496a86;
+  border-radius: 50%;
+}
+
+.art-intro.is-burst .art-intro-sticker {
+  animation: artIntroPop .78s cubic-bezier(.18,1.35,.34,1) forwards;
+}
+
+.art-intro.is-burst .art-intro-sticker.bolt { animation-delay: .07s; }
+.art-intro.is-burst .art-intro-sticker.spark { animation-delay: .14s; }
+.art-intro.is-burst .art-intro-sticker.scribble { animation-delay: .21s; }
+
+@keyframes artIntroPop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(.18) rotate(calc(var(--rot) - 16deg));
+  }
+  68% {
+    opacity: 1;
+    transform: translate(calc(-50% + var(--tx) * 1.06), calc(-50% + var(--ty) * 1.06)) scale(1.08) rotate(calc(var(--rot) + 3deg));
+  }
+  100% {
+    opacity: 1;
+    transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(1) rotate(var(--rot));
+  }
+}
+
+.art-intro.is-settled .art-intro-sticker {
+  animation: artIntroFloat 1.7s ease-in-out infinite alternate;
+}
+.art-intro.is-settled .art-intro-sticker.bolt { animation-delay: -.4s; }
+.art-intro.is-settled .art-intro-sticker.spark { animation-delay: -.8s; }
+.art-intro.is-settled .art-intro-sticker.scribble { animation-delay: -1.2s; }
+
+@keyframes artIntroFloat {
+  from { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty) - 2px)) scale(1) rotate(calc(var(--rot) - 1deg)); }
+  to   { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty) + 5px)) scale(1.018) rotate(calc(var(--rot) + 1.5deg)); }
+}
+
+.art-intro.is-scatter .art-intro-sticker {
+  animation: none;
+  opacity: 0;
+  transition: transform 1.08s cubic-bezier(.18,.72,.22,1), opacity .78s ease;
+}
+.art-intro.is-scatter .art-intro-sticker.star { transform: translate(calc(-50% - 58vw), calc(-50% - 43vh)) rotate(-62deg) scale(.76); }
+.art-intro.is-scatter .art-intro-sticker.bolt { transform: translate(calc(-50% + 58vw), calc(-50% - 40vh)) rotate(58deg) scale(.76); }
+.art-intro.is-scatter .art-intro-sticker.spark { transform: translate(calc(-50% + 55vw), calc(-50% + 44vh)) rotate(48deg) scale(.76); }
+.art-intro.is-scatter .art-intro-sticker.scribble { transform: translate(calc(-50% - 56vw), calc(-50% + 45vh)) rotate(-76deg) scale(.76); }
+
+.art-intro-caption {
+  position: absolute;
+  left: 50%;
+  top: calc(50% + min(27vw, 230px));
+  translate: -50% 0;
+  color: rgba(35, 39, 32, .48);
+  font: 700 10px/1 var(--body, sans-serif);
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity .8s ease, transform .8s ease;
+}
+
+.art-intro.is-colored .art-intro-caption {
+  opacity: 1;
+  transform: translateY(5px);
+}
+.art-intro.is-handoff .art-intro-caption { opacity: 0; }
+
+@media (max-width: 640px) {
+  .art-intro { -webkit-backdrop-filter: blur(12px) saturate(.82); backdrop-filter: blur(12px) saturate(.82); }
+  .art-intro-logo { width: min(66vw, 310px); }
+  .art-intro-sticker.star { --tx: -145px; --ty: -112px; width: 39px; height: 39px; }
+  .art-intro-sticker.bolt { --tx: 150px; --ty: -108px; width: 29px; height: 56px; }
+  .art-intro-sticker.spark { --tx: 143px; --ty: 108px; width: 34px; height: 34px; }
+  .art-intro-sticker.scribble { --tx: -150px; --ty: 114px; width: 68px; height: 40px; border-width: 5px; }
+  .art-intro-caption { top: calc(50% + min(38vw, 194px)); font-size: 8px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .intro-signature { animation:none !important; }
-  .intro-watercolor, .intro-drawn-logo path, .intro-pencil-echo, .intro-emblem, .intro-sticker { animation:none !important; }
+  .art-intro { display: none !important; }
 }

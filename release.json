@@ -1,6 +1,6 @@
 {
-  "version": "4.0.1",
-  "name": "CLB Foundation",
+  "version": "5.0.0",
+  "name": "CLB v5 Intro",
   "minimumNode": "18",
   "notes": "Static site; no runtime framework; no service worker."
 }

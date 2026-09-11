@@ -1,4 +1,4 @@
-import { images } from '../data/images.js?v=4.0.1';
+import { images } from '../data/images.js?v=5.0.0';
 /** Thumbnail selection never mutates/recompresses the artist's full-size original. */
 export function imageInfo(src) { return images[src]; }
 export function imageVariant(src, target = 560) {

@@ -1,4 +1,4 @@
-import { rafThrottle } from "../core/runtime.js?v=4.0.1";
+import { rafThrottle } from "../core/runtime.js?v=5.0.0";
 /** Haruko garden: drawing preserved; no frame loop while hidden. */
 export function initGarden() {
   'use strict';

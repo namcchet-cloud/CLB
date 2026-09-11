@@ -1,6 +1,6 @@
-import { local, t, apply } from '../core/i18n.js?v=4.0.1';
-import { setImage, imageVariant } from '../core/images.js?v=4.0.1';
-import { start, loadCSS, report } from '../core/runtime.js?v=4.0.1';
+import { local, t, apply } from '../core/i18n.js?v=5.0.0';
+import { setImage, imageVariant } from '../core/images.js?v=5.0.0';
+import { start, loadCSS, report } from '../core/runtime.js?v=5.0.0';
 
 /** Author/gallery state is independent of visual effects and of the music player. */
 export function initGallery(content) {
@@ -21,7 +21,7 @@ export function initGallery(content) {
   const artName = art => local(art.title).trim() || `${local(art.author)} · ${local(art.description)}`;
   const visible = () => artworks.map((art, index) => ({ art, index }))
     .filter(({ art }) => (!artistId || art.artistId === artistId) && (filter === 'all' || art.category === filter));
-  const effectsCSS = new URL('../../css/effects.css?v=4.0.1', import.meta.url).href;
+  const effectsCSS = new URL('../../css/effects.css?v=5.0.0', import.meta.url).href;
   let cssReady;
   const ensureEffectsCSS = () => cssReady ||= loadCSS(effectsCSS).catch(e => { cssReady = null; throw e; });
   async function effect(replay = false) {
@@ -31,7 +31,7 @@ export function initGallery(content) {
       await ensureEffectsCSS();
       const btn = switcher.querySelector(`[data-artist="${artistId}"]`);
       if (artistId === 'akiko-oishi' && replay && motion?.enabled) {
-        const akiko = await start('akiko', async () => (await import('./akiko.js?v=4.0.1')).initAkiko());
+        const akiko = await start('akiko', async () => (await import('./akiko.js?v=5.0.0')).initAkiko());
         if (rev === effectRevision && artistId === 'akiko-oishi') await akiko.launch(btn);
       }
     } catch (e) { report('author-effect', e); }
