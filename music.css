@@ -1,4 +1,4 @@
-/* Music v3.7.0 — brighter collectible vinyl tones + vintage mechanical turntable. */
+/* Music v3.8.0 — brighter collectible vinyl tones + vintage mechanical turntable. */
 .music-v3{
   --mv3-accent:#536f4c;
   --mv3-paper:#eee5d4;
@@ -274,3 +274,49 @@
   .mv3-turntable{width:min(94vw,308px);padding:16px 16px 14px}
   .mv3-now,.mv3-status,.mv3-spotify{max-width:308px}
 }
+
+/* ============================================================
+   v3.8.0 — Music corner comic ambience
+   Decorative only: no hit targets, no layout contribution.
+   ============================================================ */
+.music-v3{position:relative;isolation:isolate}
+.music-v3 .mv3-room{position:relative;z-index:2}
+.mv3-scene-decor{position:absolute;inset:110px 0 0;pointer-events:none;z-index:1;overflow:hidden}
+.mv3-paper-note{position:absolute;display:block;padding:10px 12px;background:#eee2c9;color:#4b4032;border:1px solid rgba(65,54,43,.22);box-shadow:3px 5px 0 rgba(55,43,32,.08);font:800 10px/1.35 var(--display);letter-spacing:.08em;opacity:.56;transform:rotate(-5deg)}
+.mv3-paper-a{left:1.5%;top:17%}.mv3-paper-b{right:2%;top:43%;transform:rotate(7deg);opacity:.48}
+
+.mv3-turntable{overflow:visible}
+.mv3-comic-fx{position:absolute;inset:-18%;pointer-events:none;z-index:12;overflow:visible}
+.mv3-fx-note,.mv3-fx-spark,.mv3-fx-bubble,.mv3-fx-swoosh{position:absolute;opacity:0;pointer-events:none;will-change:transform,opacity}
+.mv3-fx-note{font-family:Georgia,'Times New Roman',serif;font-weight:900;line-height:1;color:#f0b2bd;text-shadow:0 1px 0 #fff7,0 0 10px rgba(235,143,164,.26);transform:translate3d(0,14px,0) scale(.82) rotate(-8deg)}
+.mv3-fx-note.n1{left:4%;top:24%;font-size:30px}.mv3-fx-note.n2{left:14%;top:4%;font-size:22px}.mv3-fx-note.n3{right:13%;top:16%;font-size:25px}.mv3-fx-note.n4{right:2%;top:52%;font-size:32px}.mv3-fx-note.n5{left:9%;bottom:8%;font-size:24px}.mv3-fx-note.n6{right:21%;bottom:3%;font-size:28px}
+.mv3-fx-spark{color:#e4c16f;text-shadow:0 0 10px rgba(239,198,105,.34);font-size:18px;transform:scale(.4) rotate(0deg)}
+.mv3-fx-spark.s1{left:20%;top:13%}.mv3-fx-spark.s2{right:27%;top:7%;font-size:13px}.mv3-fx-spark.s3{right:5%;bottom:24%;font-size:16px}
+.mv3-fx-swoosh{width:46px;height:16px;border-top:2px solid rgba(240,178,189,.76);border-radius:50%;transform:rotate(-20deg) scaleX(.55)}
+.mv3-fx-swoosh::after{content:"";position:absolute;width:31px;height:10px;left:9px;top:5px;border-top:1px solid rgba(225,193,111,.72);border-radius:50%}
+.mv3-fx-swoosh.sw1{left:1%;top:58%}.mv3-fx-swoosh.sw2{right:3%;top:33%;transform:rotate(158deg) scaleX(.55)}
+.mv3-fx-bubble{right:-2%;top:-2%;padding:7px 8px 6px;background:#efe2c8;color:#8f4e50;border:2px solid #59483a;box-shadow:3px 3px 0 rgba(45,34,26,.16);font:900 10px/.9 var(--display);letter-spacing:.035em;text-align:center;transform:rotate(8deg) scale(.65)}
+.mv3-fx-bubble::before{content:"";position:absolute;left:-7px;bottom:5px;width:12px;height:12px;background:#efe2c8;border-left:2px solid #59483a;border-bottom:2px solid #59483a;transform:rotate(34deg)}
+
+.music-v3.is-music-playing .mv3-fx-note{animation:mv3NoteFloat 3.8s cubic-bezier(.22,.65,.35,1) infinite}
+.music-v3.is-music-playing .mv3-fx-note.n2{animation-delay:-1.6s;animation-duration:4.4s}.music-v3.is-music-playing .mv3-fx-note.n3{animation-delay:-2.7s;animation-duration:4.1s}.music-v3.is-music-playing .mv3-fx-note.n4{animation-delay:-.9s;animation-duration:4.8s}.music-v3.is-music-playing .mv3-fx-note.n5{animation-delay:-3.1s;animation-duration:4.5s}.music-v3.is-music-playing .mv3-fx-note.n6{animation-delay:-2s;animation-duration:5s}
+.music-v3.is-music-playing .mv3-fx-spark{animation:mv3SparkPop 2.2s ease-in-out infinite}.music-v3.is-music-playing .mv3-fx-spark.s2{animation-delay:-.8s}.music-v3.is-music-playing .mv3-fx-spark.s3{animation-delay:-1.5s}
+.music-v3.is-music-playing .mv3-fx-swoosh{animation:mv3Swoosh 3.2s ease-in-out infinite}.music-v3.is-music-playing .mv3-fx-swoosh.sw2{animation-delay:-1.7s}
+.music-v3.is-music-playing .mv3-fx-bubble{animation:mv3BubbleIn 4.2s cubic-bezier(.2,.8,.2,1) infinite}
+.music-v3.is-music-playing .mv3-paper-note{filter:saturate(1.06);opacity:.72;transition:opacity .8s ease,filter .8s ease}
+
+@keyframes mv3NoteFloat{0%{opacity:0;transform:translate3d(0,14px,0) scale(.78) rotate(-9deg)}14%{opacity:.92}52%{opacity:.72;transform:translate3d(7px,-15px,0) scale(1) rotate(7deg)}86%{opacity:.18}100%{opacity:0;transform:translate3d(-5px,-38px,0) scale(.9) rotate(-5deg)}}
+@keyframes mv3SparkPop{0%,100%{opacity:0;transform:scale(.35) rotate(0)}30%{opacity:.9;transform:scale(1.08) rotate(24deg)}55%{opacity:.5;transform:scale(.82) rotate(48deg)}75%{opacity:.85;transform:scale(1) rotate(68deg)}}
+@keyframes mv3Swoosh{0%,100%{opacity:0;transform:rotate(-20deg) translateX(-7px) scaleX(.55)}35%,64%{opacity:.68;transform:rotate(-20deg) translateX(3px) scaleX(1)}80%{opacity:.15}}
+@keyframes mv3BubbleIn{0%,70%,100%{opacity:0;transform:rotate(8deg) scale(.65) translateY(4px)}8%,58%{opacity:.92;transform:rotate(4deg) scale(1) translateY(0)}}
+
+/* Keep the ambience gentle on phones and in reduced-motion mode. */
+@media(max-width:640px){
+  .mv3-scene-decor{inset:92px 0 0}.mv3-paper-note{font-size:8px;padding:7px 8px;opacity:.38}.mv3-paper-a{left:-2%;top:27%}.mv3-paper-b{right:-2%;top:49%}
+  .mv3-comic-fx{inset:-12%}.mv3-fx-note.n1,.mv3-fx-note.n4{font-size:23px}.mv3-fx-note.n2,.mv3-fx-note.n3,.mv3-fx-note.n5,.mv3-fx-note.n6{font-size:18px}.mv3-fx-bubble{right:-1%;top:-3%;font-size:8px;padding:6px}
+  .mv3-fx-swoosh{width:34px}
+}
+html[data-motion="quiet"] .music-v3.is-music-playing .mv3-fx-note{animation-duration:6.4s;opacity:.5}
+html[data-motion="quiet"] .music-v3.is-music-playing .mv3-fx-spark{animation-duration:4.2s}
+html[data-motion="off"] .mv3-fx-note,html[data-motion="off"] .mv3-fx-spark,html[data-motion="off"] .mv3-fx-swoosh,html[data-motion="off"] .mv3-fx-bubble{display:none!important}
+@media(prefers-reduced-motion:reduce){html[data-motion-choice="auto"] .music-v3.is-music-playing .mv3-fx-note,html[data-motion-choice="auto"] .music-v3.is-music-playing .mv3-fx-spark,html[data-motion-choice="auto"] .music-v3.is-music-playing .mv3-fx-swoosh,html[data-motion-choice="auto"] .music-v3.is-music-playing .mv3-fx-bubble{animation:none;opacity:.32;transform:none}}

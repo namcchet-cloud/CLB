@@ -1,7 +1,7 @@
 /* CLB Nghe thuat / Comic Studio 2.2
    Three type families. Motion, layout and player state are kept independent. */
 :root {
-  --club-build:370;
+  --club-build:380;
   --paper:#f2eadb; --paper-2:#e7ddca; --ink:#252923; --muted:#606254;
   --sage:#b9cba3; --sage-dark:#536b48; --rust:#a44331;
   --blue:#355972; --dusty:#5d7d91; --mustard:#e0bb58; --pink:#d990a4;
@@ -651,7 +651,7 @@ html[data-motion-level="quiet"] .float-doodle,html[data-motion-level="quiet"] .l
 }
 
 /* 2.3: contain layout overflow at its source, not by translating the page. */
-:root { --club-build:370; --gutter:clamp(18px,3vw,32px); --display:"Barlow Condensed","Arial Narrow","Liberation Sans Narrow",sans-serif; }
+:root { --club-build:380; --gutter:clamp(18px,3vw,32px); --display:"Barlow Condensed","Arial Narrow","Liberation Sans Narrow",sans-serif; }
 html { width:100%; max-width:100%; overflow-x:hidden; }
 body { width:100%; min-width:0; max-width:100%; overflow-x:hidden; }
 @supports (overflow:clip) { html,body { overflow-x:clip; } }
@@ -1515,4 +1515,4 @@ html.is-dragging-record,html.is-dragging-record body{overscroll-behavior:none!im
 }
 
 
-:root{--club-build:370}
+:root{--club-build:380}
