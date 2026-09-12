@@ -1,13 +1,26 @@
-import { copy } from '../data/translations.js?v=5.0.0';
-import { storage, emit } from './runtime.js?v=5.0.0';
+import { copy } from '../data/translations.js?v=5.1.0';
+import { storage, emit } from './runtime.js?v=5.1.0';
 let language = storage.get('artclub-lang', 'vi') === 'en' ? 'en' : 'vi';
 export const local = value => value && typeof value === 'object'
   ? value[language] ?? value.vi ?? value.en ?? '' : String(value ?? '');
 export const t = key => copy[language][key] ?? copy.vi[key] ?? key;
+function renderRichText(el, value) {
+  const parts = String(value ?? '').split(/(<br\s*\/?\s*>|<\/?em>)/gi);
+  const fragment = document.createDocumentFragment();
+  let emphasis = null;
+  const parent = () => emphasis || fragment;
+  for (const part of parts) {
+    if (!part) continue;
+    if (/^<br\s*\/?\s*>$/i.test(part)) { parent().append(document.createElement('br')); continue; }
+    if (/^<em>$/i.test(part)) { emphasis = document.createElement('em'); fragment.append(emphasis); continue; }
+    if (/^<\/em>$/i.test(part)) { emphasis = null; continue; }
+    parent().append(document.createTextNode(part));
+  }
+  el.replaceChildren(fragment);
+}
 export function apply(scope = document) {
   scope.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
-  // Only the author's static UI dictionary uses HTML. User artwork data uses textContent.
-  scope.querySelectorAll('[data-i18n-html]').forEach(el => { el.innerHTML = t(el.dataset.i18nHtml); });
+  scope.querySelectorAll('[data-i18n-html]').forEach(el => renderRichText(el, t(el.dataset.i18nHtml)));
   for (const type of ['aria', 'alt', 'placeholder', 'title']) {
     scope.querySelectorAll(`[data-i18n-${type}]`).forEach(el => {
       el.setAttribute(type === 'aria' ? 'aria-label' : type, t(el.getAttribute(`data-i18n-${type}`)));

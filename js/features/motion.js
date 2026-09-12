@@ -206,7 +206,7 @@ export function initMotion() {
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('motionDock'))$('motionDock').open=false;});
   document.addEventListener('click',e=>{if(!$('motionDock')?.contains(e.target)&&$('motionDock'))$('motionDock').open=false;});
 
-  window.ClubMotion={version:'4.0.0',burst,animate,register,setChoice,get enabled(){return enabled;},get choice(){return choice;}};
+  window.ClubMotion={version:'5.1.0',burst,animate,register,setChoice,get enabled(){return enabled;},get choice(){return choice;}};
   window.addEventListener('pageshow',()=>{root.dataset.pageHidden='false';syncPreference();register();});
   window.addEventListener('blur',resetPointer);
   root.dataset.pageHidden=String(document.hidden);

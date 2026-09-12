@@ -1,8 +1,8 @@
-import { imageVariant } from '../core/images.js?v=5.0.0';
+import { imageVariant } from '../core/images.js?v=5.1.0';
 /** Original mascot pixels; finite UFO flight. Loaded on demand. */
 export function initAkiko() {
   'use strict';
-  const VERSION = '4.0.0';
+  const VERSION = '5.1.0';
   const MASCOT = imageVariant('assets/gallery/akiko/mascot-intact-v253.webp', 480).src;
   const SVG_NS = 'http://www.w3.org/2000/svg';
   const root = document.documentElement;
@@ -123,7 +123,9 @@ export function initAkiko() {
     const trailInk = svg('path', {class: 'af253-trail-ink', fill: 'none'});
     trails.append(path, trailUnder, trailInk);
     const craft = document.createElement('div'); craft.className = 'af253-craft';
-    const hull = document.createElement('div'); hull.className = 'af253-hull'; hull.innerHTML = ROCKET_SVG;
+    const hull = document.createElement('div'); hull.className = 'af253-hull';
+    const parsedShip = new DOMParser().parseFromString(ROCKET_SVG, 'image/svg+xml').documentElement;
+    hull.append(document.importNode(parsedShip, true));
     const rider = document.createElement('img'); rider.className = 'af253-rider';
     rider.src = MASCOT; rider.alt = ''; rider.width = 760; rider.height = 603; rider.draggable = false;
     craft.append(hull, rider); overlay.append(trails, craft); document.body.append(overlay);

@@ -132,7 +132,7 @@ export const copy = {
     "activityLabel": "WHAT WE DO",
     "activityTitle": "More than just<br><em>sitting and drawing.</em>",
     "act1": "Learn techniques, color, composition and discover your own visual style.",
-    "act2": "No prompt. No pressure. Just a pen and an idea.",
+    "act2": "No brief. No pressure. Just a pen and an idea.",
     "act3": "Bring member artworks closer to everyone.",
     "act4": "Build creative projects together and collaborate with other clubs.",
     "musicLabel": "MUSIC CORNER",
