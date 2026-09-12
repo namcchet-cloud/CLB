@@ -1,4 +1,4 @@
-import { VERSION } from './core/build.js?v=5.1.1';
+import { VERSION } from './core/build.js?v=5.1.2';
 import { start, near, features, issues, report } from './core/runtime.js?v=5.1.0';
 import { initI18n } from './core/i18n.js?v=5.1.0';
 import { initMotion } from './features/motion.js?v=5.1.0';
@@ -24,7 +24,7 @@ try {
   initI18n(); features.set('i18n', { ready: true });
   features.set('motion', initMotion());
   features.set('navigation', initNavigation());
-  lazy('gallery', document.getElementById('gallery'), async () => (await import('./features/gallery.js?v=5.1.0')).initGallery(content));
+  lazy('gallery', document.getElementById('gallery'), async () => (await import('./features/gallery.js?v=5.1.2')).initGallery(content));
   lazy('music', document.getElementById('playlist'), async () => (await import('./features/music/index.js?v=5.1.0')).initMusic(content));
   document.documentElement.dataset.appReady = 'true';
 } catch (error) { report('startup', error); }

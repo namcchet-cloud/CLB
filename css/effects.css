@@ -209,25 +209,13 @@
 }
 
 @keyframes ufoHover {
-  from {
-    translate: 0 -2px;
-    rotate: -1deg;
-  }
-  to {
-    translate: 0 3px;
-    rotate: 1.2deg;
-  }
+  from { transform: translateY(-2px) rotate(-1deg); }
+  to { transform: translateY(3px) rotate(1.2deg); }
 }
 
 @keyframes ufoBeam {
-  from {
-    opacity: .18;
-    scale: .9 1;
-  }
-  to {
-    opacity: .48;
-    scale: 1.03 1.04;
-  }
+  from { opacity: .18; transform: scale(.9,1); }
+  to { opacity: .48; transform: scale(1.03,1.04); }
 }
 
 @keyframes ufoBlink {
