@@ -77,8 +77,9 @@ window.CLUB_CONTENT = {
       "id": "raven-lin",
       "name": { "vi": "Raven Lin", "en": "Raven Lin" },
       "label": { "vi": "Họa sĩ", "en": "Artist" },
-      "note": { "vi": "0 tác phẩm · Hồ sơ đang mở", "en": "0 works · Profile initializing" },
-      "effect": "raven"
+      "note": { "vi": "0 tác phẩm · Geats Driver", "en": "0 works · Geats Driver" },
+      "effect": "raven",
+      "mascot": "assets/raven/driver-reference-v611.webp"
     }
   ],
   "artworks": [
