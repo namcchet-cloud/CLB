@@ -21,7 +21,7 @@ export function initGallery(content) {
   const artName = art => local(art.title).trim() || `${local(art.author)} · ${local(art.description)}`;
   const visible = () => artworks.map((art, index) => ({ art, index }))
     .filter(({ art }) => (!artistId || art.artistId === artistId) && (filter === 'all' || art.category === filter));
-  const effectsCSS = new URL('../../css/effects.css?v=6.1.1&r=641', import.meta.url).href;
+  const effectsCSS = new URL('../../css/effects.css?v=6.1.1&r=650', import.meta.url).href;
   const RAVEN_POSTER_SVG = `
 <svg viewBox="0 0 1000 440" role="img" aria-label="Vector transformation driver">
   <defs><linearGradient id="rp-n" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#2d3850"/><stop offset="1" stop-color="#0b1120"/></linearGradient><linearGradient id="rp-r" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ff5147"/><stop offset="1" stop-color="#99020b"/></linearGradient></defs>
@@ -43,7 +43,7 @@ export function initGallery(content) {
       ? Promise.resolve() : loadCSS(effectsCSS)
   ).catch(error => { cssReady = null; throw error; });
   const ensureRaven = () => start('raven', async () => {
-    const url = new URL('./raven.js?v=6.1.1&r=641', import.meta.url);
+    const url = new URL('./raven.js?v=6.1.1&r=650', import.meta.url);
     // Retry only after a failed import, not on every page view.
     if (ravenImportAttempt) url.searchParams.set('retry', String(ravenImportAttempt));
     try { return (await import(url.href)).initRaven(); }
