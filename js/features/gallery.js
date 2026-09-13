@@ -21,7 +21,7 @@ export function initGallery(content) {
   const artName = art => local(art.title).trim() || `${local(art.author)} · ${local(art.description)}`;
   const visible = () => artworks.map((art, index) => ({ art, index }))
     .filter(({ art }) => (!artistId || art.artistId === artistId) && (filter === 'all' || art.category === filter));
-  const effectsCSS = new URL('../../css/effects.css?v=6.1.1&r=650', import.meta.url).href;
+  const effectsCSS = new URL('../../css/effects.css?v=6.1.1&r=710', import.meta.url).href;
   const RAVEN_POSTER_SVG = `
 <svg viewBox="0 0 1000 440" role="img" aria-label="Vector transformation driver">
   <defs><linearGradient id="rp-n" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#2d3850"/><stop offset="1" stop-color="#0b1120"/></linearGradient><linearGradient id="rp-r" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ff5147"/><stop offset="1" stop-color="#99020b"/></linearGradient></defs>
@@ -43,7 +43,7 @@ export function initGallery(content) {
       ? Promise.resolve() : loadCSS(effectsCSS)
   ).catch(error => { cssReady = null; throw error; });
   const ensureRaven = () => start('raven', async () => {
-    const url = new URL('./raven.js?v=6.1.1&r=710', import.meta.url);
+    const url = new URL('./raven.js?v=6.1.1&r=712', import.meta.url);
     // Retry only after a failed import, not on every page view.
     if (ravenImportAttempt) url.searchParams.set('retry', String(ravenImportAttempt));
     try { return (await import(url.href)).initRaven(); }
@@ -84,7 +84,7 @@ export function initGallery(content) {
     const selected = artistId;
     window.ClubAkikoFlight?.stop();
     window.ClubRaven?.stop();
-    ravenBusy = !!(selected === 'raven-lin' && replay && (motion?.enabled !== false || explicit));
+    ravenBusy = !!(selected === 'raven-lin' && replay);
     ravenStatus = ravenBusy ? 'loading' : '';
     syncRavenControls();
     try {
@@ -97,7 +97,7 @@ export function initGallery(content) {
         const akiko = await start('akiko', async () => (await import('./akiko.js?v=6.1.1')).initAkiko());
         if (rev === effectRevision && artistId === selected) await akiko.launch(btn);
       }
-      if (selected === 'raven-lin' && replay && (motion?.enabled !== false || explicit)) {
+      if (selected === 'raven-lin' && replay) {
         const raven = await ensureRaven();
         if (rev !== effectRevision || artistId !== selected) return;
         const launched = await raven.launch(source || btn, { explicit });
@@ -178,7 +178,7 @@ export function initGallery(content) {
         const replay = make('button', 'raven-replay', en ? '▷ Replay transformation' : '▷ Biến hình lại');
         replay.type = 'button'; replay.dataset.ravenReplay = 'true';
         replay.setAttribute('aria-describedby', 'raven-motion-note raven-launch-status');
-        const badge = make('small', 'raven-build-badge', 'VECTOR DRIVER / RAVEN 7.1');
+        const badge = make('small', 'raven-build-badge', 'VECTOR DRIVER / RAVEN 7.1.2');
         const motionNote = make('p', 'raven-motion-note');
         motionNote.id = 'raven-motion-note'; motionNote.dataset.ravenMotionNote = '';
         const status = make('p', 'raven-launch-status');
@@ -235,7 +235,7 @@ export function initGallery(content) {
   // Hover/focus warms one shared atlas; it never launches a sequence or audio.
   const warmRaven = e => {
     if (!e.target.closest('[data-artist="raven-lin"]')) return;
-    ensureEffectsCSS().then(ensureRaven).then(raven => raven.preload()).catch(() => {});
+    ensureRaven().then(raven => raven.preload()).catch(() => {});
   };
   switcher.addEventListener('pointerover', warmRaven, { passive: true });
   switcher.addEventListener('focusin', warmRaven);
@@ -243,7 +243,7 @@ export function initGallery(content) {
     const button = e.target.closest('[data-artist]'); if (!button) return;
     const id = button.dataset.artist;
     if (id !== artistId) { artistId = id; filter = 'all'; limit = 12; renderArtists(); render(); }
-    motion?.burst(switcher.querySelector(`[data-artist="${id}"]`), '', 5); effect(true);
+    motion?.burst(switcher.querySelector(`[data-artist="${id}"]`), '', 5); effect(true, id === 'raven-lin', button);
   });
   document.querySelector('.filters').addEventListener('click', e => {
     const button = e.target.closest('[data-filter]'); if (!button) return;

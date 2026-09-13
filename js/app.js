@@ -24,7 +24,7 @@ try {
   initI18n(); features.set('i18n', { ready: true });
   features.set('motion', initMotion());
   features.set('navigation', initNavigation());
-  lazy('gallery', document.getElementById('gallery'), async () => (await import('./features/gallery.js?v=6.1.1&r=621')).initGallery(content));
+  lazy('gallery', document.getElementById('gallery'), async () => (await import('./features/gallery.js?v=6.1.1&r=712')).initGallery(content));
   lazy('music', document.getElementById('playlist'), async () => (await import('./features/music/index.js?v=6.1.1')).initMusic(content));
   document.documentElement.dataset.appReady = 'true';
 } catch (error) { report('startup', error); }
