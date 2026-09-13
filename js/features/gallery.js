@@ -1,6 +1,6 @@
-import { local, t, apply } from '../core/i18n.js?v=5.1.2';
-import { setImage, imageVariant } from '../core/images.js?v=5.1.2';
-import { start, loadCSS, report } from '../core/runtime.js?v=5.1.2';
+import { local, t, apply } from '../core/i18n.js?v=6.0.0';
+import { setImage, imageVariant } from '../core/images.js?v=6.0.0';
+import { start, loadCSS, report } from '../core/runtime.js?v=6.0.0';
 
 /** Author/gallery state is independent of visual effects and of the music player. */
 export function initGallery(content) {
@@ -21,18 +21,23 @@ export function initGallery(content) {
   const artName = art => local(art.title).trim() || `${local(art.author)} · ${local(art.description)}`;
   const visible = () => artworks.map((art, index) => ({ art, index }))
     .filter(({ art }) => (!artistId || art.artistId === artistId) && (filter === 'all' || art.category === filter));
-  const effectsCSS = new URL('../../css/effects.css?v=5.1.2', import.meta.url).href;
+  const effectsCSS = new URL('../../css/effects.css?v=6.0.0', import.meta.url).href;
   let cssReady;
   const ensureEffectsCSS = () => cssReady ||= loadCSS(effectsCSS).catch(e => { cssReady = null; throw e; });
   async function effect(replay = false) {
     const rev = ++effectRevision;
     window.ClubAkikoFlight?.stop();
+    window.ClubRaven?.stop();
     try {
       await ensureEffectsCSS();
       const btn = switcher.querySelector(`[data-artist="${artistId}"]`);
       if (artistId === 'akiko-oishi' && replay && motion?.enabled) {
-        const akiko = await start('akiko', async () => (await import('./akiko.js?v=5.1.2')).initAkiko());
+        const akiko = await start('akiko', async () => (await import('./akiko.js?v=6.0.0')).initAkiko());
         if (rev === effectRevision && artistId === 'akiko-oishi') await akiko.launch(btn);
+      }
+      if (artistId === 'raven-lin' && replay && motion?.enabled) {
+        const raven = await start('raven', async () => (await import('./raven.js?v=6.0.0')).initRaven());
+        if (rev === effectRevision && artistId === 'raven-lin') await raven.launch(btn);
       }
     } catch (e) { report('author-effect', e); }
   }
@@ -89,9 +94,18 @@ export function initGallery(content) {
       card.append(img, info); fragment.append(card);
     }
     if (!items.length) {
-      const placeholder = make('article', 'gallery-card placeholder-card');
-      placeholder.append(make('div', 'placeholder-art', '✦'), make('h3', 'gallery-info', t('comingSoon')));
-      fragment.append(placeholder);
+      if (artistId === 'raven-lin') {
+        const placeholder = make('article', 'raven-empty');
+        const copy = make('div', 'raven-empty-copy');
+        copy.append(make('div', 'raven-empty-mark', '◇'),
+          make('h3', '', 'Raven Lin'),
+          make('p', '', document.documentElement.lang === 'en' ? 'ARCHIVE LOCKED // Artworks will be uploaded after the transformation sequence is complete.' : 'ARCHIVE LOCKED // Tác phẩm sẽ được đăng sau khi hoàn thiện hiệu ứng biến đổi.'));
+        placeholder.append(copy); fragment.append(placeholder);
+      } else {
+        const placeholder = make('article', 'gallery-card placeholder-card');
+        placeholder.append(make('div', 'placeholder-art', '✦'), make('h3', 'gallery-info', t('comingSoon')));
+        fragment.append(placeholder);
+      }
     }
     if (items.length > limit) {
       const more = make('button', 'comic-button gallery-more', document.documentElement.lang === 'en' ? 'Load more artworks' : 'Xem thêm tác phẩm');

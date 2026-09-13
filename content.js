@@ -72,6 +72,13 @@ window.CLUB_CONTENT = {
         "en": "6 works · Digital"
       },
       "mascot": "assets/gallery/akiko/mascot-flying.webp"
+    },
+    {
+      "id": "raven-lin",
+      "name": { "vi": "Raven Lin", "en": "Raven Lin" },
+      "label": { "vi": "Họa sĩ", "en": "Artist" },
+      "note": { "vi": "0 tác phẩm · Hồ sơ đang mở", "en": "0 works · Profile initializing" },
+      "effect": "raven"
     }
   ],
   "artworks": [
