@@ -1,0 +1,105 @@
+{
+  "version": "6.1.0",
+  "type": "cumulative static-site patch",
+  "runtime_file_count": 18,
+  "new_files": [
+    "assets/raven/driver-parts-v61.webp",
+    "assets/raven/driver-reference-v61.webp"
+  ],
+  "validated_against": [
+    "CLB-main (2)(2).zip",
+    "CLB-main-v6.zip"
+  ],
+  "files": [
+    {
+      "path": "assets/raven/driver-parts-v61.webp",
+      "bytes": 105548,
+      "sha256": "c296273d50f389e73dd6c00505560d8d5797c83ba60e8cfdc7cae772f8c01d71"
+    },
+    {
+      "path": "assets/raven/driver-reference-v61.webp",
+      "bytes": 81642,
+      "sha256": "0ea09b9d7499ea287b8eec266218bc7492c0ff28bab53c71cf797596c6ee7eea"
+    },
+    {
+      "path": "content.js",
+      "bytes": 8270,
+      "sha256": "6a33806efc1f6c8983f5a4f1f377d32a327077257c85842dec925ea0622bef06"
+    },
+    {
+      "path": "css/effects.css",
+      "bytes": 21886,
+      "sha256": "1aa4d5f30b8f2365c2eb20e760b2b0560da521272a552871b1b4966da1b5657d"
+    },
+    {
+      "path": "index.html",
+      "bytes": 27309,
+      "sha256": "a4bfd4a306dd3243230f96b107c6cdda397f2658a208801a6b0476e1726f5b15"
+    },
+    {
+      "path": "js/app.js",
+      "bytes": 2028,
+      "sha256": "654e07ab3a6f9f36d4b980b37fd6f63ee19b1390a52bd0e4b28b519e3eacb672"
+    },
+    {
+      "path": "js/core/build.js",
+      "bytes": 94,
+      "sha256": "7f220a8040163d1ca96b7fbd7f91d6048b2cab50355e19da5b4ed0c59689e54b"
+    },
+    {
+      "path": "js/core/i18n.js",
+      "bytes": 2542,
+      "sha256": "3cbcb16ea525c88fd376cffba2b7a5a3a10682d98e35e0e919e8ff78dee313fc"
+    },
+    {
+      "path": "js/core/images.js",
+      "bytes": 847,
+      "sha256": "0d6c8f9bc000ca523e9270e4877d283d6e3eb3b2b636ec2cce2274102528d6f8"
+    },
+    {
+      "path": "js/features/akiko.js",
+      "bytes": 15191,
+      "sha256": "57bd9b7cf66bde6a5914993db72698219e5fc85209b698e40154d48a43e4b8a1"
+    },
+    {
+      "path": "js/features/gallery.js",
+      "bytes": 12073,
+      "sha256": "f0366a02e097611eaffd725208281d4666ed1622c59ed62d1e8617a0ef010bf4"
+    },
+    {
+      "path": "js/features/garden.js",
+      "bytes": 9711,
+      "sha256": "cfc4360b936aa61dbc5c5adc7c2f2324af2fa60356fea6bfd021878c112b52cf"
+    },
+    {
+      "path": "js/features/motion.js",
+      "bytes": 12382,
+      "sha256": "d6f9718ec1a971bf1ccbfe6ca02f6157ff395a66f734a7403b99c6ba86ac03e4"
+    },
+    {
+      "path": "js/features/music/index.js",
+      "bytes": 15514,
+      "sha256": "1545d205c0d11ec14ac5caab03888cf0a6b48456f8ee8f549d2b9dd6db2166f0"
+    },
+    {
+      "path": "js/features/music/motor.js",
+      "bytes": 4917,
+      "sha256": "dcbb491bff06687f3047c4ee2e9e86a1a45f8932adf5428fc642eaaf61397f96"
+    },
+    {
+      "path": "js/features/navigation.js",
+      "bytes": 3177,
+      "sha256": "1fd2e7498481665857944acc5fffe9b1cdd6f14ecd986f4f10741680417fd8c9"
+    },
+    {
+      "path": "js/features/raven.js",
+      "bytes": 25087,
+      "sha256": "bd65100a64c76fb8101880ee24a3ae20ea630f8f8cc363de9921413fffdda433"
+    },
+    {
+      "path": "release.json",
+      "bytes": 197,
+      "sha256": "7fb093919a7f12617537184dbf974232df3bd6726e508c2b6d81296da9794f2a"
+    }
+  ]
+}

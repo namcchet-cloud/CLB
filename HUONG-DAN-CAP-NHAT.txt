@@ -1,0 +1,22 @@
+CẬP NHẬT v6.1 - RAVEN LIN / GEATS DRIVER
+
+1. Giải nén gói ZIP này.
+2. Mở thư mục CLB-main. Đưa NỘI DUNG bên trong lên thư mục gốc của repo (nơi đang có index.html).
+3. Giữ nguyên đường dẫn css/, js/, assets/. Ghi đè tệp trùng đường dẫn, thêm tệp mới; KHÔNG xóa những tệp khác.
+4. Commit thay đổi, chờ GitHub Pages triển khai rồi tải lại trang. Chọn Raven Lin ở Góc Triển lãm.
+
+KHÔNG upload nguyên file ZIP để thay cho các file web. Không tạo thêm lớp thư mục CLB-main trong repo.
+Cần upload đủ tệp trong CLB-main, kể cả index.html và các module JS đổi mã cache; không chỉ upload raven.js.
+Gói này chỉ chứa file mới/file cần ghi đè, không phải toàn bộ website. Đã kiểm tra ghép lên cả bản gốc và v6 của cuộc trò chuyện này.
+
+HIỆU ỨNG
+Driver xuất hiện > cánh khép lại > khóa/nạp năng lượng > bung mở > hiện Raven Lin.
+13 lớp ảnh chung một atlas WebP; 9 dải năng lượng. Chưa thêm tranh.
+Bấm Biến hình lại để phát lại. Bỏ qua/Escape để thoát. Tôn trọng chế độ giảm/tắt chuyển động.
+Âm FX tự tạo, mặc định tắt; không dùng âm thanh phim, không can thiệp phát/dừng Spotify.
+Đây là mô phỏng 2.5D từ ảnh, không phải mô hình 3D cơ khí chính xác.
+
+KIỂM TRA
+266/266 kiểm tra tĩnh; 70/70 kiểm tra riêng cho bản cập nhật trên Chromium.
+Chưa kiểm tra Safari/iPhone thật; Spotify chỉ kiểm tra bằng mô phỏng API của project.
+Báo cáo QA và danh sách SHA-256 ở ngoài CLB-main chỉ để đọc, không cần upload.
