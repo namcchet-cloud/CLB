@@ -43,7 +43,7 @@ export function initGallery(content) {
       ? Promise.resolve() : loadCSS(effectsCSS)
   ).catch(error => { cssReady = null; throw error; });
   const ensureRaven = () => start('raven', async () => {
-    const url = new URL('./raven.js?v=6.1.1&r=650', import.meta.url);
+    const url = new URL('./raven.js?v=6.1.1&r=710', import.meta.url);
     // Retry only after a failed import, not on every page view.
     if (ravenImportAttempt) url.searchParams.set('retry', String(ravenImportAttempt));
     try { return (await import(url.href)).initRaven(); }
@@ -178,7 +178,7 @@ export function initGallery(content) {
         const replay = make('button', 'raven-replay', en ? '▷ Replay transformation' : '▷ Biến hình lại');
         replay.type = 'button'; replay.dataset.ravenReplay = 'true';
         replay.setAttribute('aria-describedby', 'raven-motion-note raven-launch-status');
-        const badge = make('small', 'raven-build-badge', 'VECTOR DRIVER / RAVEN 6.3');
+        const badge = make('small', 'raven-build-badge', 'VECTOR DRIVER / RAVEN 7.1');
         const motionNote = make('p', 'raven-motion-note');
         motionNote.id = 'raven-motion-note'; motionNote.dataset.ravenMotionNote = '';
         const status = make('p', 'raven-launch-status');
@@ -188,7 +188,7 @@ export function initGallery(content) {
         const figure = make('figure', 'raven-empty-driver');
         const driver = make('div', 'raven-vector-poster');
         driver.innerHTML = RAVEN_POSTER_SVG;
-        figure.append(driver, make('figcaption', '', 'VECTOR DRIVER / IX / RAVEN LIN'));
+        figure.append(driver, make('figcaption', '', 'BOOST MARK IX / VECTOR 7.1 / RAVEN LIN'));
         placeholder.append(copy, figure); fragment.append(placeholder);
       } else {
         const placeholder = make('article', 'gallery-card placeholder-card');
