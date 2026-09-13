@@ -21,18 +21,18 @@ export function initGallery(content) {
   const artName = art => local(art.title).trim() || `${local(art.author)} · ${local(art.description)}`;
   const visible = () => artworks.map((art, index) => ({ art, index }))
     .filter(({ art }) => (!artistId || art.artistId === artistId) && (filter === 'all' || art.category === filter));
-  const effectsCSS = new URL('../../css/effects.css?v=6.1.1', import.meta.url).href;
+  const effectsCSS = new URL('../../css/effects.css?v=6.2.0', import.meta.url).href;
   let cssReady;
   let ravenBusy = false;
   let ravenStatus = '';
   let ravenImportAttempt = 0;
   const english = () => document.documentElement.lang === 'en';
   const ensureEffectsCSS = () => cssReady ||= (
-    document.querySelector('link[data-artist-effects="6.1.1"]')?.sheet
+    document.querySelector('link[data-artist-effects="6.2.0"]')?.sheet
       ? Promise.resolve() : loadCSS(effectsCSS)
   ).catch(error => { cssReady = null; throw error; });
   const ensureRaven = () => start('raven', async () => {
-    const url = new URL('./raven.js?v=6.1.1', import.meta.url);
+    const url = new URL('./raven.js?v=6.2.0', import.meta.url);
     // Retry only after a failed import, not on every page view.
     if (ravenImportAttempt) url.searchParams.set('retry', String(ravenImportAttempt));
     try { return (await import(url.href)).initRaven(); }
@@ -165,7 +165,7 @@ export function initGallery(content) {
         const replay = make('button', 'raven-replay', en ? '▷ Replay transformation' : '▷ Biến hình lại');
         replay.type = 'button'; replay.dataset.ravenReplay = 'true';
         replay.setAttribute('aria-describedby', 'raven-motion-note raven-launch-status');
-        const badge = make('small', 'raven-build-badge', 'GEATS DRIVER / v6.1.1');
+        const badge = make('small', 'raven-build-badge', 'DESIRE DRIVER / v6.2.0');
         const motionNote = make('p', 'raven-motion-note');
         motionNote.id = 'raven-motion-note'; motionNote.dataset.ravenMotionNote = '';
         const status = make('p', 'raven-launch-status');
@@ -174,7 +174,7 @@ export function initGallery(content) {
         copy.append(badge, replay, motionNote, status);
         const figure = make('figure', 'raven-empty-driver');
         const driver = make('img', '');
-        driver.src = new URL('../../assets/raven/driver-reference-v611.webp', import.meta.url).href;
+        driver.src = new URL('../../assets/raven/final.webp', import.meta.url).href;
         driver.alt = en ? 'White and red Geats Driver' : 'Geats Driver trắng và đỏ';
         driver.width = 967; driver.height = 427; driver.decoding = 'async'; driver.draggable = false;
         figure.append(driver, make('figcaption', '', 'GEATS / IX / RAVEN LIN'));
