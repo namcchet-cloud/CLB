@@ -1,6 +1,0 @@
-{
-  "version": "6.0.0",
-  "name": "CLB v6 Raven Lin",
-  "minimumNode": "18",
-  "notes": "Static site; no runtime framework; no service worker."
-}
