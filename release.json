@@ -1,0 +1,6 @@
+{
+  "version": "6.2.0",
+  "name": "CLB v6.2 Production Repair",
+  "minimumNode": "18",
+  "notes": "Static GitHub Pages release; gallery, Akiko, Raven, intro and Spotify preserved."
+}
