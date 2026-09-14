@@ -21,29 +21,18 @@ export function initGallery(content) {
   const artName = art => local(art.title).trim() || `${local(art.author)} · ${local(art.description)}`;
   const visible = () => artworks.map((art, index) => ({ art, index }))
     .filter(({ art }) => (!artistId || art.artistId === artistId) && (filter === 'all' || art.category === filter));
-  const effectsCSS = new URL('../../css/effects.css?v=6.1.1&r=710', import.meta.url).href;
-  const RAVEN_POSTER_SVG = `
-<svg viewBox="0 0 1000 440" role="img" aria-label="Vector transformation driver">
-  <defs><linearGradient id="rp-n" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#2d3850"/><stop offset="1" stop-color="#0b1120"/></linearGradient><linearGradient id="rp-r" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ff5147"/><stop offset="1" stop-color="#99020b"/></linearGradient></defs>
-  <path d="M52 176h165v88H52l-28-24v-40zM948 176H783v88h165l28-24v-40z" fill="#bcc4cb" stroke="#626c76" stroke-width="8"/>
-  <path d="M177 118h250l53 45v114l-53 45H177l-35-37V155zM823 118H573l-53 45v114l53 45h250l35-37V155z" fill="url(#rp-n)" stroke="#080d17" stroke-width="11"/>
-  <circle cx="500" cy="220" r="144" fill="#0b101b" stroke="#39455b" stroke-width="12"/><circle cx="500" cy="220" r="112" fill="#57e45c" opacity=".8"/>
-  <g fill="#f7f8f6" stroke="#bac1c6" stroke-width="6"><path d="M505 218 435 155 254 103 207 128 249 176 430 207z"/><path d="M505 220 430 192 221 190 180 220 221 250 430 248z"/><path d="M505 222 435 285 254 337 207 312 249 264 430 233z"/><path d="M495 218 565 155 746 103 793 128 751 176 570 207z"/><path d="M495 220 570 192 779 190 820 220 779 250 570 248z"/><path d="M495 222 565 285 746 337 793 312 751 264 570 233z"/></g>
-  <g fill="#e5222d"><path d="M455 185 368 137 283 119 265 132 293 155 384 176zM455 220 364 205 246 205 225 220 246 235 364 234zM455 255 368 303 283 321 265 308 293 285 384 264z"/><path d="M545 185 632 137 717 119 735 132 707 155 616 176zM545 220 636 205 754 205 775 220 754 235 636 234zM545 255 632 303 717 321 735 308 707 285 616 264z"/></g>
-  <path d="M500 170 447 192 430 239 449 290 500 316 551 290 570 239 553 192z" fill="#f7f8f6" stroke="#a9b2ba" stroke-width="7"/><path d="M463 213 486 226 478 247 456 238zM537 213l-23 13 8 21 22-9zM500 241l14 22-14 12-14-12z" fill="#111827"/><path d="M470 209 486 218 481 231 465 225zM530 209l-16 9 5 13 16-6z" fill="#e5222d"/>
-  <path d="M495 178 455 123 466 62 493 112 500 60 507 112 534 62 545 123 505 178z" fill="#f7f8f6" stroke="#aeb5bb" stroke-width="7"/><path d="M470 121 478 87 493 124 500 82 507 124 522 87 530 121" fill="#e5222d"/>
-</svg>`;
+  const effectsCSS = new URL('../../css/effects.css?v=6.1.1&r=740', import.meta.url).href;
   let cssReady;
   let ravenBusy = false;
   let ravenStatus = '';
   let ravenImportAttempt = 0;
   const english = () => document.documentElement.lang === 'en';
   const ensureEffectsCSS = () => cssReady ||= (
-    document.querySelector('link[data-artist-effects="raven-621"]')?.sheet
+    document.querySelector('link[data-artist-effects="raven-740"]')?.sheet
       ? Promise.resolve() : loadCSS(effectsCSS)
   ).catch(error => { cssReady = null; throw error; });
   const ensureRaven = () => start('raven', async () => {
-    const url = new URL('./raven.js?v=6.1.1&r=712', import.meta.url);
+    const url = new URL('./raven.js?v=6.1.1&r=740', import.meta.url);
     // Retry only after a failed import, not on every page view.
     if (ravenImportAttempt) url.searchParams.set('retry', String(ravenImportAttempt));
     try { return (await import(url.href)).initRaven(); }
@@ -74,8 +63,8 @@ export function initGallery(content) {
         ? (english() ? 'Loading Driver...' : '\u0110ang t\u1ea3i Driver...')
         : ravenStatus === 'error'
           ? (english()
-            ? 'The transformation module could not load. Reload the page, then tap to try again.'
-            : 'Ch\u01b0a t\u1ea3i \u0111\u01b0\u1ee3c m\u00f4-\u0111un bi\u1ebfn h\u00ecnh. H\u00e3y t\u1ea3i l\u1ea1i trang r\u1ed3i b\u1ea5m th\u1eed l\u1ea1i.')
+            ? 'Driver could not load. Check that the js, css and assets/raven folders were uploaded beside index.html, then tap to try again.'
+            : 'Ch\u01b0a t\u1ea3i \u0111\u01b0\u1ee3c Driver. Ki\u1ec3m tra \u0111\u00e3 up \u0111\u1ee7 c\u00e1c th\u01b0 m\u1ee5c js, css v\u00e0 assets/raven c\u00f9ng c\u1ea5p index.html, r\u1ed3i b\u1ea5m th\u1eed l\u1ea1i.')
           : '';
     }
   }
@@ -88,9 +77,8 @@ export function initGallery(content) {
     ravenStatus = ravenBusy ? 'loading' : '';
     syncRavenControls();
     try {
-      // Raven 6.2.1 is self-contained so a stale/missing effects.css can no longer
-      // create a blank full-screen lock. Other artist effects still use effects.css.
       if (selected !== 'raven-lin') await ensureEffectsCSS();
+      else ensureEffectsCSS().catch(() => {});
       if (rev !== effectRevision || artistId !== selected) return;
       const btn = switcher.querySelector(`[data-artist="${selected}"]`);
       if (selected === 'akiko-oishi' && replay && motion?.enabled) {
@@ -178,7 +166,7 @@ export function initGallery(content) {
         const replay = make('button', 'raven-replay', en ? '▷ Replay transformation' : '▷ Biến hình lại');
         replay.type = 'button'; replay.dataset.ravenReplay = 'true';
         replay.setAttribute('aria-describedby', 'raven-motion-note raven-launch-status');
-        const badge = make('small', 'raven-build-badge', 'VECTOR DRIVER / RAVEN 7.1.2');
+        const badge = make('small', 'raven-build-badge', 'MECH DRIVER / RAVEN 7.4');
         const motionNote = make('p', 'raven-motion-note');
         motionNote.id = 'raven-motion-note'; motionNote.dataset.ravenMotionNote = '';
         const status = make('p', 'raven-launch-status');
@@ -186,9 +174,11 @@ export function initGallery(content) {
         status.setAttribute('role', 'status'); status.setAttribute('aria-live', 'polite'); status.hidden = true;
         copy.append(badge, replay, motionNote, status);
         const figure = make('figure', 'raven-empty-driver');
-        const driver = make('div', 'raven-vector-poster');
-        driver.innerHTML = RAVEN_POSTER_SVG;
-        figure.append(driver, make('figcaption', '', 'BOOST MARK IX / VECTOR 7.1 / RAVEN LIN'));
+        const driver = make('img', '');
+        driver.src = new URL('../../assets/raven/driver-reference-v611.webp', import.meta.url).href;
+        driver.alt = en ? 'White and red Geats Driver' : 'Geats Driver trắng và đỏ';
+        driver.width = 967; driver.height = 427; driver.decoding = 'async'; driver.draggable = false;
+        figure.append(driver, make('figcaption', '', 'BOOST MARK IX / MECH 7.4 / RAVEN LIN'));
         placeholder.append(copy, figure); fragment.append(placeholder);
       } else {
         const placeholder = make('article', 'gallery-card placeholder-card');
