@@ -79,7 +79,7 @@ window.CLUB_CONTENT = {
       "label": { "vi": "Họa sĩ", "en": "Artist" },
       "note": { "vi": "0 tác phẩm · Geats Driver", "en": "0 works · Geats Driver" },
       "effect": "raven",
-      "mascot": "assets/raven/final.webp"
+      "mascot": "assets/raven/driver-reference-v611.webp"
     }
   ],
   "artworks": [
