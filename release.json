@@ -1,6 +1,6 @@
 {
-  "version": "6.4.0",
-  "name": "CLB v6.4.0 Raven Gallery Compact",
+  "version": "6.4.1",
+  "name": "CLB v6.4.1 Raven + Akiko Gallery Compact",
   "minimumNode": "18",
   "notes": "Adds six Raven Lin artworks and image 7 as Raven avatar using one optimized WebP per image. Raven Kivat animation and all other site behavior remain unchanged."
 }

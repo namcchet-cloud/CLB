@@ -312,6 +312,96 @@ window.CLUB_CONTENT = {
       "id": "akiko-oishi-12"
     },
     {
+      "artistId": "akiko-oishi",
+      "image": "assets/gallery/akiko/akiko-07.webp",
+      "category": "digital-art",
+      "title": {
+        "vi": "",
+        "en": ""
+      },
+      "author": {
+        "vi": "Akiko Oishi",
+        "en": "Akiko Oishi"
+      },
+      "description": {
+        "vi": "Digital Art",
+        "en": "Digital Art"
+      },
+      "id": "akiko-oishi-13"
+    },
+    {
+      "artistId": "akiko-oishi",
+      "image": "assets/gallery/akiko/akiko-08.webp",
+      "category": "digital-art",
+      "title": {
+        "vi": "",
+        "en": ""
+      },
+      "author": {
+        "vi": "Akiko Oishi",
+        "en": "Akiko Oishi"
+      },
+      "description": {
+        "vi": "Digital Art",
+        "en": "Digital Art"
+      },
+      "id": "akiko-oishi-14"
+    },
+    {
+      "artistId": "akiko-oishi",
+      "image": "assets/gallery/akiko/akiko-09.webp",
+      "category": "digital-art",
+      "title": {
+        "vi": "",
+        "en": ""
+      },
+      "author": {
+        "vi": "Akiko Oishi",
+        "en": "Akiko Oishi"
+      },
+      "description": {
+        "vi": "Digital Art",
+        "en": "Digital Art"
+      },
+      "id": "akiko-oishi-15"
+    },
+    {
+      "artistId": "akiko-oishi",
+      "image": "assets/gallery/akiko/akiko-10.webp",
+      "category": "digital-art",
+      "title": {
+        "vi": "",
+        "en": ""
+      },
+      "author": {
+        "vi": "Akiko Oishi",
+        "en": "Akiko Oishi"
+      },
+      "description": {
+        "vi": "Digital Art",
+        "en": "Digital Art"
+      },
+      "id": "akiko-oishi-16"
+    },
+    {
+      "artistId": "akiko-oishi",
+      "image": "assets/gallery/akiko/akiko-11.webp",
+      "category": "digital-art",
+      "title": {
+        "vi": "",
+        "en": ""
+      },
+      "author": {
+        "vi": "Akiko Oishi",
+        "en": "Akiko Oishi"
+      },
+      "description": {
+        "vi": "Digital Art",
+        "en": "Digital Art"
+      },
+      "id": "akiko-oishi-17"
+    },
+    {
       "artistId": "raven-lin",
       "image": "assets/gallery/raven/raven-01.webp",
       "category": "digital-art",
