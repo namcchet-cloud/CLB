@@ -1,0 +1,6 @@
+{
+  "version": "6.3.1",
+  "name": "CLB v6.3.1 Raven Runtime Repair",
+  "minimumNode": "18",
+  "notes": "Preserves the complete SEO layer and all existing visuals/interactions. Restores Raven Lin Kivat effect by reconnecting the gallery trigger and restoring the exact mesh-data dependency required by the existing Raven v2.2 animation. Removes only unused duplicate Raven files."
+}
