@@ -1,8 +1,8 @@
-import { imageVariant } from '../core/images.js?v=6.2.0';
+import { imageVariant } from '../core/images.js?v=6.3.0';
 /** Original mascot pixels; finite UFO flight. Loaded on demand. */
 export function initAkiko() {
   'use strict';
-  const VERSION = '6.2.0';
+  const VERSION = '6.3.0';
   const MASCOT = imageVariant('assets/gallery/akiko/mascot-intact-v253.webp', 480).src;
   const SVG_NS = 'http://www.w3.org/2000/svg';
   const root = document.documentElement;

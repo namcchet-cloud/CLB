@@ -1,8 +1,8 @@
-import { VERSION } from './core/build.js?v=6.2.0';
-import { start, near, features, issues, report } from './core/runtime.js?v=6.2.0';
-import { initI18n } from './core/i18n.js?v=6.2.0';
-import { initMotion } from './features/motion.js?v=6.2.0';
-import { initNavigation } from './features/navigation.js?v=6.2.0';
+import { VERSION } from './core/build.js?v=6.3.0';
+import { start, near, features, issues, report } from './core/runtime.js?v=6.3.0';
+import { initI18n } from './core/i18n.js?v=6.3.0';
+import { initMotion } from './features/motion.js?v=6.3.0';
+import { initNavigation } from './features/navigation.js?v=6.3.0';
 
 const content = window.CLUB_CONTENT || { artists: [], artworks: [], records: [] };
 const buildStatus = document.getElementById('buildStatus');
@@ -24,8 +24,8 @@ try {
   initI18n(); features.set('i18n', { ready: true });
   features.set('motion', initMotion());
   features.set('navigation', initNavigation());
-  lazy('gallery', document.getElementById('gallery'), async () => (await import('./features/gallery.js?v=6.2.0')).initGallery(content));
-  lazy('music', document.getElementById('playlist'), async () => (await import('./features/music/index.js?v=6.2.0')).initMusic(content));
+  lazy('gallery', document.getElementById('gallery'), async () => (await import('./features/gallery.js?v=6.3.0')).initGallery(content));
+  lazy('music', document.getElementById('playlist'), async () => (await import('./features/music/index.js?v=6.3.0')).initMusic(content));
   document.documentElement.dataset.appReady = 'true';
 } catch (error) { report('startup', error); }
 function status() {

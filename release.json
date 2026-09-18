@@ -1,6 +1,6 @@
 {
-  "version": "6.2.0",
-  "name": "CLB v6.2 Production Repair",
+  "version": "6.3.0",
+  "name": "CLB v6.3.0 SEO Complete",
   "minimumNode": "18",
-  "notes": "Static GitHub Pages release; gallery, Akiko, Raven, intro and Spotify preserved."
+  "notes": "Complete technical SEO pass: canonical metadata, crawl directives, JSON-LD, sitemap with artwork images, robots.txt, web manifest, favicon root fallback, semantic HTML cleanup. Visuals and interactions preserved."
 }
