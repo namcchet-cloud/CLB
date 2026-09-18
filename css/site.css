@@ -3018,3 +3018,73 @@ html[data-selected-artist="bao-tam"] .artist-chip[data-artist="bao-tam"].active 
 .gallery-card.image-failed img { background: var(--paper-2); }
 .lightbox.image-failed img { min-height: 5rem; }
 @media(max-width:640px) { .site-header { backdrop-filter: none; background: #f2eadbf7; } }
+
+
+/* v6.4.2 — Creative Corner story: same card footprint, denser comic storytelling */
+.mascot-card{
+  isolation:isolate;
+  overflow:hidden;
+}
+.mascot-card::before{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  width:76px;
+  height:18px;
+  left:18px;
+  top:-7px;
+  background:color-mix(in srgb,var(--mustard) 72%,var(--paper));
+  border:1px solid color-mix(in srgb,var(--ink) 22%,transparent);
+  opacity:.72;
+  transform:rotate(-3deg);
+}
+.mascot-card::after{
+  content:"✦";
+  position:absolute;
+  right:15px;
+  bottom:13px;
+  font:700 18px/1 var(--display);
+  color:var(--rust);
+  opacity:.42;
+  transform:rotate(9deg);
+}
+.mascot-card .mini-label{
+  display:inline-block;
+  padding-bottom:3px;
+  border-bottom:1px dashed color-mix(in srgb,var(--blue) 55%,transparent);
+}
+.mascot-card h2{
+  margin:8px 0 7px;
+  font-size:clamp(24px,2.5vw,30px);
+  line-height:1;
+  letter-spacing:-.015em;
+}
+.mascot-card p{
+  margin:0 0 10px;
+  max-width:34em;
+  font-size:11px;
+  line-height:1.42;
+  text-wrap:pretty;
+}
+.mascot-card p::first-letter{
+  font-family:var(--display);
+  font-weight:800;
+  font-size:1.25em;
+  color:var(--rust);
+}
+.mascot-card .mascot-tags{
+  gap:6px;
+  margin-top:auto;
+}
+.mascot-card .mascot-tags span{
+  padding:3px 8px;
+  font-size:11px;
+  transform:rotate(-1deg);
+}
+.mascot-card .mascot-tags span:nth-child(2){transform:rotate(1.5deg);background:var(--mustard)}
+.mascot-card .mascot-tags span:nth-child(3){transform:rotate(-1.2deg);background:color-mix(in srgb,var(--rust) 18%,var(--paper))}
+@media (max-width:640px){
+  .mascot-card h2{font-size:23px;margin:7px 0 6px}
+  .mascot-card p{font-size:10.5px;line-height:1.38;margin-bottom:8px}
+  .mascot-card .mascot-tags span{font-size:10px;padding:3px 7px}
+}
