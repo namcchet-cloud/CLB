@@ -77,9 +77,9 @@ window.CLUB_CONTENT = {
       "id": "raven-lin",
       "name": { "vi": "Raven Lin", "en": "Raven Lin" },
       "label": { "vi": "Họa sĩ", "en": "Artist" },
-      "note": { "vi": "0 tác phẩm · Geats Driver", "en": "0 works · Geats Driver" },
+      "note": { "vi": "6 tác phẩm · Digital & Sketch", "en": "6 works · Digital & Sketch" },
       "effect": "raven",
-      "mascot": "assets/raven/final.webp"
+      "mascot": "assets/gallery/raven/avatar.webp"
     }
   ],
   "artworks": [
@@ -310,6 +310,60 @@ window.CLUB_CONTENT = {
         "en": "Digital Art"
       },
       "id": "akiko-oishi-12"
+    },
+    {
+      "artistId": "raven-lin",
+      "image": "assets/gallery/raven/raven-01.webp",
+      "category": "digital-art",
+      "title": { "vi": "", "en": "" },
+      "author": { "vi": "Raven Lin", "en": "Raven Lin" },
+      "description": { "vi": "Digital Art", "en": "Digital Art" },
+      "id": "raven-lin-01"
+    },
+    {
+      "artistId": "raven-lin",
+      "image": "assets/gallery/raven/raven-02.webp",
+      "category": "digital-art",
+      "title": { "vi": "", "en": "" },
+      "author": { "vi": "Raven Lin", "en": "Raven Lin" },
+      "description": { "vi": "Digital Art", "en": "Digital Art" },
+      "id": "raven-lin-02"
+    },
+    {
+      "artistId": "raven-lin",
+      "image": "assets/gallery/raven/raven-03.webp",
+      "category": "digital-art",
+      "title": { "vi": "", "en": "" },
+      "author": { "vi": "Raven Lin", "en": "Raven Lin" },
+      "description": { "vi": "Digital Art", "en": "Digital Art" },
+      "id": "raven-lin-03"
+    },
+    {
+      "artistId": "raven-lin",
+      "image": "assets/gallery/raven/raven-04.webp",
+      "category": "sketch",
+      "title": { "vi": "", "en": "" },
+      "author": { "vi": "Raven Lin", "en": "Raven Lin" },
+      "description": { "vi": "Sketch", "en": "Sketch" },
+      "id": "raven-lin-04"
+    },
+    {
+      "artistId": "raven-lin",
+      "image": "assets/gallery/raven/raven-05.webp",
+      "category": "digital-art",
+      "title": { "vi": "", "en": "" },
+      "author": { "vi": "Raven Lin", "en": "Raven Lin" },
+      "description": { "vi": "Digital Art", "en": "Digital Art" },
+      "id": "raven-lin-05"
+    },
+    {
+      "artistId": "raven-lin",
+      "image": "assets/gallery/raven/raven-06.webp",
+      "category": "sketch",
+      "title": { "vi": "", "en": "" },
+      "author": { "vi": "Raven Lin", "en": "Raven Lin" },
+      "description": { "vi": "Sketch", "en": "Sketch" },
+      "id": "raven-lin-06"
     }
   ]
 };

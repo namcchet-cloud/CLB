@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://namcchet-cloud.github.io/CLB/</loc>
-    <lastmod>2026-09-18</lastmod>
+    <lastmod>2026-09-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
@@ -52,6 +52,30 @@
     <image:image>
       <image:loc>https://namcchet-cloud.github.io/CLB/assets/gallery/akiko/akiko-06.webp</image:loc>
       <image:title>Digital Art 06 — Akiko Oishi</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://namcchet-cloud.github.io/CLB/assets/gallery/raven/raven-01.webp</image:loc>
+      <image:title>Artwork 01 — Raven Lin</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://namcchet-cloud.github.io/CLB/assets/gallery/raven/raven-02.webp</image:loc>
+      <image:title>Artwork 02 — Raven Lin</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://namcchet-cloud.github.io/CLB/assets/gallery/raven/raven-03.webp</image:loc>
+      <image:title>Artwork 03 — Raven Lin</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://namcchet-cloud.github.io/CLB/assets/gallery/raven/raven-04.webp</image:loc>
+      <image:title>Artwork 04 — Raven Lin</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://namcchet-cloud.github.io/CLB/assets/gallery/raven/raven-05.webp</image:loc>
+      <image:title>Artwork 05 — Raven Lin</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://namcchet-cloud.github.io/CLB/assets/gallery/raven/raven-06.webp</image:loc>
+      <image:title>Artwork 06 — Raven Lin</image:title>
     </image:image>
   </url>
 </urlset>
