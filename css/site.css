@@ -3088,3 +3088,39 @@ html[data-selected-artist="bao-tam"] .artist-chip[data-artist="bao-tam"].active 
   .mascot-card p{font-size:10.5px;line-height:1.38;margin-bottom:8px}
   .mascot-card .mascot-tags span{font-size:10px;padding:3px 7px}
 }
+
+/* v6.5.0 — Exhibition pagination: three artworks per artist page */
+.gallery-pagination{
+  grid-column:1/-1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  min-height:46px;
+  margin:8px 0 2px;
+  padding-top:8px;
+}
+.gallery-page{
+  appearance:none;
+  min-width:34px;
+  height:34px;
+  padding:0 9px;
+  border:1px solid #25292380;
+  background:#f8f0df;
+  color:var(--ink);
+  box-shadow:3px 3px 0 #25292318;
+  font:700 12px/1 var(--sans);
+  cursor:pointer;
+  transform:rotate(-1deg);
+  transition:transform .18s ease,background .18s ease,box-shadow .18s ease;
+}
+.gallery-page:nth-child(even){transform:rotate(1deg)}
+.gallery-page:hover:not(:disabled),.gallery-page:focus-visible{transform:translateY(-2px) rotate(0);box-shadow:4px 5px 0 #2529231f}
+.gallery-page.active{background:var(--ink);color:var(--paper);transform:rotate(0);box-shadow:3px 3px 0 #b9583f55}
+.gallery-page-arrow{font:700 21px/1 var(--display)}
+.gallery-page:disabled{opacity:.3;cursor:default;box-shadow:none}
+@media(max-width:700px){
+  .gallery-pagination{gap:6px;margin-top:4px;overflow-x:auto;justify-content:flex-start;padding-inline:4px;scrollbar-width:none}
+  .gallery-pagination::-webkit-scrollbar{display:none}
+  .gallery-page{min-width:32px;height:32px;flex:0 0 auto}
+}

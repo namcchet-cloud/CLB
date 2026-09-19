@@ -1,4 +1,4 @@
-import { local, t, apply } from '../core/i18n.js?v=6.3.1';
+import { local, t, apply } from '../core/i18n.js?v=6.4.3';
 import { setImage, imageVariant } from '../core/images.js?v=6.3.1';
 import { start, loadCSS, report } from '../core/runtime.js?v=6.3.1';
 
@@ -11,7 +11,8 @@ export function initGallery(content) {
   const caption = document.getElementById('lightboxCaption');
   const artists = content.artists || [], artworks = content.artworks || [];
   const motion = window.ClubMotion;
-  let artistId = artists[0]?.id || '', filter = 'all', limit = 12;
+  const pageSize = 3;
+  let artistId = artists[0]?.id || '', filter = 'all', page = 1;
   let selectedIndex = -1, trigger = null, imageRevision = 0, effectRevision = 0;
   const make = (tag, cls, text) => {
     const el = document.createElement(tag); el.className = cls;
@@ -87,7 +88,10 @@ export function initGallery(content) {
         make('p', '', `${items.length} ${document.documentElement.lang === 'en' ? 'works' : 'tác phẩm'}`));
       fragment.append(heading);
     }
-    for (const { art, index } of items.slice(0, limit)) {
+    const pageCount = Math.max(1, Math.ceil(items.length / pageSize));
+    page = Math.min(Math.max(1, page), pageCount);
+    const pageItems = items.slice((page - 1) * pageSize, page * pageSize);
+    for (const { art, index } of pageItems) {
       const card = make('button', 'gallery-card'); card.type = 'button'; card.dataset.index = index;
       card.setAttribute('aria-label', `${t('viewArt')}: ${artName(art)}`);
       const img = make('img', ''); img.alt = artName(art);
@@ -121,9 +125,25 @@ export function initGallery(content) {
         fragment.append(placeholder);
       }
     }
-    if (items.length > limit) {
-      const more = make('button', 'comic-button gallery-more', document.documentElement.lang === 'en' ? 'Load more artworks' : 'Xem thêm tác phẩm');
-      more.type = 'button'; more.dataset.more = 'true'; fragment.append(more);
+    if (items.length > pageSize) {
+      const pager = make('nav', 'gallery-pagination');
+      pager.setAttribute('aria-label', document.documentElement.lang === 'en' ? 'Artwork pages' : 'Trang tác phẩm');
+      const prev = make('button', 'gallery-page gallery-page-arrow', '‹');
+      prev.type = 'button'; prev.dataset.page = String(page - 1); prev.disabled = page === 1;
+      prev.setAttribute('aria-label', document.documentElement.lang === 'en' ? 'Previous page' : 'Trang trước');
+      pager.append(prev);
+      for (let number = 1; number <= pageCount; number++) {
+        const button = make('button', 'gallery-page', String(number));
+        button.type = 'button'; button.dataset.page = String(number);
+        if (number === page) { button.classList.add('active'); button.setAttribute('aria-current', 'page'); }
+        button.setAttribute('aria-label', `${document.documentElement.lang === 'en' ? 'Page' : 'Trang'} ${number}`);
+        pager.append(button);
+      }
+      const next = make('button', 'gallery-page gallery-page-arrow', '›');
+      next.type = 'button'; next.dataset.page = String(page + 1); next.disabled = page === pageCount;
+      next.setAttribute('aria-label', document.documentElement.lang === 'en' ? 'Next page' : 'Trang sau');
+      pager.append(next);
+      fragment.append(pager);
     }
     grid.replaceChildren(fragment); grid.removeAttribute('aria-busy');
     motion?.register(grid);
@@ -159,17 +179,21 @@ export function initGallery(content) {
   switcher.addEventListener('click', e => {
     const button = e.target.closest('[data-artist]'); if (!button) return;
     const id = button.dataset.artist;
-    if (id !== artistId) { artistId = id; filter = 'all'; limit = 12; renderArtists(); render(); }
+    if (id !== artistId) { artistId = id; filter = 'all'; page = 1; renderArtists(); render(); }
     motion?.burst(switcher.querySelector(`[data-artist="${id}"]`), '', 5); effect(true);
   });
   document.querySelector('.filters').addEventListener('click', e => {
     const button = e.target.closest('[data-filter]'); if (!button) return;
-    filter = button.dataset.filter; limit = 12; render(); motion?.burst(button, '', 5);
+    filter = button.dataset.filter; page = 1; render(); motion?.burst(button, '', 5);
   });
   grid.addEventListener('click', e => {
     const card = e.target.closest('[data-index]');
     if (card) open(Number(card.dataset.index), card);
-    if (e.target.closest('[data-more]')) { limit += 12; render(); }
+    const pageButton = e.target.closest('[data-page]');
+    if (pageButton && !pageButton.disabled) {
+      page = Number(pageButton.dataset.page); render();
+      grid.scrollIntoView({ behavior: motion?.enabled ? 'smooth' : 'auto', block: 'nearest' });
+    }
   });
   dialog.querySelector('.lightbox-close').addEventListener('click', close);
   dialog.addEventListener('cancel', e => { e.preventDefault(); close(); });
@@ -185,11 +209,8 @@ export function initGallery(content) {
     paintLightbox(indices[(at + (e.key === 'ArrowRight' ? 1 : -1) + indices.length) % indices.length]);
   });
   document.addEventListener('club:language', () => { renderArtists(); render(); if (dialog.open) paintLightbox(selectedIndex); });
-  // Default cards are server-rendered in index.html. Hydrate without layout replacement.
+  // Hydrate the server-rendered gallery into the paginated view.
   document.documentElement.dataset.selectedArtist = artistId;
-  renderArtists(); grid.removeAttribute('aria-busy');
-  if (!grid.querySelector('[data-index]')) render();
-  else if (document.documentElement.lang === 'en') render();
-  motion?.register(grid); effect(false);
+  renderArtists(); render(); effect(false);
   return { render, close, get state() { return { artistId, filter, visible: visible().length, selectedIndex }; } };
 }
