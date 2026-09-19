@@ -1,6 +1,0 @@
-{
-  "version": "6.5.0",
-  "name": "CLB v6.5.0 Exhibition Pagination",
-  "minimumNode": "18",
-  "notes": "Gallery pagination with exactly three artworks per artist page. Existing artwork, artist effects, lightbox, Raven and Akiko animations remain unchanged."
-}
