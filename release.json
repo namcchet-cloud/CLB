@@ -1,6 +1,6 @@
 {
-  "version": "6.6.0",
-  "name": "CLB v6.6.0 Runtime Optimization Baseline",
+  "version": "6.7.0",
+  "name": "CLB v6.7.0 Comic Decor System",
   "minimumNode": "18",
-  "notes": "Optimization baseline for future updates. Existing motion, Raven/Kivat, Akiko, gallery pagination, music/Spotify, intro, SEO metadata and Google Search verification are preserved."
+  "notes": "Adds a lightweight original SVG/CSS-like comic decoration layer inspired by impact, spark, speed-line, flame and punk-collage visual language. Existing site behavior and Google Search verification are preserved."
 }
