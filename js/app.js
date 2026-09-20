@@ -1,9 +1,9 @@
-import { VERSION } from './core/build.js?v=6.8.1';
+import { VERSION } from './core/build.js?v=6.8.3';
 import { start, near, features, issues, report } from './core/runtime.js?v=6.8.0';
 import { initI18n } from './core/i18n.js?v=6.8.0';
 import { initMotion } from './features/motion.js?v=6.8.0';
 import { initNavigation } from './features/navigation.js?v=6.8.0';
-import { initComicDecor } from './features/comic-decor.js?v=6.8.0';
+import { initComicDecor } from './features/comic-decor.js?v=6.8.3';
 
 const content = window.CLUB_CONTENT || { artists: [], artworks: [], records: [] };
 const buildStatus = document.getElementById('buildStatus');

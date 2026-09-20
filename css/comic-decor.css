@@ -1,7 +1,7 @@
 /* v6.7.0 — original comic accents, intentionally lightweight */
 .section,.join-section{position:relative;isolation:isolate}
 .comic-decor-layer{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;contain:layout paint;opacity:.82}
-.comic-decor-layer~*{position:relative;z-index:1}
+.section>.comic-decor-layer~*{position:relative;z-index:1}
 .cd-icon{position:absolute;display:block;width:72px;height:72px;opacity:.68;transform:rotate(var(--cd-r,0deg));filter:saturate(.88);will-change:transform}
 .cd-slot-a{left:clamp(8px,2.2vw,34px);top:18%;--cd-r:-9deg}.cd-slot-b{right:clamp(7px,2vw,30px);top:57%;--cd-r:8deg}.cd-slot-c{right:8%;top:10%;--cd-r:-4deg}
 .cd-burst{width:88px;height:66px;background:#d8b84e;clip-path:polygon(50% 0,59% 25%,78% 8%,75% 34%,100% 31%,80% 49%,97% 67%,72% 64%,75% 94%,56% 72%,44% 100%,40% 72%,15% 90%,24% 62%,0 58%,22% 45%,4% 25%,32% 31%);outline:2px solid #1e2423}
@@ -18,3 +18,10 @@
 @keyframes cdFloat{to{transform:translate3d(0,-7px,0) rotate(calc(var(--cd-r) + 3deg))}}
 @media(max-width:700px){.comic-decor-layer{opacity:.5}.cd-icon{transform:scale(.72) rotate(var(--cd-r));transform-origin:center}.cd-slot-a{left:-14px;top:14%}.cd-slot-b{right:-16px;top:66%}.cd-slot-c{display:none}#about .cd-scribble,#playlist .cd-note{display:none}}
 @media(prefers-reduced-motion:reduce){.cd-icon{animation:none!important}}[data-motion="off"] .cd-icon{animation:none!important;opacity:.45}
+
+/* v6.8.3 — Join isolation: comic decor must never enter document flow here. */
+#join>.comic-decor-layer{display:none!important}
+.join-section>.join-burst{position:absolute;z-index:0}
+.join-section>.join-inner{position:relative;z-index:2}
+.join-section>.join-sticker{position:absolute;z-index:3}
+

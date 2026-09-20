@@ -1,6 +1,6 @@
 {
-  "version": "6.8.2",
-  "name": "CLB v6.8.2 Join Structural Compact Fix",
+  "version": "6.8.3",
+  "name": "CLB v6.8.3 Join Root Flow Fix",
   "minimumNode": "18",
-  "notes": "Structurally compacts the Google Form join section by placing desktop copy and CTA beside the heading while preserving the form link, effects, search verification, gallery, Raven/Akiko, Spotify and existing interactions."
+  "notes": "Fixes the actual oversized Join section cause: comic-decor sibling positioning was forcing join-burst and join-sticker into normal flow. Removes Join comic injection, scopes decor stacking to standard sections, and hardens Join absolute positioning without changing its content or Google Form link."
 }

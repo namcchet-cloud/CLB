@@ -5,7 +5,7 @@ const DECOR = [
   ['gallery','burst','ART!','a'], ['gallery','spark','','b'], ['gallery','arrow','','c'],
   ['activities','flame','','a'], ['activities','burst','WOW!','b'],
   ['playlist','note','','a'], ['playlist','spark','','b'],
-  ['join','burst','MAKE!','a'], ['contact','bolt','','b']
+  ['contact','bolt','','b']
 ];
 
 function make(type, text, slot) {
