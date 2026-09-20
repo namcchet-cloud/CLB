@@ -1,6 +1,6 @@
 {
-  "version": "6.8.0",
-  "name": "CLB v6.8.0 Search Brand Integration",
+  "version": "6.8.1",
+  "name": "CLB v6.8.1 Search Brand Integration",
   "minimumNode": "18",
   "notes": "Integrates search-brand metadata and favicon assets while preserving v6.7.1 join-form fix, comic decor, Google verification, Raven/Akiko effects, gallery, Spotify and existing interactions."
 }

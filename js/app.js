@@ -1,4 +1,4 @@
-import { VERSION } from './core/build.js?v=6.8.0';
+import { VERSION } from './core/build.js?v=6.8.1';
 import { start, near, features, issues, report } from './core/runtime.js?v=6.8.0';
 import { initI18n } from './core/i18n.js?v=6.8.0';
 import { initMotion } from './features/motion.js?v=6.8.0';

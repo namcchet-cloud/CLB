@@ -3124,3 +3124,38 @@ html[data-selected-artist="bao-tam"] .artist-chip[data-artist="bao-tam"].active 
   .gallery-pagination::-webkit-scrollbar{display:none}
   .gallery-page{min-width:32px;height:32px;flex:0 0 auto}
 }
+
+/* v6.8.1 — compact Join section: preserve composition, remove excess vertical footprint */
+.join-section .join-inner {
+  padding-top: clamp(56px, 6vw, 76px);
+  padding-bottom: clamp(62px, 6.5vw, 84px);
+}
+.join-section h2 {
+  font-size: clamp(54px, 6.4vw, 88px);
+  line-height: .98;
+  max-width: 900px;
+  margin-bottom: 22px;
+}
+.join-section .join-inner > p {
+  margin-bottom: 22px;
+}
+@media (max-width: 720px) {
+  .join-section .join-inner {
+    padding-top: 44px;
+    padding-bottom: 52px;
+  }
+  .join-section h2 {
+    font-size: clamp(39px, 10.8vw, 52px);
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+  .join-section .join-inner > p {
+    margin-bottom: 20px;
+  }
+  .join-section .join-sticker {
+    width: 52px;
+    height: 52px;
+    right: 12px;
+    bottom: 14px;
+  }
+}
