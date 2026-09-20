@@ -1,6 +1,6 @@
 {
-  "version": "6.7.0",
-  "name": "CLB v6.7.0 Comic Decor System",
+  "version": "6.8.0",
+  "name": "CLB v6.8.0 Search Brand Integration",
   "minimumNode": "18",
-  "notes": "Adds a lightweight original SVG/CSS-like comic decoration layer inspired by impact, spark, speed-line, flame and punk-collage visual language. Existing site behavior and Google Search verification are preserved."
+  "notes": "Integrates search-brand metadata and favicon assets while preserving v6.7.1 join-form fix, comic decor, Google verification, Raven/Akiko effects, gallery, Spotify and existing interactions."
 }
