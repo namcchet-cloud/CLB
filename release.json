@@ -1,0 +1,6 @@
+{
+  "version": "6.9.0",
+  "name": "CLB v6.9.0 Performance Preserve Visuals",
+  "minimumNode": "18",
+  "notes": "Preserves the existing visuals, interactions and animation features while reducing hidden runtime costs. Artist-effect CSS is loaded with the gallery instead of the critical head, lightbox artwork uses responsive web variants, Raven mesh payload is fetched as JSON instead of parsed as a 2 MB JavaScript module, intro assets declare intrinsic dimensions, and the complete intro choreography runs at 58% of its previous duration. Music CSS stays eager to preserve exact anchor/layout behavior. Cache/build versions are synchronized."
+}
