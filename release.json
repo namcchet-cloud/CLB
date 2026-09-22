@@ -1,6 +1,0 @@
-{
-  "version": "6.8.5",
-  "name": "CLB v6.8.5 Gallery Responsive + Rights & Security",
-  "minimumNode": "18",
-  "notes": "Gallery uses 3 artworks per page on desktop and 2 on compact/mobile layouts including landscape phones; page position is preserved across rotation. Adds CSP hardening, external-frame referrer hardening, public web artwork copies, per-artist copyright credits, a bilingual copyright/privacy page, repository rights/security notices, EXIF cleanup, synchronized cache versions, and removes unused root legacy duplicates."
-}
