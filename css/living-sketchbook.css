@@ -1,0 +1,315 @@
+/* v7.0.0 — Living Sketchbook signature layer. Visual-only, no layout ownership. */
+.living-ink {
+  position: absolute;
+  inset: 0 0 auto 0;
+  width: 100%;
+  height: 100px;
+  z-index: 3;
+  pointer-events: none;
+  overflow: visible;
+  opacity: .78;
+  mix-blend-mode: multiply;
+}
+.living-ink svg { display:block; width:100%; height:100%; overflow:visible; }
+.living-ink .ink-shadow,
+.living-ink .ink-path,
+.living-ink .ink-landmark {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.living-ink .ink-shadow { stroke:#25292318; stroke-width:4.2; transform:translate(1.4px,1.1px); }
+.living-ink .ink-path { stroke:#536b487d; stroke-width:1.8; }
+.living-ink .ink-landmark { stroke:#a443316d; stroke-width:1.55; }
+.living-ink .ink-landmark.music { stroke:#35597280; }
+.living-ink .ink-landmark.gallery { stroke:#536b488c; }
+
+/* The sheet covers the viewport only during intentional in-page navigation. */
+.living-page-turn {
+  position: fixed;
+  inset: 0;
+  z-index: 2147481500;
+  pointer-events: none;
+  opacity: 0;
+  perspective: 1400px;
+  contain: strict;
+}
+.living-page-turn.is-active { pointer-events: auto; opacity: 1; }
+.living-page-sheet {
+  position: absolute;
+  inset: -5%;
+  background:
+    linear-gradient(94deg,transparent 0 6%,#2529230a 6.2% 6.5%,transparent 6.8%),
+    radial-gradient(circle at 76% 34%,#e0bb5823 0 1px,transparent 2px),
+    #f2eadb;
+  box-shadow: -24px 0 55px #25292326;
+  transform: translate3d(110%,0,0) rotateY(-7deg);
+  transform-origin: 100% 50%;
+  will-change: transform,opacity;
+  overflow: hidden;
+}
+.living-page-sheet::before {
+  content:"";
+  position:absolute;
+  inset:0;
+  background:url("../assets/optimized/paper-grain.png");
+  opacity:.055;
+  pointer-events:none;
+}
+.living-page-sheet::after {
+  content:"ART CLUB  /  SKETCHBOOK";
+  position:absolute;
+  right:clamp(28px,6vw,90px);
+  bottom:clamp(30px,7vh,82px);
+  color:#25292378;
+  font:700 clamp(9px,1vw,12px)/1 var(--body);
+  letter-spacing:.22em;
+  transform:rotate(-2deg);
+}
+.living-page-stitch {
+  position:absolute;
+  top:9%; bottom:9%; left:8%;
+  width:1px;
+  background:repeating-linear-gradient(to bottom,#25292350 0 6px,transparent 6px 13px);
+}
+.living-page-doodle {
+  position:absolute;
+  left:clamp(38px,12vw,180px);
+  top:22%;
+  font:800 clamp(42px,8vw,110px)/1 var(--display);
+  font-style:italic;
+  color:#a4433118;
+  transform:rotate(-8deg);
+}
+
+/* Local page wipe when switching exhibition artists. */
+.artist-paper-wipe {
+  position:absolute;
+  z-index:12;
+  inset:0;
+  pointer-events:none;
+  opacity:0;
+  background:
+    linear-gradient(100deg,#f2eadb 0 69%,#e7ddca 100%);
+  box-shadow:12px 0 35px #2529231c;
+  transform:translate3d(105%,0,0) rotate(.8deg);
+  will-change:transform,opacity;
+}
+.artist-paper-wipe::after {
+  content:"✎  ARTIST PAGE";
+  position:absolute;
+  right:7%; top:12%;
+  color:#25292355;
+  font:700 10px/1 var(--body);
+  letter-spacing:.2em;
+  transform:rotate(2deg);
+}
+
+.artist-signature-layer {
+  position:absolute;
+  inset:0;
+  z-index:3;
+  pointer-events:none;
+  overflow:visible;
+}
+.artist-signature { position:absolute; pointer-events:none; }
+.artist-signature.haruko {
+  left:clamp(24px,7vw,96px);
+  top:clamp(92px,12vw,154px);
+  width:min(360px,62vw);
+  opacity:.9;
+  transform:rotate(-3deg);
+}
+.artist-signature.haruko svg { width:100%; height:auto; overflow:visible; }
+.artist-signature.haruko path {
+  fill:none;
+  stroke:#65785b;
+  stroke-width:5;
+  stroke-linecap:round;
+  stroke-dasharray:230;
+  stroke-dashoffset:230;
+  filter:drop-shadow(1px 1px 0 #f2eadb);
+  animation:harukoStroke .82s var(--motion-ease) forwards;
+}
+.artist-signature.haruko path:last-child { stroke:#a44331; stroke-width:2.2; animation-delay:.16s; }
+@keyframes harukoStroke { to { stroke-dashoffset:0; } }
+
+.artist-signature.akiko {
+  right:clamp(24px,8vw,110px);
+  top:clamp(88px,11vw,146px);
+  width:150px; height:150px;
+  border:1.5px solid #35597270;
+  border-radius:50%;
+  animation:akikoOrbitIn .75s var(--spring) both;
+}
+.artist-signature.akiko::before,
+.artist-signature.akiko::after {
+  content:"";
+  position:absolute;
+  inset:18px;
+  border:1px dashed #d990a48f;
+  border-radius:50%;
+  animation:akikoSpin 1.3s linear both;
+}
+.artist-signature.akiko::after { inset:42px; border-style:solid; border-color:#e0bb5890; animation-direction:reverse; }
+.artist-signature.akiko i {
+  position:absolute;
+  width:8px; height:8px;
+  background:#355972;
+  box-shadow:0 0 0 3px #f2eadb;
+  transform:rotate(45deg);
+  animation:akikoPixel .72s var(--spring) both;
+}
+.artist-signature.akiko i:nth-child(1){left:4px;top:70px}.artist-signature.akiko i:nth-child(2){right:17px;top:16px;animation-delay:.08s}.artist-signature.akiko i:nth-child(3){right:0;bottom:42px;animation-delay:.16s}.artist-signature.akiko i:nth-child(4){left:32px;bottom:1px;animation-delay:.24s}
+@keyframes akikoOrbitIn { from{opacity:0;transform:scale(.65) rotate(-18deg)} to{opacity:.85;transform:scale(1) rotate(4deg)} }
+@keyframes akikoSpin { from{transform:rotate(-40deg)} to{transform:rotate(110deg)} }
+@keyframes akikoPixel { 0%{opacity:0;scale:.1} 55%{opacity:1;scale:1.35} 100%{opacity:.7;scale:1} }
+
+.artist-signature.raven {
+  inset:72px 2.5% auto 2.5%;
+  height:min(430px,68vh);
+  border:1px solid #b447534d;
+  clip-path:polygon(0 0,18% 0,18% 1px,82% 1px,82% 0,100% 0,100% 100%,82% 100%,82% calc(100% - 1px),18% calc(100% - 1px),18% 100%,0 100%);
+  opacity:0;
+  animation:ravenFrame .52s cubic-bezier(.2,.85,.2,1) forwards;
+}
+.artist-signature.raven::before {
+  content:"";
+  position:absolute;
+  left:0;right:0;top:18%;height:1px;
+  background:linear-gradient(90deg,transparent,#e15b6d 20% 80%,transparent);
+  box-shadow:0 0 14px #e15b6d80;
+  animation:ravenScan .68s ease-out both;
+}
+.artist-signature.raven::after {
+  content:"LOCK / 03";
+  position:absolute;
+  right:12px;top:10px;
+  color:#8f3441;
+  font:800 9px/1 var(--body);
+  letter-spacing:.18em;
+}
+@keyframes ravenFrame { 0%{opacity:0;transform:scale(.985)} 58%{opacity:.88;transform:scale(1.004)} 100%{opacity:.58;transform:none} }
+@keyframes ravenScan { from{top:18%;opacity:0} 15%{opacity:1} to{top:82%;opacity:0} }
+
+/* Session-only visitor marks. */
+.section.has-visitor-trace,.join-section.has-visitor-trace { position:relative; }
+.visitor-trace {
+  position:absolute;
+  z-index:2;
+  right:clamp(8px,1.7vw,25px);
+  top:var(--trace-top,36px);
+  width:38px;height:38px;
+  display:grid;place-items:center;
+  color:#536b4895;
+  font:800 20px/1 var(--display);
+  border:1px solid currentColor;
+  border-radius:48% 52% 46% 54%;
+  transform:rotate(var(--trace-rot,-8deg)) scale(.88);
+  opacity:0;
+  pointer-events:none;
+  mix-blend-mode:multiply;
+  animation:visitorStamp .48s var(--spring) forwards;
+}
+.visitor-trace::after {
+  content:attr(data-no);
+  position:absolute;
+  right:-5px;bottom:-5px;
+  padding:2px 3px;
+  background:var(--paper);
+  color:#25292382;
+  font:700 7px/1 var(--body);
+  letter-spacing:.06em;
+}
+.visitor-trace[data-kind="artist"] { width:31px;height:31px;right:clamp(50px,6vw,94px);top:var(--trace-top,78px);font-size:15px; }
+.visitor-trace[data-key="akiko-oishi"]{color:#355972a0}.visitor-trace[data-key="raven-lin"]{color:#a44331a0}.visitor-trace[data-key="bao-tam"]{color:#65785ba5}
+@keyframes visitorStamp { 0%{opacity:0;transform:rotate(calc(var(--trace-rot,-8deg) - 10deg)) scale(1.45)} 60%{opacity:.74;transform:rotate(var(--trace-rot,-8deg)) scale(.82)} 100%{opacity:.62;transform:rotate(var(--trace-rot,-8deg)) scale(.88)} }
+
+.secret-sketch-trigger {
+  border:1px dashed #25292378;
+  background:#e0bb5840;
+  color:var(--ink);
+  padding:8px 11px;
+  font:800 9px/1 var(--body);
+  letter-spacing:.12em;
+  transform:rotate(-1.5deg);
+  box-shadow:3px 4px 0 #2529230f;
+}
+.secret-sketch-trigger[hidden] { display:none!important; }
+.secret-sketch-trigger.is-unlocked { animation:secretUnlock .7s var(--spring) both; }
+@keyframes secretUnlock { from{opacity:0;transform:translateY(16px) rotate(-7deg) scale(.78)} to{opacity:1;transform:rotate(-1.5deg) scale(1)} }
+.secret-sketch-dialog {
+  width:min(560px,calc(100vw - 28px));
+  border:0;
+  padding:0;
+  background:transparent;
+  overflow:visible;
+}
+.secret-sketch-dialog::backdrop { background:#2529238c; backdrop-filter:blur(3px); }
+.secret-sketch-paper {
+  position:relative;
+  min-height:420px;
+  padding:32px 30px 28px;
+  overflow:hidden;
+  background:
+    linear-gradient(#2529230b 1px,transparent 1px),
+    linear-gradient(90deg,#25292308 1px,transparent 1px),
+    var(--paper);
+  background-size:22px 22px;
+  border:1px solid #25292355;
+  box-shadow:18px 22px 0 #25292322;
+  transform:rotate(-.6deg);
+}
+.secret-sketch-paper::before {
+  content:"";position:absolute;inset:0;background:url("../assets/optimized/paper-grain.png");opacity:.04;pointer-events:none;
+}
+.secret-sketch-close {
+  position:absolute;z-index:5;right:14px;top:12px;
+  width:38px;height:38px;border:1px solid #25292366;border-radius:50%;background:#f2eadbdc;font:700 22px/1 var(--body);
+}
+.secret-sketch-kicker { position:relative;z-index:2;color:var(--rust);font:800 9px/1 var(--body);letter-spacing:.18em; }
+.secret-sketch-paper h3 { position:relative;z-index:2;margin:9px 0 8px;font:800 clamp(38px,9vw,64px)/.86 var(--display);letter-spacing:-.03em; }
+.secret-sketch-paper>p { position:relative;z-index:2;max-width:34ch;color:var(--muted);font:500 12px/1.6 var(--body); }
+.secret-sketch-note { position:absolute;z-index:2;left:30px;bottom:22px;font:700 8px/1 var(--body);letter-spacing:.1em;color:#25292375; }
+.secret-sketch-canvas { position:absolute;inset:0;pointer-events:none; }
+.secret-mark { position:absolute;left:var(--x);top:var(--y);width:var(--s);height:var(--s);color:var(--c);opacity:.68;transform:rotate(var(--r)); }
+.secret-mark.line { height:3px;border-radius:99px;background:currentColor; }
+.secret-mark.ring { border:3px solid currentColor;border-radius:50%; }
+.secret-mark.star::before { content:"✦";font:800 var(--s)/1 var(--display); }
+.secret-mark.cross::before { content:"×";font:800 var(--s)/1 var(--display); }
+.secret-mark.scribble { border:2px solid currentColor;border-radius:57% 43% 60% 40%; }
+
+@media (max-width:800px) {
+  .living-ink { opacity:.55; }
+  .living-page-sheet::after { right:28px;bottom:34px; }
+  .artist-signature.haruko { left:18px;top:125px;width:210px; }
+  .artist-signature.akiko { right:17px;top:122px;width:94px;height:94px; }
+  .artist-signature.akiko::before{inset:12px}.artist-signature.akiko::after{inset:28px}
+  .artist-signature.raven { inset:112px 8px auto 8px;height:330px; }
+  .visitor-trace { right:6px;width:30px;height:30px;font-size:16px;opacity:.5; }
+  .visitor-trace[data-kind="artist"] { right:34px; }
+  .secret-sketch-paper { min-height:390px;padding:28px 22px 24px; }
+}
+
+html[data-motion-choice="quiet"] .artist-signature.haruko path,
+html[data-motion-choice="quiet"] .artist-signature.akiko,
+html[data-motion-choice="quiet"] .artist-signature.akiko::before,
+html[data-motion-choice="quiet"] .artist-signature.akiko::after,
+html[data-motion-choice="quiet"] .artist-signature.raven,
+html[data-motion-choice="quiet"] .artist-signature.raven::before { animation-duration:.22s!important; }
+html[data-motion="off"] .living-page-turn,
+html[data-motion="off"] .artist-paper-wipe,
+html[data-motion="off"] .artist-signature { display:none!important; }
+html[data-motion="off"] .visitor-trace,
+html[data-motion="off"] .secret-sketch-trigger { animation:none!important;opacity:.58; }
+html[data-motion="off"] .living-ink { opacity:.28; }
+html[data-motion="off"] .living-ink .ink-path { stroke-dasharray:none!important;stroke-dashoffset:0!important; }
+
+@media (prefers-reduced-motion:reduce) {
+  html:not([data-motion-choice="full"]) .living-page-turn,
+  html:not([data-motion-choice="full"]) .artist-paper-wipe,
+  html:not([data-motion-choice="full"]) .artist-signature { display:none!important; }
+  html:not([data-motion-choice="full"]) .visitor-trace,
+  html:not([data-motion-choice="full"]) .secret-sketch-trigger { animation:none!important;opacity:.58; }
+}
