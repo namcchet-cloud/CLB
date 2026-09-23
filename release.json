@@ -1,6 +1,6 @@
 {
-  "version": "7.0.1",
-  "name": "CLB v7.0.1 Living Sketchbook + SEO Discovery",
+  "version": "7.0.2",
+  "name": "CLB v7.0.2 Living Sketchbook Polish",
   "minimumNode": "18",
-  "notes": "Cumulative release from v6.9.0. Preserves all v7.0.0 Living Sketchbook interactions and all v6.9.0 performance/security/gallery work, while merging the latest Search Display and SEO Discovery fixes. Runtime i18n metadata no longer reverts the optimized title/description; natural Bảo Lộc art keyword coverage, descriptive artwork alt text, updated structured data, manifest and sitemap are included. No existing feature or visual effect is removed."
+  "notes": "Polishes the four Living Sketchbook signature systems without removing features or changing site content: smoother layout-aware ink, transform-only paper transitions, refined artist motion identities with soft exits, and a journey-based Secret Sketch. Reduces expensive full-page compositing, fixes rapid-transition cleanup, and keeps all v7.0.1 SEO, security, gallery, music and Raven behavior."
 }
