@@ -1,6 +1,6 @@
 {
-  "version": "7.0.2",
-  "name": "CLB v7.0.2 Living Sketchbook Polish",
+  "version": "7.0.3",
+  "name": "CLB v7.0.3 Living Sketchbook Art Direction",
   "minimumNode": "18",
-  "notes": "Polishes the four Living Sketchbook signature systems without removing features or changing site content: smoother layout-aware ink, transform-only paper transitions, refined artist motion identities with soft exits, and a journey-based Secret Sketch. Reduces expensive full-page compositing, fixes rapid-transition cleanup, and keeps all v7.0.1 SEO, security, gallery, music and Raven behavior."
+  "notes": "Rebuilds the four Living Sketchbook signatures as one art-directed motion system: viewport-local ink rail, physical paper-flap transitions, artist identities anchored to the exhibition author block, and a structured visitor-route Secret Sketch. Preserves all v7.0.2 content, SEO, security, responsive gallery, music, Raven and performance behavior."
 }

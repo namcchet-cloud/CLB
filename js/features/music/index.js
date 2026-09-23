@@ -1,8 +1,8 @@
-import { createMotor } from './motor.js?v=7.0.2';
-import { createSpotify } from './spotify.js?v=7.0.2';
-import { local } from '../../core/i18n.js?v=7.0.2';
-import { setImage } from '../../core/images.js?v=7.0.2';
-import { clamp } from '../../core/runtime.js?v=7.0.2';
+import { createMotor } from './motor.js?v=7.0.3';
+import { createSpotify } from './spotify.js?v=7.0.3';
+import { local } from '../../core/i18n.js?v=7.0.3';
+import { setImage } from '../../core/images.js?v=7.0.3';
+import { clamp } from '../../core/runtime.js?v=7.0.3';
 
 /** A single real record node travels from its sleeve to the platter and back. */
 export function initMusic(content) {
