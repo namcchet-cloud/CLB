@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://namcchet-cloud.github.io/CLB/sitemap.xml
+Sitemap: https://namcchet-cloud.github.io/sitemap.xml
