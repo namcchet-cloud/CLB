@@ -1,8 +1,8 @@
-import { createMotor } from './motor.js?v=7.0.7';
-import { createSpotify } from './spotify.js?v=7.0.7';
-import { local } from '../../core/i18n.js?v=7.0.7';
-import { setImage } from '../../core/images.js?v=7.0.7';
-import { clamp } from '../../core/runtime.js?v=7.0.7';
+import { createMotor } from './motor.js?v=7.0.8';
+import { createSpotify } from './spotify.js?v=7.0.8';
+import { local } from '../../core/i18n.js?v=7.0.8';
+import { setImage } from '../../core/images.js?v=7.0.8';
+import { clamp } from '../../core/runtime.js?v=7.0.8';
 
 /** A single real record node travels from its sleeve to the platter and back. */
 export function initMusic(content) {
@@ -25,8 +25,10 @@ export function initMusic(content) {
     returning: ['Đang nhấc kim và trả đĩa về bìa…', 'Lifting the stylus and returning the record…'],
     miss: ['Đĩa đã trở về bìa. Thả gần mâm để đặt lại.', 'Record returned. Drop it near the platter to place it.'],
     connecting: ['Đang kết nối Spotify…', 'Connecting to Spotify…'],
-    error: ['Chưa kết nối được Spotify. Nhấn Phát để thử lại hoặc mở Spotify ↗.', 'Spotify is unavailable. Press Play to retry or open Spotify ↗.'],
-    gesture: ['Hãy bấm nút phát trong khung Spotify bên dưới để cho phép phát nhạc.', 'Press Play in the Spotify player below to allow playback.'],
+    readyAgain: ['Spotify đã sẵn sàng. Nhấn Phát nhạc lần nữa.', 'Spotify is ready. Press Play music once more.'],
+    fallback: ['Đã mở trình phát Spotify gốc. Nếu nút trên mâm chưa phát, hãy bấm ▶ trong khung Spotify.', 'The native Spotify player is ready. If the deck button cannot start playback, press ▶ inside the Spotify player.'],
+    error: ['Không tải được Spotify. Hãy kiểm tra mạng hoặc mở Spotify ↗.', 'Spotify could not load. Check your connection or open Spotify ↗.'],
+    gesture: ['Trình duyệt đang chặn phát tự động. Hãy bấm ▶ trong khung Spotify bên dưới.', 'Your browser blocked programmatic playback. Press ▶ inside the Spotify player below.'],
     playing: ['Đang phát · 33⅓ RPM', 'Playing · 33⅓ RPM'],
     buffering: ['Spotify đang tải nhạc…', 'Spotify is buffering…'],
     play: ['Phát nhạc', 'Play music'], pause: ['Tạm dừng', 'Pause'],
@@ -165,10 +167,19 @@ export function initMusic(content) {
     if (state.phase === 'SETTLING' || returning) return;
     if (state.loadedId && state.loadedId !== id) await returnLoaded();
     state.phase = 'SETTLING'; state.selectedId = id; sync();
+
+    // Start Spotify while the record is physically travelling to the platter.
+    // This gives mobile Safari/slow networks more time to create the official Embed
+    // before the listener presses the deck Play button.
+    const spotifyJob = transport.ensure(record(id)).catch(() => null);
     await relocate(id, platter, true);
     state.loadedId = id; state.phase = 'ON_TURNTABLE'; state.trackProgress = 0; state.currentURI = '';
-    deck.classList.add('is-loaded'); sync(); setStatus('ready');
-    transport.ensure(record(id)).catch(() => {});
+    deck.classList.add('is-loaded'); sync();
+    setStatus(transport.controllable ? 'ready' : transport.fallback ? 'fallback' : 'connecting');
+    spotifyJob.then(() => {
+      if (state.loadedId !== id || state.phase !== 'ON_TURNTABLE') return;
+      setStatus(transport.controllable ? 'ready' : transport.fallback ? 'fallback' : 'ready');
+    });
     if (latestSelection && latestSelection !== id) select(latestSelection);
   }
   function beginDrag(event, id) {
@@ -216,17 +227,49 @@ export function initMusic(content) {
       if (latestSelection && latestSelection !== state.selectedId) select(latestSelection);
     }
   }
-  async function togglePlay() {
+  function togglePlay() {
     if (!state.loadedId || state.phase !== 'ON_TURNTABLE' || commandPending) return;
     const id = state.loadedId, wanted = !state.playing;
+
+    // Keep the actual play/pause command inside the original user click. This is
+    // important on Safari/iOS where awaiting network/controller setup can consume
+    // the user-activation token and make Spotify look "disconnected".
+    if (transport.controllable) {
+      commandPending = true; play.setAttribute('aria-busy', 'true');
+      const sent = transport.command(wanted);
+      if (!sent) {
+        clearRequest();
+        setStatus(transport.fallback ? 'fallback' : 'gesture');
+        transport.focus();
+        return;
+      }
+      requestTimer = setTimeout(() => {
+        clearRequest();
+        if (id === state.loadedId && wanted !== state.playing) {
+          setStatus('gesture');
+          transport.focus();
+        }
+      }, 4500);
+      return;
+    }
+
+    if (transport.fallback) {
+      setStatus('fallback');
+      transport.focus();
+      return;
+    }
+
     commandPending = true; play.setAttribute('aria-busy', 'true'); setStatus('connecting');
-    try {
-      if (!transport.ready) await transport.ensure(record(id));
-      if (id !== state.loadedId || state.phase !== 'ON_TURNTABLE') { clearRequest(); return; }
-      transport.command(wanted);
-      // There is no fake playback. A blocked autoplay requires the visible Spotify control.
-      requestTimer = setTimeout(() => { clearRequest(); if (id === state.loadedId && wanted !== state.playing) setStatus('gesture'); }, 5500);
-    } catch (e) { clearRequest(); if (e.name !== 'AbortError' && id === state.loadedId) setStatus('error'); }
+    transport.ensure(record(id)).then(() => {
+      clearRequest();
+      if (id !== state.loadedId || state.phase !== 'ON_TURNTABLE') return;
+      if (transport.controllable) setStatus('readyAgain');
+      else if (transport.fallback) { setStatus('fallback'); transport.focus(); }
+      else setStatus('gesture');
+    }).catch(error => {
+      clearRequest();
+      if (error?.name !== 'AbortError' && id === state.loadedId) setStatus('error');
+    });
   }
   play.addEventListener('click', togglePlay);
   quick?.addEventListener('click', async () => {

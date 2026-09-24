@@ -1,6 +1,6 @@
 {
-  "version": "7.0.7",
-  "name": "CLB v7.0.7 Touch + PWA Pipeline",
+  "version": "7.0.8",
+  "name": "CLB v7.0.8 Spotify Connection Repair",
   "minimumNode": "18",
-  "notes": "Improves smartphone record-player touch handling with a quick-place fallback, verifies the gallery remains WebP-only with lazy/async decoding, completes social preview metadata, and adds a versioned Service Worker for repeat-visit caching without changing the visual design."
+  "notes": "Hardens the Spotify integration with a more tolerant IFrame API lifecycle, preserves user-gesture playback on Safari/iOS, adds an official native Spotify Embed fallback, and expands Spotify CSP allowances without changing the turntable mechanics or visual design."
 }

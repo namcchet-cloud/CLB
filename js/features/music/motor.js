@@ -1,4 +1,4 @@
-import { clamp } from '../../core/runtime.js?v=7.0.7';
+import { clamp } from '../../core/runtime.js?v=7.0.8';
 
 /** V2.2 geometry retained. One clock controls spin, cueing and progress tracking. */
 export function createMotor(deck, state, getSurface, onChange) {

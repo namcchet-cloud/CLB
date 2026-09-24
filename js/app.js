@@ -1,9 +1,9 @@
-import { VERSION } from './core/build.js?v=7.0.7';
-import { start, near, features, issues, report } from './core/runtime.js?v=7.0.7';
-import { initI18n } from './core/i18n.js?v=7.0.7';
-import { initMotion } from './features/motion.js?v=7.0.7';
-import { initNavigation } from './features/navigation.js?v=7.0.7';
-import { initComicDecor } from './features/comic-decor.js?v=7.0.7';
+import { VERSION } from './core/build.js?v=7.0.8';
+import { start, near, features, issues, report } from './core/runtime.js?v=7.0.8';
+import { initI18n } from './core/i18n.js?v=7.0.8';
+import { initMotion } from './features/motion.js?v=7.0.8';
+import { initNavigation } from './features/navigation.js?v=7.0.8';
+import { initComicDecor } from './features/comic-decor.js?v=7.0.8';
 
 const content = window.CLUB_CONTENT || { artists: [], artworks: [], records: [] };
 const buildStatus = document.getElementById('buildStatus');
@@ -26,8 +26,8 @@ try {
   features.set('motion', initMotion());
   features.set('navigation', initNavigation());
   features.set('comicDecor', initComicDecor());
-  lazy('gallery', document.getElementById('gallery'), async () => (await import('./features/gallery.js?v=7.0.7')).initGallery(content));
-  lazy('music', document.getElementById('playlist'), async () => (await import('./features/music/index.js?v=7.0.7')).initMusic(content));
+  lazy('gallery', document.getElementById('gallery'), async () => (await import('./features/gallery.js?v=7.0.8')).initGallery(content));
+  lazy('music', document.getElementById('playlist'), async () => (await import('./features/music/index.js?v=7.0.8')).initMusic(content));
   document.documentElement.dataset.appReady = 'true';
 } catch (error) { report('startup', error); }
 function status() {

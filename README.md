@@ -1,6 +1,6 @@
 # CLB Nghệ thuật — THPT Bảo Lộc
 
-Bản production hiện tại: **v7.0.7**.
+Bản production hiện tại: **v7.0.8**.
 
 ## Cấu trúc thư mục
 
@@ -39,7 +39,7 @@ Bản production hiện tại: **v7.0.7**.
 
 ## Ghi chú
 
-Bản v7.0.7 giữ cấu trúc sạch của v7.0.6, bổ sung touch fallback cho mâm đĩa, xác minh pipeline tranh WebP/lazy decode, hoàn thiện Social Meta và thêm Service Worker có cache version để tăng tốc những lần truy cập sau.
+Bản v7.0.8 giữ toàn bộ v7.0.7 và sửa kết nối Spotify: IFrame API có lifecycle chịu lỗi tốt hơn, nút Phát không mất user-gesture trên Safari/iOS, và có Spotify Embed gốc làm fallback nếu controller API bị chặn hoặc timeout.
 
 
 ## PWA / Service Worker

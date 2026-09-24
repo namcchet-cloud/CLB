@@ -127,6 +127,17 @@ Preserved:
 ---
 
 
+
+## v7.0.8 — Spotify Connection Repair
+
+- Giữ cơ khí mâm đĩa, playlist và giao diện hiện tại; chỉ sửa tầng kết nối Spotify.
+- IFrame API không còn phụ thuộc tuyệt đối vào một event `ready` duy nhất; controller callback + iframe load có soft-ready fallback để tránh timeout giả.
+- Dùng URL playlist chính thức làm nguồn controller, đồng thời giữ URI để tương thích ngược.
+- Nút Phát chỉ gửi lệnh play/pause đồng bộ khi controller đã sẵn sàng, tránh mất user activation sau `await` trên Safari/iOS.
+- Nếu IFrame API không tải/không khởi tạo được, tự chuyển sang Spotify Embed gốc có `encrypted-media` thay vì để vùng player lỗi trắng.
+- Mở rộng CSP cho các host Spotify CDN/scdn cần thiết; Service Worker vẫn không cache Spotify API/player.
+- Hai playlist hiện tại vẫn dùng nguyên link/ID cũ.
+
 ## v7.0.7 — Touch + PWA Pipeline
 
 - Thêm `touch-action: none` cho vùng tương tác đĩa/mâm và giữ Pointer Events làm API chính cho chuột + cảm ứng.
