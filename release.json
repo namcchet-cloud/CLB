@@ -1,0 +1,6 @@
+{
+  "version": "7.0.6",
+  "name": "CLB v7.0.6 Clean Source Structure",
+  "minimumNode": "18",
+  "notes": "Maintenance-only source reorganization. Root documentation is consolidated under docs/, CLUB_CONTENT moves to js/data/content.js, and the four removed Living Sketchbook experiments remain absent. Public design, features, SEO, gallery, music, Raven, intro and security behavior are preserved."
+}
