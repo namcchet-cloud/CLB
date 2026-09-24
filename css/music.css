@@ -1156,3 +1156,33 @@ html[data-page-hidden="true"] .mv3-turntable * { animation-play-state: paused !i
 .mv3-turntable.is-playing[data-visual-active="true"] .mv3-disc-surface { will-change: transform; }
 .mv3-play[aria-busy="true"] { cursor: progress; }
 .mv3-spotify[aria-busy="true"] { min-height: 152px; }
+
+
+/* v7.0.7 — coarse-pointer fallback without changing the desktop interaction. */
+.mv3-platter-wrap,
+.mv3-disc {
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+.mv3-quick-place {
+  display: none;
+  width: min(100%, 290px);
+  margin: 10px auto 0;
+  min-height: 44px;
+  border: 1px solid rgba(53,42,32,.45);
+  border-radius: 999px;
+  background: rgba(242,234,219,.92);
+  color: #352a20;
+  font: 800 12px/1 var(--body);
+  letter-spacing: .045em;
+  box-shadow: 2px 3px 0 rgba(53,42,32,.12);
+  touch-action: manipulation;
+  cursor: pointer;
+}
+.mv3-quick-place:active { transform: translateY(1px); box-shadow: 1px 1px 0 rgba(53,42,32,.12); }
+.mv3-quick-place:disabled { opacity: .48; cursor: wait; }
+@media (hover: none), (pointer: coarse), (max-width: 820px) {
+  .mv3-quick-place { display: block; }
+}

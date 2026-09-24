@@ -1,6 +1,6 @@
-import { local, t, apply } from '../core/i18n.js?v=7.0.6';
-import { setImage, imageVariant } from '../core/images.js?v=7.0.6';
-import { start, loadCSS, report } from '../core/runtime.js?v=7.0.6';
+import { local, t, apply } from '../core/i18n.js?v=7.0.7';
+import { setImage, imageVariant } from '../core/images.js?v=7.0.7';
+import { start, loadCSS, report } from '../core/runtime.js?v=7.0.7';
 
 /** Author/gallery state is independent of visual effects and of the music player. */
 export function initGallery(content) {
@@ -35,7 +35,7 @@ export function initGallery(content) {
   };
   const visible = () => artworks.map((art, index) => ({ art, index }))
     .filter(({ art }) => (!artistId || art.artistId === artistId) && (filter === 'all' || art.category === filter));
-  const effectsCSS = new URL('../../css/effects.css?v=7.0.6', import.meta.url).href;
+  const effectsCSS = new URL('../../css/effects.css?v=7.0.7', import.meta.url).href;
   let cssReady;
   const ensureEffectsCSS = () => cssReady ||= (
     document.querySelector('link[data-artist-effects="core"]')?.sheet
@@ -51,11 +51,11 @@ export function initGallery(content) {
       if (rev !== effectRevision || artistId !== selected) return;
       const btn = switcher.querySelector(`[data-artist="${selected}"]`);
       if (selected === 'akiko-oishi' && replay && motion?.enabled) {
-        const akiko = await start('akiko', async () => (await import('./akiko.js?v=7.0.6')).initAkiko());
+        const akiko = await start('akiko', async () => (await import('./akiko.js?v=7.0.7')).initAkiko());
         if (rev === effectRevision && artistId === selected) await akiko.launch(btn);
       }
       if (selected === 'raven-lin' && replay && motion?.enabled) {
-        const raven = await start('raven', async () => (await import('./raven.js?v=7.0.6')).initRaven());
+        const raven = await start('raven', async () => (await import('./raven.js?v=7.0.7')).initRaven());
         if (rev === effectRevision && artistId === selected) raven.launch(btn);
       }
     } catch (error) {
@@ -174,7 +174,7 @@ export function initGallery(content) {
       image.classList.remove('is-loading'); dialog.classList.add('image-failed');
       caption.append(document.documentElement.lang === 'en' ? ' — Image could not load.' : ' — Chưa tải được ảnh.');
     };
-    setImage(image, art.image, { width: 1200, sizes: '91vw', lazy: false, responsive: true });
+    setImage(image, art.image, { width: 1200, sizes: '91vw', lazy: true, responsive: true });
     image.fetchPriority = 'high'; // public web copy only; masters are not shipped
   }
   function open(index, source) {

@@ -1,5 +1,5 @@
-import { copy } from '../data/translations.js?v=7.0.6';
-import { storage, emit } from './runtime.js?v=7.0.6';
+import { copy } from '../data/translations.js?v=7.0.7';
+import { storage, emit } from './runtime.js?v=7.0.7';
 let language = storage.get('artclub-lang', 'vi') === 'en' ? 'en' : 'vi';
 export const local = value => value && typeof value === 'object'
   ? value[language] ?? value.vi ?? value.en ?? '' : String(value ?? '');
@@ -32,7 +32,13 @@ export function setLanguage(lang) {
   storage.set('artclub-lang', language);
   document.documentElement.lang = language;
   document.title = t('pageTitle');
-  document.querySelector('meta[name="description"]')?.setAttribute('content', t('metaDescription'));
+  const description = t('metaDescription');
+  document.querySelector('meta[name="description"]')?.setAttribute('content', description);
+  document.querySelector('meta[property="og:title"]')?.setAttribute('content', t('pageTitle'));
+  document.querySelector('meta[property="og:description"]')?.setAttribute('content', description);
+  document.querySelector('meta[name="twitter:title"]')?.setAttribute('content', t('pageTitle'));
+  document.querySelector('meta[name="twitter:description"]')?.setAttribute('content', description);
+  document.querySelector('meta[property="og:locale"]')?.setAttribute('content', language === 'en' ? 'en_US' : 'vi_VN');
   apply();
   document.querySelectorAll('[data-lang-option]').forEach(el => el.classList.toggle('is-current', el.dataset.langOption === language));
   document.querySelector('.lang-toggle')?.setAttribute('aria-label', language === 'vi' ? 'Switch to English' : 'Chuyển sang tiếng Việt');

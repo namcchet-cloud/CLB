@@ -1,6 +1,6 @@
 # CLB Nghệ thuật — THPT Bảo Lộc
 
-Bản production hiện tại: **v7.0.6**.
+Bản production hiện tại: **v7.0.7**.
 
 ## Cấu trúc thư mục
 
@@ -39,4 +39,12 @@ Bản production hiện tại: **v7.0.6**.
 
 ## Ghi chú
 
-Bản v7.0.6 chỉ sắp xếp lại source để dễ bảo trì. Không thay đổi giao diện hay tính năng so với v7.0.5.
+Bản v7.0.7 giữ cấu trúc sạch của v7.0.6, bổ sung touch fallback cho mâm đĩa, xác minh pipeline tranh WebP/lazy decode, hoàn thiện Social Meta và thêm Service Worker có cache version để tăng tốc những lần truy cập sau.
+
+
+## PWA / Service Worker
+
+- `sw.js` nằm ở root để có scope cho toàn bộ `/CLB/`.
+- `js/core/pwa.js` chỉ đăng ký Service Worker; không chứa logic giao diện.
+- Mỗi lần tăng version phải đổi `CACHE_VERSION` trong `sw.js` và query `?v=` của asset đang chạy.
+- Không cache Spotify API/player; chỉ cache tài nguyên tĩnh của site và font Google khi trình duyệt thực sự tải chúng.

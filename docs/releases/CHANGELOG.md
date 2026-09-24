@@ -126,6 +126,17 @@ Preserved:
 
 ---
 
+
+## v7.0.7 — Touch + PWA Pipeline
+
+- Thêm `touch-action: none` cho vùng tương tác đĩa/mâm và giữ Pointer Events làm API chính cho chuột + cảm ứng.
+- Thêm nút `Đặt đĩa lên mâm / Trả đĩa về bìa` chỉ hiện trên thiết bị cảm ứng hoặc màn hình nhỏ, song song với kéo-thả.
+- Xác minh toàn bộ artwork public trong gallery dùng `.webp`; thumbnail và lightbox không quay lại JPEG/PNG master.
+- Gallery tiếp tục áp `loading=lazy` và `decoding=async` qua `setImage()` và bản SSR ban đầu.
+- Hoàn thiện Social Meta với Twitter URL, giữ OG preview JPEG 1200×630 để tương thích tốt với Facebook/Messenger/Zalo.
+- Thêm `sw.js` + `js/core/pwa.js`; cache versioned CSS/JS/logo và cache font khi được tải, đồng thời tự xóa cache `clb-v*` cũ.
+- Không cache Spotify API/player và không pre-cache dữ liệu Raven/artwork nặng để tránh làm lần truy cập đầu chậm hơn.
+
 ## v7.0.6 — Clean Source Structure
 
 - Gom toàn bộ tài liệu bảo trì khỏi thư mục gốc vào `docs/`.

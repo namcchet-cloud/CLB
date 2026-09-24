@@ -4,7 +4,7 @@ let kivatDataJob = null;
 async function ensureKivatData() {
   if (KIVAT_MESH_DATA && KIVAT_META) return true;
   if (!kivatDataJob) {
-    const url = new URL('./kivat-mesh-data.json?v=7.0.6', import.meta.url);
+    const url = new URL('./kivat-mesh-data.json?v=7.0.7', import.meta.url);
     kivatDataJob = fetch(url, { cache: 'force-cache', credentials: 'same-origin' })
       .then(response => {
         if (!response.ok) throw new Error(`Kivat mesh HTTP ${response.status}`);

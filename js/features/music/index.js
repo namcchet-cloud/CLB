@@ -1,14 +1,14 @@
-import { createMotor } from './motor.js?v=7.0.6';
-import { createSpotify } from './spotify.js?v=7.0.6';
-import { local } from '../../core/i18n.js?v=7.0.6';
-import { setImage } from '../../core/images.js?v=7.0.6';
-import { clamp } from '../../core/runtime.js?v=7.0.6';
+import { createMotor } from './motor.js?v=7.0.7';
+import { createSpotify } from './spotify.js?v=7.0.7';
+import { local } from '../../core/i18n.js?v=7.0.7';
+import { setImage } from '../../core/images.js?v=7.0.7';
+import { clamp } from '../../core/runtime.js?v=7.0.7';
 
 /** A single real record node travels from its sleeve to the platter and back. */
 export function initMusic(content) {
   const records = content.records || [], $ = id => document.getElementById(id);
   const room = $('playlist'), albums = $('mv3Albums'), platter = $('mv3Platter');
-  const drop = $('mv3DropZone'), deck = $('mv3Turntable'), play = $('mv3Play');
+  const drop = $('mv3DropZone'), deck = $('mv3Turntable'), play = $('mv3Play'), quick = $('mv3QuickPlace');
   const status = $('mv3Status'), spotifyMount = $('mv3Spotify');
   if (!records.length) { status.textContent = 'Chưa có playlist.'; return {}; }
   const state = { selectedId: records[0].id, loadedId: null, phase: 'IN_SLEEVE', playing: false,
@@ -30,6 +30,7 @@ export function initMusic(content) {
     playing: ['Đang phát · 33⅓ RPM', 'Playing · 33⅓ RPM'],
     buffering: ['Spotify đang tải nhạc…', 'Spotify is buffering…'],
     play: ['Phát nhạc', 'Play music'], pause: ['Tạm dừng', 'Pause'],
+    quickPlace: ['Đặt đĩa lên mâm', 'Place record on platter'], quickReturn: ['Trả đĩa về bìa', 'Return record to sleeve'],
     help: ['① Bấm bìa để chọn · ② Kéo đĩa lên mâm · ③ Nhấn Phát nhạc.', '① Select a cover · ② Drag the record onto the platter · ③ Press Play.']
   };
   const t = key => strings[key]?.[en() ? 1 : 0] || key;
@@ -76,7 +77,13 @@ export function initMusic(content) {
       n.name.textContent = local(r.name); n.title.textContent = local(r.name);
       n.caption.textContent = local(r.caption); n.tag.textContent = t('selected');
     }
-    play.disabled = !state.loadedId || state.phase !== 'ON_TURNTABLE'; meta();
+    play.disabled = !state.loadedId || state.phase !== 'ON_TURNTABLE';
+    if (quick) {
+      quick.textContent = t(state.loadedId ? 'quickReturn' : 'quickPlace');
+      quick.setAttribute('aria-label', quick.textContent);
+      quick.disabled = Boolean(drag || returning) || ['SETTLING', 'RETURNING', 'DRAGGING'].includes(state.phase);
+    }
+    meta();
   }
   function createAlbum(r) {
     const wrap = document.createElement('article'); wrap.className = 'mv3-album'; wrap.dataset.record = r.id; wrap.dataset.theme = r.theme;
@@ -222,6 +229,11 @@ export function initMusic(content) {
     } catch (e) { clearRequest(); if (e.name !== 'AbortError' && id === state.loadedId) setStatus('error'); }
   }
   play.addEventListener('click', togglePlay);
+  quick?.addEventListener('click', async () => {
+    if (drag || returning || ['SETTLING', 'RETURNING', 'DRAGGING'].includes(state.phase)) return;
+    if (state.loadedId) await returnLoaded();
+    else await place(state.selectedId);
+  });
   document.addEventListener('club:language', () => sync());
   document.addEventListener('visibilitychange', () => { if (document.hidden && drag) finishDrag(true); });
   window.addEventListener('pagehide', () => { if (drag) finishDrag(true); });

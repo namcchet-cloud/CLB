@@ -1,4 +1,4 @@
-import { rafThrottle } from "../core/runtime.js?v=7.0.6";
+import { rafThrottle } from "../core/runtime.js?v=7.0.7";
 export function initNavigation() {
   'use strict';
   const { t, local } = window.Club;
