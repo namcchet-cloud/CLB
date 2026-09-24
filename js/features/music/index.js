@@ -1,8 +1,8 @@
-import { createMotor } from './motor.js?v=7.0.8';
-import { createSpotify } from './spotify.js?v=7.0.8';
-import { local } from '../../core/i18n.js?v=7.0.8';
-import { setImage } from '../../core/images.js?v=7.0.8';
-import { clamp } from '../../core/runtime.js?v=7.0.8';
+import { createMotor } from './motor.js?v=7.0.9';
+import { createSpotify } from './spotify.js?v=7.0.9';
+import { local } from '../../core/i18n.js?v=7.0.9';
+import { setImage } from '../../core/images.js?v=7.0.9';
+import { clamp } from '../../core/runtime.js?v=7.0.9';
 
 /** A single real record node travels from its sleeve to the platter and back. */
 export function initMusic(content) {
@@ -15,7 +15,7 @@ export function initMusic(content) {
     trackProgress: 0, spinAngle: 0, spinVelocity: 0, armAngle: -6, armMode: 'REST', currentURI: '' };
   const nodes = new Map(), record = id => records.find(r => r.id === id);
   let drag = null, dragFrame = 0, animation = null, returning = null, latestSelection = null;
-  let requestTimer = 0, commandPending = false, message = 'drag';
+  let requestTimer = 0, commandPending = false, pendingCommand = null, message = 'drag';
   const en = () => document.documentElement.lang === 'en';
   const strings = {
     choose: ['Chọn album', 'Choose album'], selected: ['Đang chọn', 'Selected'],
@@ -37,26 +37,32 @@ export function initMusic(content) {
   };
   const t = key => strings[key]?.[en() ? 1 : 0] || key;
   function setStatus(key) { message = key; status.textContent = t(key); }
-  function clearRequest() { clearTimeout(requestTimer); requestTimer = 0; commandPending = false; play.removeAttribute('aria-busy'); }
+  function clearRequest() { clearTimeout(requestTimer); requestTimer = 0; commandPending = false; pendingCommand = null; play.removeAttribute('aria-busy'); }
   const motor = createMotor(deck, state, () => state.loadedId ? nodes.get(state.loadedId)?.surface : null, on => {
-    clearRequest(); play.querySelector('b').textContent = t(on ? 'pause' : 'play');
+    play.querySelector('b').textContent = t(on ? 'pause' : 'play');
     play.querySelector('span').textContent = on ? 'Ⅱ' : '▶';
     deck.querySelector('.mv3-signal-text').textContent = on ? '33⅓ RPM' : (en() ? 'READY' : 'CHỜ PHÁT');
     setStatus(on ? 'playing' : state.loadedId ? 'ready' : 'empty');
   });
   const transport = createSpotify(spotifyMount, (data, id) => {
     if (id !== state.loadedId || state.phase !== 'ON_TURNTABLE') return;
-    clearRequest();
     const changed = data.playingURI && state.currentURI && data.playingURI !== state.currentURI;
     if (data.playingURI) state.currentURI = data.playingURI;
     if (data.type === 'started') {
+      clearRequest();
       if (changed) motor.progress(0);
-      motor.setPlaying(true); return;
+      motor.setPlaying(true);
+      return;
     }
     if (Number(data.duration) > 0) motor.progress(clamp(Number(data.position) / Number(data.duration), 0, 1));
-    if (typeof data.isPaused === 'boolean') motor.setPlaying(!data.isPaused && !data.isBuffering);
-    if (data.isBuffering) setStatus('buffering');
-  }, key => { if (state.loadedId) setStatus(key); });
+    if (typeof data.isPaused === 'boolean') {
+      clearRequest();
+      // Buffering is a network state, not a turntable state: the platter should
+      // keep rotating until Spotify actually reports pause.
+      motor.setPlaying(!data.isPaused);
+      if (data.isBuffering && !data.isPaused) setStatus('buffering');
+    } else if (data.isBuffering) setStatus('buffering');
+  }, key => { if (state.loadedId && !(commandPending && key === 'ready')) setStatus(key); });
   function meta() {
     const r = record(state.loadedId);
     $('mv3NowLabel').textContent = t(r ? 'selected' : 'empty');
@@ -175,10 +181,10 @@ export function initMusic(content) {
     await relocate(id, platter, true);
     state.loadedId = id; state.phase = 'ON_TURNTABLE'; state.trackProgress = 0; state.currentURI = '';
     deck.classList.add('is-loaded'); sync();
-    setStatus(transport.controllable ? 'ready' : transport.fallback ? 'fallback' : 'connecting');
+    setStatus(transport.ready ? 'ready' : transport.fallback ? 'fallback' : 'connecting');
     spotifyJob.then(() => {
       if (state.loadedId !== id || state.phase !== 'ON_TURNTABLE') return;
-      setStatus(transport.controllable ? 'ready' : transport.fallback ? 'fallback' : 'ready');
+      setStatus(transport.ready ? 'ready' : transport.fallback ? 'fallback' : 'connecting');
     });
     if (latestSelection && latestSelection !== id) select(latestSelection);
   }
@@ -229,27 +235,34 @@ export function initMusic(content) {
   }
   function togglePlay() {
     if (!state.loadedId || state.phase !== 'ON_TURNTABLE' || commandPending) return;
-    const id = state.loadedId, wanted = !state.playing;
+    const id = state.loadedId, wanted = !state.playing, before = state.playing;
 
-    // Keep the actual play/pause command inside the original user click. This is
-    // important on Safari/iOS where awaiting network/controller setup can consume
-    // the user-activation token and make Spotify look "disconnected".
+    // If a controller already exists, issue the command inside the original
+    // click/tap and let the mechanics respond immediately. Spotify events remain
+    // authoritative: they confirm the state or roll the optimistic motion back.
     if (transport.controllable) {
-      commandPending = true; play.setAttribute('aria-busy', 'true');
+      commandPending = true;
+      pendingCommand = { id, wanted, before };
+      play.setAttribute('aria-busy', 'true');
       const sent = transport.command(wanted);
       if (!sent) {
         clearRequest();
-        setStatus(transport.fallback ? 'fallback' : 'gesture');
+        setStatus(transport.fallback ? 'fallback' : transport.pending ? 'connecting' : 'gesture');
         transport.focus();
         return;
       }
+
+      motor.setPlaying(wanted);
+      setStatus(wanted ? 'buffering' : 'ready');
       requestTimer = setTimeout(() => {
+        const pending = pendingCommand;
+        if (!pending || pending.id !== id || pending.wanted !== wanted) return;
         clearRequest();
-        if (id === state.loadedId && wanted !== state.playing) {
-          setStatus('gesture');
-          transport.focus();
-        }
-      }, 4500);
+        if (id !== state.loadedId || state.phase !== 'ON_TURNTABLE') return;
+        motor.setPlaying(pending.before);
+        setStatus(transport.pending ? 'readyAgain' : 'gesture');
+        transport.focus();
+      }, 6000);
       return;
     }
 

@@ -1,4 +1,4 @@
-import { clamp } from '../../core/runtime.js?v=7.0.8';
+import { clamp } from '../../core/runtime.js?v=7.0.9';
 
 /** V2.2 geometry retained. One clock controls spin, cueing and progress tracking. */
 export function createMotor(deck, state, getSurface, onChange) {
@@ -8,7 +8,12 @@ export function createMotor(deck, state, getSurface, onChange) {
   let frame = 0, previous = 0, visible = false, transition = null, engaged = false;
   let angle = -6, lift = 0, rotation = 0, velocity = 0, waiters = [];
   const smooth = x => { x = clamp(x, 0, 1); return x * x * x * (x * (x * 6 - 15) + 10); };
-  const enabled = () => document.documentElement.dataset.motion !== 'off';
+  const root = document.documentElement;
+  // Turntable rotation is functional playback feedback. System-level reduced
+  // motion may simplify the arm choreography, but only an explicit site choice
+  // of "off" disables the spinning platter.
+  const spinAllowed = () => root.dataset.motionChoice !== 'off';
+  const choreographyAllowed = () => root.dataset.motion !== 'off';
   const targetAngle = () => 23 + state.trackProgress * 5;
   function paint() {
     rotor.style.transform = `rotate(${angle.toFixed(3)}deg)`;
@@ -22,36 +27,39 @@ export function createMotor(deck, state, getSurface, onChange) {
     deck.dataset.armMode = state.armMode.toLowerCase();
   }
   function resolvePark() { const list = waiters; waiters = []; list.forEach(fn => fn()); }
-  function settle() {
+  function settleArm() {
     transition = null; lift = 0; angle = engaged ? targetAngle() : -6;
-    velocity = 0; paint(); if (!engaged) resolvePark();
+    paint(); if (!engaged) resolvePark();
   }
   function wake() {
-    if (!frame && visible && !document.hidden && enabled()) { previous = 0; frame = requestAnimationFrame(tick); }
+    const needsSpin = spinAllowed() && (state.playing || velocity > 0);
+    const needsArm = choreographyAllowed() && Boolean(transition);
+    if (!frame && visible && !document.hidden && (needsSpin || needsArm)) { previous = 0; frame = requestAnimationFrame(tick); }
   }
   function cue(on) {
     engaged = on;
-    if (!enabled() || !visible || document.hidden) { settle(); return; }
+    if (!choreographyAllowed() || !visible || document.hidden) { settleArm(); wake(); return; }
     transition = { at: performance.now(), from: angle, to: on ? targetAngle() : -6, fromLift: lift };
     wake();
   }
   function tick(now) {
     frame = 0;
-    if (!visible || document.hidden || !enabled()) { previous = 0; return; }
+    if (!visible || document.hidden) { previous = 0; return; }
     const dt = previous ? clamp(now - previous, 0, 48) : 16.7; previous = now;
-    const wantedVelocity = state.playing ? .2 : 0; // degrees/ms at 33 1/3 RPM
+    const wantedVelocity = spinAllowed() && state.playing ? .2 : 0; // degrees/ms at 33 1/3 RPM
     velocity += (wantedVelocity - velocity) * (1 - Math.exp(-dt / (state.playing ? 1250 : 1500)));
     if (velocity < .00025 && !state.playing) velocity = 0;
     rotation = (rotation + velocity * dt) % 360;
-    if (transition) {
+    if (transition && choreographyAllowed()) {
       const elapsed = (now - transition.at) / 1000;
       angle = transition.from + (transition.to - transition.from) * smooth((elapsed - .18) / 1.15);
       lift = elapsed < .23 ? transition.fromLift + (1 - transition.fromLift) * smooth(elapsed / .23)
         : elapsed < 1.28 ? 1 : 1 - smooth((elapsed - 1.28) / .45);
       if (elapsed >= 1.73) { transition = null; lift = 0; if (!engaged) resolvePark(); }
-    } else if (engaged) angle += (targetAngle() - angle) * (1 - Math.exp(-dt / 700));
+    } else if (transition) settleArm();
+    else if (engaged) angle += (targetAngle() - angle) * (1 - Math.exp(-dt / 700));
     paint();
-    if (state.playing || velocity > 0 || transition) frame = requestAnimationFrame(tick);
+    if ((spinAllowed() && (state.playing || velocity > 0)) || (choreographyAllowed() && transition)) frame = requestAnimationFrame(tick);
     else {
       previous = 0; deck.classList.remove('is-power-on');
       if (!engaged) resolvePark();
@@ -64,12 +72,12 @@ export function createMotor(deck, state, getSurface, onChange) {
     if (on) deck.classList.add('is-power-on');
     room.classList.toggle('is-music-playing', on);
     cue(on); wake();
-    if (!enabled() || !visible || document.hidden) deck.classList.toggle('is-power-on', on);
+    if (!visible || document.hidden || !choreographyAllowed()) deck.classList.toggle('is-power-on', on);
     onChange?.(on);
   }
   function progress(value) {
     state.trackProgress = clamp(Number(value) || 0, 0, 1);
-    if (engaged && (!visible || document.hidden || !enabled())) { angle = targetAngle(); paint(); }
+    if (engaged && (!visible || document.hidden || !choreographyAllowed())) { angle = targetAngle(); paint(); }
     else wake();
   }
   function park() {
@@ -80,10 +88,13 @@ export function createMotor(deck, state, getSurface, onChange) {
   }
   function visibility() {
     deck.dataset.visualActive = String(visible && !document.hidden);
-    if (!visible || document.hidden || !enabled()) {
+    if (!visible || document.hidden) {
       cancelAnimationFrame(frame); frame = 0; previous = 0;
-      if (transition) settle();
-    } else wake();
+      if (transition) settleArm();
+    } else {
+      if (!choreographyAllowed() && transition) settleArm();
+      wake();
+    }
   }
   const observer = 'IntersectionObserver' in window ? new IntersectionObserver(entries => {
     visible = entries[0].isIntersecting; visibility();

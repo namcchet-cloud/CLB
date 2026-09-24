@@ -13,6 +13,6 @@ This release intentionally keeps the current visual design, interactions and fea
 No artwork, album, interaction, gallery layout, music behavior, Raven motion sequence, or comic decoration was removed.
 
 
-## Service Worker (v7.0.8)
+## Service Worker (v7.0.9)
 
-Service Worker dùng cache có version (`clb-v7.0.8`). Tài nguyên CSS/JS/logo cốt lõi được làm ấm sau lần truy cập đầu; Google Fonts được cache khi trình duyệt yêu cầu. Navigation ưu tiên network và chỉ fallback cache khi offline. Spotify, mesh Raven và toàn bộ gallery không bị pre-cache hàng loạt để không tăng chi phí lần tải đầu.
+Service Worker dùng cache có version (`clb-v7.0.9`). Tài nguyên CSS/JS/logo cốt lõi được làm ấm sau lần truy cập đầu; Google Fonts được cache khi trình duyệt yêu cầu. Navigation ưu tiên network và chỉ fallback cache khi offline. Spotify, mesh Raven và toàn bộ gallery không bị pre-cache hàng loạt để không tăng chi phí lần tải đầu.

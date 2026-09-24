@@ -128,6 +128,16 @@ Preserved:
 
 
 
+## v7.0.9 — Turntable Playback Sync Repair
+
+- Sửa lỗi đĩa đã ở trên mâm nhưng không quay sau thay đổi Spotify v7.0.8.
+- Bỏ soft-ready dựa trên iframe load/timer; chỉ event `ready` hoặc playback event của Spotify mới xác nhận controller đã sẵn sàng.
+- Khi controller đã tồn tại, nút Phát gửi lệnh ngay trong user gesture và cho cơ khí mâm phản hồi ngay; playback events sau đó xác nhận hoặc hoàn tác trạng thái.
+- `playback_update` không còn dừng mâm chỉ vì `isBuffering=true`; mâm chỉ dừng khi Spotify thực sự báo pause.
+- Giữ controller ở trạng thái `api-pending` thay vì đổi sớm sang Embed thô, nhờ đó thao tác trực tiếp trong Spotify vẫn tiếp tục phát event để đồng bộ mâm.
+- Khi hệ điều hành bật Reduce Motion ở chế độ Theo thiết bị, mâm đĩa vẫn quay như phản hồi chức năng; chỉ lựa chọn `Tắt` ngay trên website mới tắt hẳn quay mâm.
+- Giữ nguyên playlist, giao diện, kéo-thả, touch fallback, PWA, SEO và các hiệu ứng gốc.
+
 ## v7.0.8 — Spotify Connection Repair
 
 - Giữ cơ khí mâm đĩa, playlist và giao diện hiện tại; chỉ sửa tầng kết nối Spotify.

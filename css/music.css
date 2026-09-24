@@ -1187,7 +1187,7 @@ html[data-page-hidden="true"] .mv3-turntable * { animation-play-state: paused !i
   .mv3-quick-place { display: block; }
 }
 
-/* v7.0.8 — Spotify connection hardening.
+/* v7.0.9 — Spotify connection hardening.
    The native fallback uses Spotify's full playlist embed so playback remains
    available even when the controller API is delayed or blocked. */
 .mv3-spotify.is-native-embed iframe {

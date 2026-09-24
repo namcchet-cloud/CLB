@@ -1,5 +1,5 @@
-import { copy } from '../data/translations.js?v=7.0.8';
-import { storage, emit } from './runtime.js?v=7.0.8';
+import { copy } from '../data/translations.js?v=7.0.9';
+import { storage, emit } from './runtime.js?v=7.0.9';
 let language = storage.get('artclub-lang', 'vi') === 'en' ? 'en' : 'vi';
 export const local = value => value && typeof value === 'object'
   ? value[language] ?? value.vi ?? value.en ?? '' : String(value ?? '');

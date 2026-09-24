@@ -1,11 +1,11 @@
-const CACHE_VERSION = 'clb-v7.0.8';
+const CACHE_VERSION = 'clb-v7.0.9';
 const CORE = [
   './', './index.html', './legal.html', './site.webmanifest',
-  './css/tokens.css?v=7.0.8', './css/site.css?v=7.0.8', './css/music.css?v=7.0.8', './css/intro.css?v=7.0.8', './css/comic-decor.css?v=7.0.8', './css/effects.css?v=7.0.8',
-  './js/core/bootstrap.js?v=7.0.8', './js/core/build.js?v=7.0.8', './js/core/runtime.js?v=7.0.8', './js/core/i18n.js?v=7.0.8', './js/core/images.js?v=7.0.8', './js/core/pwa.js?v=7.0.8',
-  './js/data/content.js?v=7.0.8', './js/data/images.js?v=7.0.8', './js/data/translations.js?v=7.0.8', './js/app.js?v=7.0.8',
-  './js/features/motion.js?v=7.0.8', './js/features/navigation.js?v=7.0.8', './js/features/comic-decor.js?v=7.0.8', './js/features/gallery.js?v=7.0.8', './js/features/akiko.js?v=7.0.8', './js/features/raven.js?v=7.0.8',
-  './js/features/music/index.js?v=7.0.8', './js/features/music/motor.js?v=7.0.8', './js/features/music/spotify.js?v=7.0.8',
+  './css/tokens.css?v=7.0.9', './css/site.css?v=7.0.9', './css/music.css?v=7.0.9', './css/intro.css?v=7.0.9', './css/comic-decor.css?v=7.0.9', './css/effects.css?v=7.0.9',
+  './js/core/bootstrap.js?v=7.0.9', './js/core/build.js?v=7.0.9', './js/core/runtime.js?v=7.0.9', './js/core/i18n.js?v=7.0.9', './js/core/images.js?v=7.0.9', './js/core/pwa.js?v=7.0.9',
+  './js/data/content.js?v=7.0.9', './js/data/images.js?v=7.0.9', './js/data/translations.js?v=7.0.9', './js/app.js?v=7.0.9',
+  './js/features/motion.js?v=7.0.9', './js/features/navigation.js?v=7.0.9', './js/features/comic-decor.js?v=7.0.9', './js/features/gallery.js?v=7.0.9', './js/features/akiko.js?v=7.0.9', './js/features/raven.js?v=7.0.9',
+  './js/features/music/index.js?v=7.0.9', './js/features/music/motor.js?v=7.0.9', './js/features/music/spotify.js?v=7.0.9',
   './assets/optimized/logo-new-96-2583a335.webp', './assets/optimized/logo-new-192-86e0c09a.webp', './assets/optimized/logo-new-640-db642e82.webp',
   './assets/icons/favicon-192x192.png', './assets/icons/favicon-512x512.png',
   'https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800&family=DM+Sans:wght@400;500;600;700&family=Fraunces:ital,wght@0,600;0,700;1,600&display=swap'

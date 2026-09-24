@@ -1,10 +1,11 @@
 /**
  * Spotify transport.
  *
- * Primary path: official Spotify IFrame API.
- * Fallback path: official native Spotify Embed so the playlist remains usable
- * even when the controller API is blocked, delayed or unsupported.
- * No simulated playback is used.
+ * The official IFrame API remains the authoritative path because it is the only
+ * path that can report playback state back to the physical turntable UI.
+ * A native Embed is kept only as a last-resort fallback when the API itself
+ * cannot be created. We never replace a valid controller merely because its
+ * `ready` event is a little late.
  */
 const API_SRC = 'https://open.spotify.com/embed/iframe-api/v1';
 const API_SCRIPT_ID = 'clubSpotifyAPI';
@@ -23,7 +24,7 @@ function loadAPI() {
     let settled = false;
     let script = document.getElementById(API_SCRIPT_ID);
     const previousReady = window.onSpotifyIframeApiReady;
-    const timer = setTimeout(() => finish(null, new Error('Spotify API timeout')), 10000);
+    const timer = setTimeout(() => finish(null, new Error('Spotify API timeout')), 12000);
 
     function finish(api, error = null) {
       if (settled) return;
@@ -101,10 +102,20 @@ function ensurePermissions(iframe) {
   if (!iframe) return;
   const required = ['autoplay', 'clipboard-write', 'encrypted-media', 'fullscreen', 'picture-in-picture'];
   const current = (iframe.getAttribute('allow') || '').split(';').map(x => x.trim()).filter(Boolean);
-  const merged = [...new Set([...current, ...required])];
-  iframe.setAttribute('allow', merged.join('; '));
+  iframe.setAttribute('allow', [...new Set([...current, ...required])].join('; '));
   iframe.setAttribute('allowfullscreen', '');
+  iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
   if (!iframe.getAttribute('title')) iframe.setAttribute('title', 'Spotify player');
+}
+
+function watchIframe(mount) {
+  const apply = () => ensurePermissions(mount.querySelector('iframe'));
+  apply();
+  if (!('MutationObserver' in window)) return () => {};
+  const observer = new MutationObserver(apply);
+  observer.observe(mount, { childList: true, subtree: true });
+  const timer = setTimeout(() => observer.disconnect(), 8000);
+  return () => { clearTimeout(timer); observer.disconnect(); };
 }
 
 export function createSpotify(mount, onPlayback, onStatus) {
@@ -115,10 +126,13 @@ export function createSpotify(mount, onPlayback, onStatus) {
   let ready = false;
   let mode = 'idle';
   let cancelPending = null;
+  let stopWatchingIframe = null;
 
   const stale = () => new DOMException('Album changed', 'AbortError');
 
   function resetMount() {
+    stopWatchingIframe?.();
+    stopWatchingIframe = null;
     mount.classList.remove('is-native-embed');
     mount.removeAttribute('data-spotify-mode');
     mount.removeAttribute('aria-busy');
@@ -150,7 +164,7 @@ export function createSpotify(mount, onPlayback, onStatus) {
     iframe.title = info.title;
     iframe.width = '100%';
     iframe.height = String(info.height);
-    iframe.loading = 'lazy';
+    iframe.loading = 'eager';
     iframe.style.border = '0';
     iframe.style.borderRadius = '12px';
     ensurePermissions(iframe);
@@ -163,13 +177,25 @@ export function createSpotify(mount, onPlayback, onStatus) {
     controller = null;
     ready = false;
     mode = 'embed';
+    job = null;
     onStatus?.('fallback');
     return null;
   }
 
+  function markReady(rev) {
+    if (rev !== revision || !controller) return;
+    if (!ready || mode !== 'api') {
+      ready = true;
+      mode = 'api';
+      mount.dataset.spotifyMode = 'api';
+      mount.setAttribute('aria-busy', 'false');
+      onStatus?.('ready');
+    }
+  }
+
   function ensure(record) {
     if (!record) return Promise.resolve(null);
-    if (recordId === record.id && mode === 'api' && ready) return Promise.resolve(controller);
+    if (recordId === record.id && controller && (mode === 'api' || mode === 'api-pending')) return Promise.resolve(controller);
     if (recordId === record.id && mode === 'embed') return Promise.resolve(null);
     if (recordId === record.id && job) return job;
 
@@ -199,35 +225,17 @@ export function createSpotify(mount, onPlayback, onStatus) {
 
       return new Promise((resolve, reject) => {
         let complete = false;
-        let softTimer = 0;
-        const hardTimer = setTimeout(() => {
+        const callbackTimer = setTimeout(() => {
           if (complete) return;
           complete = true;
           cancelPending = null;
-          try { controller?.destroy?.(); } catch {}
-          controller = null;
           try { resolve(nativeFallback(record, rev)); } catch (error) { reject(error); }
-        }, 12000);
-
-        const finishReady = () => {
-          if (complete || rev !== revision) return;
-          complete = true;
-          clearTimeout(hardTimer);
-          clearTimeout(softTimer);
-          cancelPending = null;
-          ready = true;
-          mode = 'api';
-          mount.dataset.spotifyMode = 'api';
-          mount.setAttribute('aria-busy', 'false');
-          onStatus?.('ready');
-          resolve(controller);
-        };
+        }, 15000);
 
         cancelPending = () => {
           if (complete) return;
           complete = true;
-          clearTimeout(hardTimer);
-          clearTimeout(softTimer);
+          clearTimeout(callbackTimer);
           reject(stale());
         };
 
@@ -235,49 +243,49 @@ export function createSpotify(mount, onPlayback, onStatus) {
           api.createController(host, {
             width: '100%',
             height: 152,
-            url: record.spotifyUrl,
-            uri: record.uri
+            uri: record.uri || record.spotifyUrl
           }, c => {
             if (complete || rev !== revision) {
               try { c?.destroy?.(); } catch {}
               if (rev !== revision) cancelPending?.();
               return;
             }
+            clearTimeout(callbackTimer);
+            complete = true;
+            cancelPending = null;
+
             if (!c) {
-              clearTimeout(hardTimer);
-              complete = true;
-              cancelPending = null;
               try { resolve(nativeFallback(record, rev)); } catch (error) { reject(error); }
               return;
             }
 
             controller = c;
+            ready = false;
+            mode = 'api-pending';
+            mount.dataset.spotifyMode = 'api-pending';
+            mount.setAttribute('aria-busy', 'true');
+            stopWatchingIframe = watchIframe(mount);
+
             const add = typeof c.addListener === 'function' ? c.addListener.bind(c) : null;
-            add?.('ready', finishReady);
+            add?.('ready', () => markReady(rev));
             add?.('playback_started', event => {
-              if (rev === revision) onPlayback?.({ type: 'started', ...event?.data }, record.id);
+              if (rev !== revision) return;
+              markReady(rev);
+              onPlayback?.({ type: 'started', ...event?.data }, record.id);
             });
             add?.('playback_update', event => {
-              if (rev === revision) onPlayback?.({ type: 'update', ...event?.data }, record.id);
+              if (rev !== revision) return;
+              markReady(rev);
+              onPlayback?.({ type: 'update', ...event?.data }, record.id);
             });
 
-            // The official callback already proves a controller exists. Some browsers/cache
-            // paths have been observed to miss the separate `ready` event, so do not wait
-            // forever for that event if the iframe itself has mounted successfully.
-            const iframe = mount.querySelector('iframe');
-            ensurePermissions(iframe);
-            if (iframe) {
-              iframe.addEventListener('load', () => {
-                if (!complete) softTimer = setTimeout(finishReady, 180);
-              }, { once: true });
-              softTimer = setTimeout(finishReady, 1400);
-            } else {
-              softTimer = setTimeout(finishReady, 1800);
-            }
+            // The controller callback is useful immediately, but it is NOT the
+            // same thing as Spotify's `ready` event. Keep the controller instead
+            // of inventing readiness or replacing it with a raw Embed.
+            resolve(controller);
           });
         } catch (error) {
-          clearTimeout(hardTimer);
-          clearTimeout(softTimer);
+          clearTimeout(callbackTimer);
           complete = true;
           cancelPending = null;
           try { resolve(nativeFallback(record, rev)); } catch (fallbackError) { reject(fallbackError || error); }
@@ -297,10 +305,10 @@ export function createSpotify(mount, onPlayback, onStatus) {
   }
 
   function command(on) {
-    if (!ready || mode !== 'api' || !controller) return false;
+    if (!controller || !['api', 'api-pending'].includes(mode)) return false;
     try {
       if (on) {
-        const fn = controller.resume || controller.play;
+        const fn = controller.play || controller.resume;
         if (typeof fn !== 'function') return false;
         fn.call(controller);
       } else {
@@ -326,7 +334,8 @@ export function createSpotify(mount, onPlayback, onStatus) {
     destroy,
     focus,
     get ready() { return ready; },
-    get controllable() { return ready && mode === 'api' && Boolean(controller); },
+    get controllable() { return Boolean(controller) && (mode === 'api' || mode === 'api-pending'); },
+    get pending() { return mode === 'api-pending'; },
     get fallback() { return mode === 'embed'; },
     get connecting() { return mode === 'connecting'; },
     get mode() { return mode; },

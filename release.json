@@ -1,6 +1,6 @@
 {
-  "version": "7.0.8",
-  "name": "CLB v7.0.8 Spotify Connection Repair",
+  "version": "7.0.9",
+  "name": "CLB v7.0.9 Turntable Playback Sync Repair",
   "minimumNode": "18",
-  "notes": "Hardens the Spotify integration with a more tolerant IFrame API lifecycle, preserves user-gesture playback on Safari/iOS, adds an official native Spotify Embed fallback, and expands Spotify CSP allowances without changing the turntable mechanics or visual design."
+  "notes": "Repairs Spotify-to-turntable synchronization: keeps the official IFrame controller instead of inventing a soft-ready state, starts the motor responsively on an accepted deck command, reconciles it with authoritative playback events, keeps spinning through buffering, and preserves rotation under system reduced-motion unless the site motion control is explicitly Off."
 }
