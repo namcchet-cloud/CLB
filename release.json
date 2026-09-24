@@ -1,0 +1,6 @@
+{
+  "version": "7.0.11",
+  "name": "CLB v7.0.11 Spotify Fast-Start",
+  "minimumNode": "18",
+  "notes": "Includes the v7.0.10 persistent-controller turntable rebuild and warms Spotify as early as possible: preconnects open.spotify.com, initializes Music eagerly, prewarms one official IFrame controller off-screen, preloads the selected entity on cover selection and drag intent, then reveals the already-warm controller when the record reaches the platter."
+}
