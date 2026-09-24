@@ -1,6 +1,0 @@
-{
-  "version": "7.0.9",
-  "name": "CLB v7.0.9 Turntable Playback Sync Repair",
-  "minimumNode": "18",
-  "notes": "Repairs Spotify-to-turntable synchronization: keeps the official IFrame controller instead of inventing a soft-ready state, starts the motor responsively on an accepted deck command, reconciles it with authoritative playback events, keeps spinning through buffering, and preserves rotation under system reduced-motion unless the site motion control is explicitly Off."
-}
