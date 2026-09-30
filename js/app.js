@@ -1,9 +1,9 @@
-import { VERSION } from './core/build.js?v=7.0.15';
-import { start, near, features, issues, report } from './core/runtime.js?v=7.0.15';
-import { initI18n } from './core/i18n.js?v=7.0.15';
-import { initMotion } from './features/motion.js?v=7.0.15';
-import { initNavigation } from './features/navigation.js?v=7.0.15';
-import { initComicDecor } from './features/comic-decor.js?v=7.0.15';
+import { VERSION } from './core/build.js?v=7.0.16';
+import { start, near, features, issues, report } from './core/runtime.js?v=7.0.16';
+import { initI18n } from './core/i18n.js?v=7.0.16';
+import { initMotion } from './features/motion.js?v=7.0.16';
+import { initNavigation } from './features/navigation.js?v=7.0.16';
+import { initComicDecor } from './features/comic-decor.js?v=7.0.16';
 
 const content = window.CLUB_CONTENT || { artists: [], artworks: [], records: [] };
 const buildStatus = document.getElementById('buildStatus');
@@ -26,11 +26,11 @@ try {
   features.set('motion', initMotion());
   features.set('navigation', initNavigation());
   features.set('comicDecor', initComicDecor());
-  lazy('gallery', document.getElementById('gallery'), async () => (await import('./features/gallery.js?v=7.0.15')).initGallery(content));
-  // Music initializes eagerly so Spotify can warm its official IFrame API and
-  // persistent controller while the listener is still viewing earlier sections.
-  // Reuse the lazy helper for its retry UI, but trigger it immediately.
-  const loadMusic = lazy('music', document.getElementById('playlist'), async () => (await import('./features/music/index.js?v=7.0.15')).initMusic(content));
+  lazy('gallery', document.getElementById('gallery'), async () => (await import('./features/gallery.js?v=7.0.16')).initGallery(content));
+  // Music initializes eagerly so Spotify can warm the official IFrame API while
+  // the listener is still viewing earlier sections. The playback controller is
+  // created later for the record that actually reaches the platter.
+  const loadMusic = lazy('music', document.getElementById('playlist'), async () => (await import('./features/music/index.js?v=7.0.16')).initMusic(content));
   loadMusic();
   document.documentElement.dataset.appReady = 'true';
 } catch (error) { report('startup', error); }

@@ -1,6 +1,6 @@
 {
-  "version": "7.0.15",
-  "name": "CLB v7.0.15 Spotify Fast Atomic Sync",
+  "version": "7.0.16",
+  "name": "CLB v7.0.16 Direct Gesture Sync",
   "minimumNode": "18",
-  "notes": "Cumulative from v7.0.11. Preserves Atomic Play Sync and starts the first Spotify controller from the early head bootstrap, reuses that controller in Music, adds focused Spotify preconnects, queues a first Play tap while readiness finishes, and shortens silent-failure handoff without ever spinning the record before confirmed playback."
+  "notes": "Spotify API warms early, controller creation is deferred until a record reaches the platter, Play/Pause stays synchronous inside the user click, queued Play is removed, and the turntable follows confirmed Spotify playback only."
 }

@@ -1,11 +1,10 @@
 /**
- * Spotify transport — v7.0.15 Fast Atomic Sync.
+ * Spotify transport — v7.0.16 Direct Gesture Sync.
  *
- * The official IFrame API and one controller are warmed before the listener
- * places a record. The controller stays alive for the whole session and album
- * changes reuse loadEntity/loadUri. During prewarm the Spotify iframe is kept
- * off-screen (not display:none) so browsers can finish initialization without
- * shifting the page layout.
+ * The official IFrame API is warmed early, but the Embed controller is created
+ * only for a record that reaches the turntable. Play/Pause commands stay inside
+ * the user's direct button click; playback events remain the source of truth
+ * for the motor and stylus.
  */
 const API_SRC = 'https://open.spotify.com/embed/iframe-api/v1';
 const API_SCRIPT_ID = 'clubSpotifyAPI';
@@ -20,8 +19,7 @@ function loadAPI() {
   }
   if (apiPromise) return apiPromise;
 
-  // v7.0.15: the HTML starts Spotify's official script before app.js. Reuse
-  // that early handshake instead of injecting another script after Music loads.
+  // v7.0.16: reuse the official API handshake started in <head>.
   if (window.__clubSpotifyApiReady?.then) {
     apiPromise = Promise.race([
       window.__clubSpotifyApiReady,
@@ -245,34 +243,7 @@ export function createSpotify(mount, onPlayback, onStatus) {
     const api = await loadAPI();
     if (myGeneration !== generation) throw new DOMException('Spotify session replaced', 'AbortError');
 
-    // v7.0.15: adopt the controller that bootstrap started from <head>. This
-    // avoids paying createController + iframe startup again when Music initializes.
-    const earlyJob = window.__clubSpotifyEarlyController;
-    if (earlyJob?.then) {
-      try {
-        const early = await Promise.race([earlyJob, new Promise(resolve => setTimeout(() => resolve(null), 2400))]);
-        if (myGeneration !== generation) throw new DOMException('Spotify session replaced', 'AbortError');
-        if (early?.controller && early?.host) {
-          host = early.host;
-          host.removeAttribute('style');
-          host.removeAttribute('aria-hidden');
-          host.className = 'mv3-spotify-controller-host';
-          mount.classList.remove('is-native-embed');
-          mount.replaceChildren(host);
-          expose(exposeRequested);
-          attachController(early.controller);
-          if (early.ready) markReady();
-          recordId = early.recordId || 'studio';
-          const latest = desiredRecord || record;
-          if (latest && latest.id !== recordId) loadIntoController(latest);
-          else desiredRecord = latest;
-          return early.controller;
-        }
-      } catch (error) {
-        if (error?.name === 'AbortError') throw error;
-      }
-    }
-
+    // v7.0.16: controller creation starts here for the record actually placed.
     host = document.createElement('div');
     host.className = 'mv3-spotify-controller-host';
     mount.classList.remove('is-native-embed');
@@ -343,14 +314,12 @@ export function createSpotify(mount, onPlayback, onStatus) {
     });
   }
 
-  function ensure(record, { prewarm = false } = {}) {
+  function ensure(record) {
     if (!record) return Promise.resolve(null);
     desiredRecord = record;
-    if (!prewarm) {
-      exposeRequested = true;
-      fallbackAllowed = true;
-    }
-    expose(exposeRequested);
+    exposeRequested = true;
+    fallbackAllowed = true;
+    expose(true);
 
     if (controller) {
       loadIntoController(record);
@@ -359,27 +328,23 @@ export function createSpotify(mount, onPlayback, onStatus) {
 
     if (mode === 'embed') {
       if (recordId !== record.id) nativeFallback(record);
-      else expose(exposeRequested);
+      else expose(true);
       return Promise.resolve(null);
     }
 
     if (controllerJob) {
       return controllerJob.then(c => {
         if (c && desiredRecord && recordId !== desiredRecord.id) loadIntoController(desiredRecord);
-        expose(exposeRequested);
+        expose(true);
         return c;
       });
     }
 
     recordId = record.id;
     setMode('connecting', true);
-    if (!prewarm) onStatus?.('connecting');
+    onStatus?.('connecting');
     controllerJob = createPersistentController(record).catch(error => {
       controllerJob = null;
-      // Use the live fallback flag rather than the mode of the call that started
-      // the job. A record may reach the platter while a background warmup is
-      // still pending; in that case a real user request is now allowed to fall
-      // back immediately instead of waiting for a second connection attempt.
       if (error?.name !== 'AbortError' && fallbackAllowed) {
         try { return nativeFallback(desiredRecord || record); }
         catch {
@@ -393,17 +358,22 @@ export function createSpotify(mount, onPlayback, onStatus) {
   }
 
   function prepare(record) {
-    return ensure(record, { prewarm: true }).catch(() => null);
+    desiredRecord = record || desiredRecord;
+    if (controller && record) {
+      loadIntoController(record);
+      return Promise.resolve(controller);
+    }
+    // Prime only the official API. The controller itself is deferred until
+    // the selected record reaches the platter.
+    return loadAPI().then(() => null).catch(() => null);
   }
 
   function command(on) {
     if (!controller || !ready || mode !== 'api') return false;
     try {
       if (on) {
-        // v7.0.15: send play() synchronously from the user click. The turntable
-        // motor is not touched here; playback events confirm when audio really starts.
-        // resume() remains only a compatibility fallback. Calling the transport
-        // synchronously here preserves the user's activation on mobile browsers.
+        // v7.0.16: keep play() synchronous inside the user click. The motor
+        // changes only after Spotify confirms real playback.
         const fn = controller.play || controller.resume || controller.togglePlay;
         if (typeof fn !== 'function') return false;
         fn.call(controller);
