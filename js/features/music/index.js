@@ -1,8 +1,8 @@
-import { createMotor } from './motor.js?v=7.0.15';
-import { createSpotify } from './spotify.js?v=7.0.15';
-import { local } from '../../core/i18n.js?v=7.0.15';
-import { setImage } from '../../core/images.js?v=7.0.15';
-import { clamp } from '../../core/runtime.js?v=7.0.15';
+import { createMotor } from './motor.js?v=7.0.16';
+import { createSpotify } from './spotify.js?v=7.0.16';
+import { local } from '../../core/i18n.js?v=7.0.16';
+import { setImage } from '../../core/images.js?v=7.0.16';
+import { clamp } from '../../core/runtime.js?v=7.0.16';
 
 /** A single real record node travels from its sleeve to the platter and back. */
 export function initMusic(content) {
@@ -15,7 +15,7 @@ export function initMusic(content) {
     trackProgress: 0, spinAngle: 0, spinVelocity: 0, armAngle: -6, armMode: 'REST', currentURI: '' };
   const nodes = new Map(), record = id => records.find(r => r.id === id);
   let drag = null, dragFrame = 0, animation = null, returning = null, latestSelection = null;
-  let requestTimer = 0, commandPending = false, pendingCommand = null, queuedPlayId = null, message = 'drag';
+  let requestTimer = 0, commandPending = false, pendingCommand = null, message = 'drag';
   const en = () => document.documentElement.lang === 'en';
   const strings = {
     choose: ['Chọn album', 'Choose album'], selected: ['Đang chọn', 'Selected'],
@@ -92,7 +92,7 @@ export function initMusic(content) {
       n.name.textContent = local(r.name); n.title.textContent = local(r.name);
       n.caption.textContent = local(r.caption); n.tag.textContent = t('selected');
     }
-    play.disabled = !state.loadedId || state.phase !== 'ON_TURNTABLE' || transport.connecting;
+    play.disabled = !state.loadedId || state.phase !== 'ON_TURNTABLE' || commandPending || (!transport.controllable && !transport.fallback);
     if (quick) {
       quick.textContent = t(state.loadedId ? 'quickReturn' : 'quickPlace');
       quick.setAttribute('aria-label', quick.textContent);
@@ -156,7 +156,7 @@ export function initMusic(content) {
     if (returning) return returning;
     if (!state.loadedId) return;
     const id = state.loadedId;
-    state.phase = 'RETURNING'; queuedPlayId = null; clearRequest(); transport.deactivate(); setStatus('returning'); sync();
+    state.phase = 'RETURNING'; clearRequest(); transport.deactivate(); setStatus('returning'); sync();
     returning = (async () => {
       await motor.park();
       // Keep the record on its spindle until the stylus has cleared it.
@@ -265,32 +265,11 @@ export function initMusic(content) {
     }
 
     if (!transport.ready || !transport.controllable) {
-      // v7.0.15: remember this first Play tap while the already-warming Spotify
-      // controller finishes. On browsers that permit API playback, fire as soon
-      // as ready instead of asking the listener to press Play a second time.
-      queuedPlayId = wanted ? id : null;
-      setStatus('connecting');
+      // v7.0.16 never replays a stale click after an async wait. The Play
+      // button becomes active only after the Spotify controller is ready, so
+      // controller.play() can run directly inside the real user click.
+      setStatus(transport.connecting ? 'connecting' : 'ready');
       sync();
-      transport.ensure(record(id)).then(() => {
-        if (id !== state.loadedId || state.phase !== 'ON_TURNTABLE') return;
-        if (transport.fallback) { queuedPlayId = null; transport.requestGesture?.(); setStatus('fallback'); sync(); return; }
-        if (queuedPlayId === id && transport.ready && transport.controllable && !state.playing) {
-          queuedPlayId = null;
-          commandPending = true; pendingCommand = { id, wanted: true };
-          play.setAttribute('aria-busy', 'true');
-          if (transport.command(true)) {
-            setStatus('starting');
-            requestTimer = setTimeout(() => {
-              if (!state.playing && state.loadedId === id) { clearRequest(); transport.requestGesture?.(); setStatus('gesture'); sync(); }
-            }, 1200);
-          } else { clearRequest(); transport.requestGesture?.(); setStatus('gesture'); }
-        } else setStatus(transport.ready ? 'ready' : 'connecting');
-        sync();
-      }).catch(error => {
-        queuedPlayId = null;
-        if (error?.name !== 'AbortError' && id === state.loadedId) setStatus('error');
-        sync();
-      });
       return;
     }
 
@@ -306,7 +285,7 @@ export function initMusic(content) {
       return;
     }
 
-    // v7.0.15 Atomic Play Sync: the Spotify playback event is the single source
+    // v7.0.16 Direct Gesture Sync: the Spotify playback event is the single source
     // of truth for the turntable. Clicking the deck only sends the transport
     // command; it never starts/stops the motor by itself. The motor changes on
     // playback_started / playback_update so sound and platter move together.
@@ -331,7 +310,7 @@ export function initMusic(content) {
         setStatus('gesture');
       }
       sync();
-    }, 1200);
+    }, 3600);
   }
   play.addEventListener('click', togglePlay);
   quick?.addEventListener('click', async () => {

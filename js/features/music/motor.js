@@ -1,7 +1,7 @@
-import { clamp } from '../../core/runtime.js?v=7.0.15';
+import { clamp } from '../../core/runtime.js?v=7.0.16';
 
 /**
- * Turntable motor — v7.0.15.
+ * Turntable motor — v7.0.16.
  *
  * The platter is functional playback feedback, so it no longer depends on
  * IntersectionObserver. Off-screen observation only simplifies arm choreography;

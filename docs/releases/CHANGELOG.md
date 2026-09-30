@@ -1,4 +1,11 @@
 # CHANGELOG — CLB Nghệ thuật
+## v7.0.16 — Direct Gesture Sync
+- Spotify IFrame API được làm nóng sớm, nhưng controller chỉ tạo khi đĩa lên mâm.
+- Nút Play chỉ mở sau khi Spotify controller sẵn sàng.
+- Bỏ queued Play bất đồng bộ để giữ `play()` trong cú bấm thật của người dùng.
+- Motor, đĩa và kim chỉ chạy theo playback đã được Spotify xác nhận.
+- Watchdog playback tăng lên 3,6 giây; fallback Embed vẫn được giữ.
+
 ## v7.0.15 — Atomic Play Sync
 - Spotify playback events are now the only source of truth for turntable motion.
 - Pressing Play/Pause sends the Spotify command but does not optimistically change the motor.
@@ -16,7 +23,6 @@
 - Keep the warm Embed clipped at the viewport edge rather than thousands of pixels off-screen, reducing the chance of browser iframe deprioritization.
 - Preserve the v7.0.12 confirmation-driven motor: the platter does not claim playback until Spotify reports real playback.
 
-> Từ v7.0.6 trở đi, ghi thay đổi vào file này. Không tạo thêm RELEASE_vX.Y.Z.md ở thư mục gốc.
 
 ---
 
