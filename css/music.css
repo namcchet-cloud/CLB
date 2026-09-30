@@ -1203,10 +1203,9 @@ html[data-page-hidden="true"] .mv3-turntable * { animation-play-state: paused !i
 }
 
 
-/* v7.0.15 — Spotify Fast-Start.
-   Keep the official Embed fully initialized off-screen before the record reaches
-   the platter. It is not display:none, so browsers can complete iframe startup,
-   while fixed positioning prevents any layout shift. */
+/* v7.0.16 — persistent controller parking.
+   The first controller is created only after a record reaches the platter. Once
+   created, it can stay initialized off-screen between records for fast reuse. */
 .mv3-spotify.is-prewarming {
   position: fixed !important;
   left: 0 !important;
@@ -1231,8 +1230,8 @@ html[data-page-hidden="true"] .mv3-turntable * { animation-play-state: paused !i
 }
 
 
-/* v7.0.15 — Audio handshake. The custom deck never fakes playback.
-   If a browser requires a direct Spotify gesture, gently surface the real Embed. */
+/* v7.0.16 — Direct Gesture Sync. The custom deck never fakes playback.
+   If a browser rejects API playback, gently surface the real Embed. */
 .mv3-spotify.is-needs-gesture {
   outline: 1px solid rgba(53,42,32,.34);
   outline-offset: 5px;
