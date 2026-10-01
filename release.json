@@ -1,6 +1,0 @@
-{
-  "version": "7.0.16",
-  "name": "CLB v7.0.16 Direct Gesture Sync",
-  "minimumNode": "18",
-  "notes": "Spotify API warms early, controller creation is deferred until a record reaches the platter, Play/Pause stays synchronous inside the user click, queued Play is removed, and the turntable follows confirmed Spotify playback only."
-}
