@@ -1,0 +1,6 @@
+{
+  "version": "7.1.0",
+  "name": "CLB v7.1.0 Playback Stability and Comic Depth",
+  "minimumNode": "18",
+  "notes": "Fix playback confirmation and record-return controls, bound Spotify readiness, stop retired embeds, protect effect lifecycle, and improve responsive comic decoration. See docs/releases/v7.1.0.md for verification and remaining live checks."
+}
