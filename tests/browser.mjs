@@ -18,7 +18,9 @@ const server = createServer(async (req, res) => {
 });
 await new Promise(r => server.listen(0, '127.0.0.1', r));
 const origin = `http://127.0.0.1:${server.address().port}`;
-const browser = await chromium.launch({ headless: true });
+let browser;
+try { browser = await chromium.launch({ headless: true }); }
+catch (error) { await new Promise(r => server.close(r)); throw error; }
 const failures = [];
 async function wait(page, predicate, argument, { timeout = 10000 } = {}) {
   const deadline = Date.now() + timeout;
@@ -57,8 +59,8 @@ async function check(name, fn) {
 try {
   await check('play/pause confirmation, watchdog and return/place cycle', async () => {
     const { page, context } = await open();
-    await page.locator('#mv3QuickPlace').click({ force: true });
-    await wait(page, () => !document.getElementById('mv3Play').disabled);
+    await wait(page, () => document.getElementById('mv3Spotify').dataset.spotifyMode === 'ready');
+    assert.equal(await page.evaluate(() => window.ClubMusicV4.state.phase), 'IN_SLEEVE');
     await page.locator('#mv3Play').click();
     await page.evaluate(() => window.__players[0].emit('playback_update', { isPaused: true }));
     assert.equal(await page.locator('#mv3Play').getAttribute('aria-busy'), 'true');
@@ -66,6 +68,7 @@ try {
     assert.equal(await page.locator('#mv3Play').isEnabled(), true);
     await page.locator('#mv3Play').click();
     await page.evaluate(() => window.__players[0].emit('playback_started', {}));
+    await wait(page, () => window.ClubMusicV4.state.playing);
     assert.equal(await page.locator('#mv3Play').isEnabled(), true);
     assert.equal(await page.evaluate(() => window.ClubMusicV4.state.playing), true);
     const angle = await page.evaluate(() => window.ClubMusicV4.state.spinAngle);
@@ -76,7 +79,7 @@ try {
     await page.evaluate(() => window.ClubMusicV4.returnLoaded());
     assert.equal(await page.locator('#mv3QuickPlace').isEnabled(), true);
     await page.locator('#mv3QuickPlace').click({ force: true });
-    await wait(page, () => !document.getElementById('mv3Play').disabled);
+    await wait(page, () => document.getElementById('mv3Spotify').dataset.spotifyMode === 'ready');
     await page.evaluate(() => window.__players[0].emit('playback_started', {}));
     assert.equal(await page.evaluate(() => window.ClubMusicV4.state.playing), false);
     await context.close();
@@ -88,8 +91,9 @@ try {
     assert.equal(await page.locator('#mv3Play').isEnabled(), true);
     await page.locator('#mv3Play').click();
     assert.equal(await page.evaluate(() => window.ClubMusicV4.state.playing), false);
+    const oldFrame = await page.locator('#mv3Spotify iframe').elementHandle();
     await page.evaluate(() => window.ClubMusicV4.returnLoaded());
-    assert.equal(await page.locator('#mv3Spotify iframe').count(), 0);
+    assert.equal(await oldFrame.evaluate(el => el.isConnected), false);
     await context.close();
   });
   await mkdir('/tmp/clb-qa', { recursive: true });

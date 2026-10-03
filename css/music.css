@@ -1210,40 +1210,10 @@ html[data-page-hidden="true"] .mv3-turntable * { animation-play-state: paused !i
 }
 
 
-/* v7.0.16 — persistent controller parking.
-   The first controller is created only after a record reaches the platter. Once
-   created, it can stay initialized off-screen between records for fast reuse. */
-.mv3-spotify.is-prewarming {
-  position: fixed !important;
-  left: 0 !important;
-  bottom: 0 !important;
-  top: auto !important;
-  width: 2px !important;
-  height: 2px !important;
-  min-height: 0 !important;
-  margin: 0 !important;
-  overflow: hidden !important;
-  clip-path: inset(50%);
-  opacity: .001;
-  pointer-events: none !important;
-  contain: strict;
-  z-index: -1;
-}
-.mv3-spotify.is-prewarming iframe,
-.mv3-spotify.is-prewarming .mv3-spotify-controller-host {
-  width: 352px !important;
-  height: 352px !important;
-  max-width: none !important;
-}
-
-
-/* v7.0.16 — Direct Gesture Sync. The custom deck never fakes playback.
-   If a browser rejects API playback, gently surface the real Embed. */
-.mv3-spotify.is-needs-gesture {
-  outline: 1px solid rgba(53,42,32,.34);
-  outline-offset: 5px;
-  border-radius: 14px;
-}
-.mv3-spotify.is-needs-gesture iframe {
-  box-shadow: 0 8px 24px rgba(53,42,32,.10);
-}
+/* The player remains in normal flow and accepts native user gestures. */
+.mv3-player-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:24px;font-size:14px}
+.mv3-reconnect{min-height:44px;padding:8px 14px;border:1px solid var(--mv3-ink);border-radius:4px;background:var(--paper);font:inherit}
+.mv3-library .mv3-spotify{width:100%;min-height:352px;margin-top:8px;overflow:hidden;border-radius:8px}
+.mv3-library .mv3-spotify iframe{display:block;width:100%;height:352px;border:0}
+.mv3-spotify.is-needs-gesture{outline:2px solid var(--sage-dark);outline-offset:4px}
+.mv3-player-heading strong{letter-spacing:0}

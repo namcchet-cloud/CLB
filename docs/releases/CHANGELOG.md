@@ -1,4 +1,15 @@
 # CHANGELOG — CLB Nghệ thuật
+## v7.2.0 — Music Session Rebuild
+- Viết lại toàn bộ Spotify transport: mỗi album có một phiên độc lập, tự quản lý callback và thời hạn chờ.
+- Bỏ bootstrap Spotify kép và cơ chế giấu iframe ngoài màn hình.
+- Trình phát Spotify thật nằm ngay dưới phần chọn album, dùng được trước khi đặt đĩa.
+- Nút trên mâm gửi lệnh đồng bộ trong thao tác bấm; không xếp hàng lệnh phát sau hoạt họa.
+- Khi Spotify xác nhận phát, đĩa tự lên mâm và quay; khi buffering hoặc pause, motor dừng.
+- Đóng phiên cũ khi đổi album, trả đĩa hoặc rời trang; thêm nút kết nối lại.
+- Không giả lập đĩa quay khi trình phát dự phòng không báo trạng thái.
+- Kiểm thử hợp đồng phiên phát và liên kết UI bằng Node: `node --experimental-vm-modules tests/music-session.mjs`.
+- Chưa xác minh âm thanh Spotify thật hoặc iOS Safari trong môi trường này; bộ thử Node không thay thế kiểm thử nghe thực tế.
+
 ## v7.0.16 — Direct Gesture Sync
 - Spotify IFrame API được làm nóng sớm, nhưng controller chỉ tạo khi đĩa lên mâm.
 - Nút Play chỉ mở sau khi Spotify controller sẵn sàng.
