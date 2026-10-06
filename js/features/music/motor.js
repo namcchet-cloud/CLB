@@ -106,9 +106,11 @@ export function createMotor(deck, state, getSurface, onChange) {
     }
   }
 
-  function setPlaying(on) {
+  function setPlaying(on, { buffering = false } = {}) {
     on = Boolean(on);
-    if (on === state.playing) {
+    const armOn = on || Boolean(buffering && state.loadedId);
+    deck.classList.toggle('is-buffering', Boolean(buffering));
+    if (on === state.playing && engaged === armOn) {
       // Re-wake the clock even if an observer/browser lifecycle quirk stopped it.
       if (on) wake();
       return;
@@ -118,7 +120,8 @@ export function createMotor(deck, state, getSurface, onChange) {
     deck.classList.toggle('is-playing', on);
     deck.classList.toggle('is-power-on', on || velocity > 0);
     room.classList.toggle('is-music-playing', on);
-    cue(on);
+    // A network hiccup slows the disc without sending the stylus home and back.
+    if (engaged !== armOn) cue(armOn);
     wake();
     onChange?.(on);
   }

@@ -1,4 +1,4 @@
-import { VERSION } from './core/build.js?v=7.2.0';
+import { VERSION } from './core/build.js?v=7.3.0';
 import { start, near, features, issues, report } from './core/runtime.js?v=7.1.0';
 import { initI18n } from './core/i18n.js?v=7.1.0';
 import { initMotion } from './features/motion.js?v=7.1.0';
@@ -26,9 +26,9 @@ try {
   features.set('motion', initMotion());
   features.set('navigation', initNavigation());
   features.set('comicDecor', initComicDecor());
-  lazy('gallery', document.getElementById('gallery'), async () => (await import('./features/gallery.js?v=7.1.0')).initGallery(content));
+  lazy('gallery', document.getElementById('gallery'), async () => (await import('./features/gallery.js?v=7.3.0')).initGallery(content));
   // Load the selected album's visible player independently of record placement.
-  const loadMusic = lazy('music', document.getElementById('playlist'), async () => (await import('./features/music/index.js?v=7.2.0')).initMusic(content));
+  const loadMusic = lazy('music', document.getElementById('playlist'), async () => (await import('./features/music/index.js?v=7.3.0')).initMusic(content));
   loadMusic();
   document.documentElement.dataset.appReady = 'true';
 } catch (error) { report('startup', error); }

@@ -112,11 +112,12 @@ await check('stale controllers and delayed callbacks cannot take over new select
   e.players[1].emit('playback_started'); assert.equal(e.events[0][1], 'b');
   e.transport.destroy();
 });
-await check('readiness timeout, native fallback, reconnect and teardown', async () => {
+await check('slow controller survives timeout and late native playback stays synchronised', async () => {
   const e = await setup(); await e.transport.ensure(records[0]); e.advance(10001);
-  assert.equal(e.transport.fallback, true); assert.equal(e.players[0].destroyed, true);
-  assert.ok(e.mount.querySelector('iframe').src.includes('/embed/playlist/ABC123'));
-  e.players[0].emit('ready'); assert.equal(e.transport.controllable, false);
+  assert.equal(e.transport.mode, 'delayed'); assert.equal(e.players[0].destroyed, undefined);
+  assert.equal(e.players.length, 1);
+  e.players[0].emit('playback_started'); assert.equal(e.transport.controllable, true);
+  assert.equal(e.events[0][0].isPaused, false);
   await e.transport.retry(); e.players[1].emit('ready');
   assert.equal(e.transport.controllable, true);
   e.transport.deactivate(); assert.equal(e.mount.children.length, 0); assert.equal(e.timers.size, 0);
@@ -127,12 +128,32 @@ await check('synchronous playback callback does not leave a stuck pending comman
   e.transport.command(true); assert.equal(e.transport.pending, false); assert.equal(e.timers.size, 0);
   e.transport.destroy();
 });
-await check('API script timeout still exposes a native player', async () => {
+await check('API script timeout reports error; late API reconnects without a blind iframe', async () => {
   const e = await setup(); delete e.window.SpotifyIframeApi;
   const job = e.transport.ensure(records[0]); e.advance(6001); await job;
-  assert.equal(e.transport.fallback, true);
-  assert.ok(e.mount.querySelector('iframe'));
+  assert.equal(e.transport.mode, 'error');
+  assert.equal(e.mount.querySelector('iframe'), null);
+  const other = environment();
+  e.window.onSpotifyIframeApiReady(other.window.SpotifyIframeApi);
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(other.players.length, 1);
+  other.players[0].emit('playback_started');
+  assert.equal(e.transport.mode, 'playing');
+  assert.equal(e.events[0][0].isPaused, false);
   e.transport.destroy(); assert.equal(e.timers.size, 0);
+});
+await check('partial playback updates preserve buffering until explicitly cleared and reset each track', async () => {
+  const e = await setup(); await e.transport.ensure(records[0]); const c=e.players[0];
+  c.emit('playback_update', {playingURI:'spotify:track:ONE',isPaused:false,isBuffering:true,duration:200000,position:10000});
+  c.emit('playback_update', {position:11000});
+  assert.equal(e.events.at(-1)[0].isBuffering,true);
+  assert.equal(e.events.at(-1)[0].duration,200000);
+  c.emit('playback_update', {isBuffering:false});
+  assert.equal(e.transport.mode,'playing');
+  c.emit('playback_started', {playingURI:'spotify:track:TWO'});
+  assert.equal(e.events.at(-1)[0].position,0);
+  assert.equal(e.events.at(-1)[0].duration,0);
+  e.transport.destroy();
 });
 await check('invalid source shows error without mounting a foreign iframe', async () => {
   const e = await setup();

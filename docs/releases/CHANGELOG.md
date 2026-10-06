@@ -1,4 +1,11 @@
 # CHANGELOG — CLB Nghệ thuật
+## v7.3.0 — Playback Sync & Raven
+- Giữ controller Spotify khi tải chậm; phục hồi API tới muộn, bỏ iframe dự phòng không đồng bộ.
+- Đồng bộ trạng thái từng phần, buffering, bài mới và bfcache; thêm tiến trình bài và trình phát gọn/mở rộng.
+- Sửa đích dây xích Raven; thêm cảnh nhẹ khi 3D lỗi, dọn GPU/lớp phủ, quản lý focus và cuộn.
+- Nâng cache/URL module và bổ sung kiểm thử Chromium cho nhạc, Raven, vòng đời và bốn kích thước màn hình.
+- Xem `docs/releases/v7.3.0.md` về kiểm chứng, giới hạn Spotify thật và cách áp dụng.
+
 ## v7.2.0 — Music Session Rebuild
 - Viết lại toàn bộ Spotify transport: mỗi album có một phiên độc lập, tự quản lý callback và thời hạn chờ.
 - Bỏ bootstrap Spotify kép và cơ chế giấu iframe ngoài màn hình.

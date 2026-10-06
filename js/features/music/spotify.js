@@ -1,6 +1,7 @@
 /** One visible embed per selection; each session owns its callbacks and timers. */
 const API_URL = 'https://open.spotify.com/embed/iframe-api/v1';
 let apiJob;
+const apiListeners = new Set();
 
 function getAPI() {
   if (window.SpotifyIframeApi?.createController) return Promise.resolve(window.SpotifyIframeApi);
@@ -15,11 +16,16 @@ function getAPI() {
       done = true;
       clearTimeout(timer);
       if (error) { script.remove(); reject(error); }
-      else { window.SpotifyIframeApi = api; resolve(api); }
+      else resolve(api);
     };
     const timer = setTimeout(() => finish(null, new Error('Spotify API timeout')), 6000);
     window.onSpotifyIframeApiReady = api => {
-      if (api?.createController) finish(api);
+      if (!api?.createController) return;
+      // A slow script may finish after its timeout. Keep it usable for the
+      // current selection; never strand the page in an unsynchronised iframe.
+      window.SpotifyIframeApi = api;
+      finish(api);
+      apiListeners.forEach(listener => listener());
     };
     script.onerror = () => finish(null, new Error('Spotify API unavailable'));
     document.head.append(script);
@@ -66,6 +72,7 @@ export function createSpotify(mount, onPlayback, onStatus) {
       clearTimeout(s.readyTimer);
       clearIntent(s);
       s.observer?.disconnect();
+      apiListeners.delete(s.recover);
       releaseController(s);
     }
     mount.replaceChildren();
@@ -74,40 +81,25 @@ export function createSpotify(mount, onPlayback, onStatus) {
     mount.removeAttribute('data-spotify-mode');
     mount.classList.remove('is-needs-gesture', 'is-native-embed');
   }
-  function native(s) {
-    if (!active(s) || s.mode === 'embed') return;
-    clearTimeout(s.readyTimer);
-    clearIntent(s);
-    releaseController(s);
-    s.observer?.disconnect();
-    s.ready = false;
-    const iframe = document.createElement('iframe');
-    iframe.src = s.source.embed;
-    iframe.title = 'Spotify player';
-    iframe.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
-    iframe.referrerPolicy = 'strict-origin-when-cross-origin';
-    iframe.width = '100%';
-    iframe.height = '352';
-    iframe.addEventListener('error', () => publish(s, 'error'), { once: true });
-    mount.replaceChildren(iframe);
-    mount.classList.add('is-native-embed');
-    publish(s, 'embed');
-  }
   function receive(s, c, data) {
     if (!active(s) || s.controller !== c) return;
     s.ready = true;
     clearTimeout(s.readyTimer);
+    const changed = data.playingURI && data.playingURI !== s.snapshot.playingURI;
+    if (changed || data.type === 'started') s.snapshot = { position: 0, duration: 0, isBuffering: false };
     const playing = data.type === 'started' ? true : typeof data.isPaused === 'boolean' ? !data.isPaused : s.playing;
     s.playing = playing;
+    s.snapshot = { ...s.snapshot, ...data, isPaused: !playing };
     if (s.intent === playing) clearIntent(s);
     if (playing) mount.classList.remove('is-needs-gesture');
-    publish(s, s.intent !== null ? (s.intent ? 'starting' : 'pausing') : data.isBuffering ? 'buffering' : playing ? 'playing' : 'ready');
-    onPlayback?.({ ...data, isPaused: !playing }, s.record.id);
+    publish(s, s.intent !== null ? (s.intent ? 'starting' : 'pausing') : s.snapshot.isBuffering && playing ? 'buffering' : playing ? 'playing' : 'ready');
+    onPlayback?.({ ...s.snapshot }, s.record.id);
   }
   function ensure(record) {
     if (session?.record.id === record.id) return Promise.resolve(session.controller);
     destroy();
-    const s = { record, mode: 'connecting', ready: false, playing: false, intent: null, controller: null, closed: false };
+    const s = { record, mode: 'connecting', ready: false, playing: false, intent: null, controller: null, closed: false,
+      snapshot: { isPaused: true, isBuffering: false, position: 0, duration: 0 } };
     session = s;
     mount.hidden = false;
     mount.classList.remove('is-prewarming');
@@ -117,9 +109,19 @@ export function createSpotify(mount, onPlayback, onStatus) {
     const host = document.createElement('div');
     mount.append(host);
     publish(s, 'connecting');
-    s.readyTimer = setTimeout(() => native(s), 10000);
+    s.recover = () => { if (active(s) && s.mode === 'error' && !s.creating) connect(s, host); };
+    apiListeners.add(s.recover);
+    return connect(s, host);
+  }
+  function connect(s, host) {
+    s.creating = true;
+    publish(s, 'connecting');
+    clearTimeout(s.readyTimer);
+    s.readyTimer = setTimeout(() => {
+      if (active(s) && !s.ready) publish(s, 'delayed');
+    }, 10000);
     return getAPI().then(api => {
-      if (!active(s) || s.mode === 'embed') return null;
+      if (!active(s)) return null;
       s.observer = new MutationObserver(() => {
         const iframe = mount.querySelector('iframe');
         if (iframe) {
@@ -128,9 +130,9 @@ export function createSpotify(mount, onPlayback, onStatus) {
         }
       });
       s.observer.observe(mount, { childList: true, subtree: true });
-      api.createController(host, { uri: s.source.uri, width: '100%', height: 352 }, c => {
-        if (!active(s) || s.mode === 'embed') { try { c?.destroy?.(); } catch {} return; }
-        if (!c?.addListener) { native(s); return; }
+      api.createController(host, { uri: s.source.uri, width: '100%', height: 152 }, c => {
+        if (!active(s)) { try { c?.destroy?.(); } catch {} return; }
+        if (!c?.addListener) { try { c?.destroy?.(); } catch {} publish(s, 'error'); return; }
         s.controller = c;
         c.addListener('ready', () => {
           if (!active(s) || s.controller !== c) return;
@@ -142,13 +144,16 @@ export function createSpotify(mount, onPlayback, onStatus) {
         c.addListener('playback_update', e => receive(s, c, { ...e?.data, type: 'update' }));
       });
       return s.controller;
-    }).catch(() => { native(s); return null; });
+    }).catch(() => {
+      if (active(s)) { clearTimeout(s.readyTimer); publish(s, 'error'); }
+      return null;
+    }).finally(() => { s.creating = false; });
   }
   function requestGesture() {
     const s = session;
     if (!s) return false;
     mount.classList.add('is-needs-gesture');
-    if (s.mode !== 'embed' && s.mode !== 'error' && s.mode !== 'connecting') publish(s, 'gesture');
+    if (s.ready) publish(s, 'gesture');
     mount.scrollIntoView({ behavior: 'auto', block: 'nearest' });
     mount.querySelector('iframe')?.focus({ preventScroll: true });
     return true;
@@ -181,7 +186,7 @@ export function createSpotify(mount, onPlayback, onStatus) {
     get ready() { return Boolean(session?.ready); },
     get controllable() { return Boolean(session?.ready && session.controller); },
     get pending() { return session?.intent != null; },
-    get fallback() { return session?.mode === 'embed'; },
+    get fallback() { return false; },
     get connecting() { return session?.mode === 'connecting'; },
     get mode() { return session?.mode || 'idle'; },
     get recordId() { return session?.record.id || null; }

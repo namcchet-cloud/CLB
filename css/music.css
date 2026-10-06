@@ -1213,7 +1213,30 @@ html[data-page-hidden="true"] .mv3-turntable * { animation-play-state: paused !i
 /* The player remains in normal flow and accepts native user gestures. */
 .mv3-player-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:24px;font-size:14px}
 .mv3-reconnect{min-height:44px;padding:8px 14px;border:1px solid var(--mv3-ink);border-radius:4px;background:var(--paper);font:inherit}
-.mv3-library .mv3-spotify{width:100%;min-height:352px;margin-top:8px;overflow:hidden;border-radius:8px}
-.mv3-library .mv3-spotify iframe{display:block;width:100%;height:352px;border:0}
+.mv3-player-panel .mv3-spotify{width:100%;max-width:none;min-height:152px;margin-top:8px;overflow:hidden;border-radius:8px}
+.mv3-player-panel .mv3-spotify iframe{display:block;width:100%;height:152px!important;border:0}
+.mv3-player-panel .mv3-spotify.is-expanded iframe{height:352px!important}
 .mv3-spotify.is-needs-gesture{outline:2px solid var(--sage-dark);outline-offset:4px}
 .mv3-player-heading strong{letter-spacing:0}
+
+/* Playback telemetry lives outside the live status, avoiding repeated announcements. */
+.mv3-track-progress{display:flex;align-items:center;gap:12px;margin:14px 0 0;color:var(--mv3-ink);font:700 12px/1.4 var(--body);font-variant-numeric:tabular-nums}
+.mv3-track-progress span{min-width:3.5em;text-align:center;flex:none}
+.mv3-track-progress progress{appearance:none;display:block;flex:1;width:0;min-width:0;height:6px;border:0;border-radius:8px;overflow:hidden;background:#34291d1a;accent-color:var(--sage-dark)}
+.mv3-track-progress progress::-webkit-progress-bar{background:#34291d1a;border-radius:8px}
+.mv3-track-progress progress::-webkit-progress-value{background:var(--sage-dark);border-radius:8px}
+.mv3-track-progress progress::-moz-progress-bar{background:var(--sage-dark);border-radius:8px}
+.mv3-turntable.is-buffering .mv3-led{background:#a97a37;box-shadow:0 0 8px #a97a3766}
+.mv3-spotify[data-spotify-mode="error"]{min-height:88px;background:repeating-linear-gradient(-45deg,#797e6910,#797e6910 8px,transparent 8px,transparent 16px);border:1px dashed #797e6966}
+.mv3-player-heading{flex-wrap:wrap}
+.mv3-player-actions{display:flex;gap:8px;flex-wrap:wrap}
+.mv3-track-progress{width:100%;max-width:420px;margin-inline:auto}
+@media(max-width:980px){.mv3-track-progress{max-width:337px}}
+@media(max-width:390px){.mv3-track-progress{max-width:308px}}
+.mv3-player-panel{min-width:0;grid-area:player}
+.mv3-player-panel .mv3-player-heading{margin-top:0}
+.mv3-library{grid-area:library;min-width:0}
+.mv3-deck-panel{grid-area:deck;min-width:0}
+.music-v3 .mv3-room{grid-template-areas:"library deck" "player deck";row-gap:24px}
+.mv3-player-panel .mv3-spotify[data-spotify-mode="error"]{min-height:88px}
+@media(max-width:980px){.music-v3 .mv3-room{grid-template-areas:"library" "deck" "player"}.mv3-player-panel{width:100%;max-width:520px;margin-inline:auto}}

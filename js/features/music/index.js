@@ -1,5 +1,5 @@
-import { createMotor } from './motor.js?v=7.1.0';
-import { createSpotify } from './spotify.js?v=7.2.0';
+import { createMotor } from './motor.js?v=7.3.0';
+import { createSpotify } from './spotify.js?v=7.3.0';
 import { local } from '../../core/i18n.js?v=7.1.0';
 import { setImage } from '../../core/images.js?v=7.1.0';
 import { clamp } from '../../core/runtime.js?v=7.1.0';
@@ -15,7 +15,7 @@ export function initMusic(content) {
     trackProgress: 0, spinAngle: 0, spinVelocity: 0, armAngle: -6, armMode: 'REST', currentURI: '' };
   const nodes = new Map(), record = id => records.find(r => r.id === id);
   let drag = null, dragFrame = 0, animation = null, returning = null, latestSelection = null;
-  let message = 'connecting', playback = null;
+  let message = 'connecting', playback = null, expanded = false, suspended = false;
   const en = () => document.documentElement.lang === 'en';
   const strings = {
     choose: ['Chọn album', 'Choose album'], selected: ['Đang chọn', 'Selected'],
@@ -26,11 +26,14 @@ export function initMusic(content) {
     miss: ['Đĩa đã trở về bìa. Thả gần mâm để đặt lại.', 'Record returned. Drop it near the platter to place it.'],
     connecting: ['Đang kết nối Spotify…', 'Connecting to Spotify…'],
     readyAgain: ['Spotify đã sẵn sàng. Nhấn Phát nhạc lần nữa.', 'Spotify is ready. Press Play music once more.'],
-    fallback: ['Phát trực tiếp trong Spotify bên dưới. Chế độ này không đồng bộ được đĩa quay.', 'Play in Spotify below. Record animation is unavailable in this mode.'],
+    delayed: ['Spotify tải hơi lâu. Cậu có thể bấm ▶ ngay trong khung bên dưới; đĩa vẫn theo nhạc.', 'Spotify is taking a little longer. Try ▶ in the player below; the record will still follow playback.'],
     retry: ['Kết nối lại', 'Reconnect'],
     error: ['Không tải được Spotify. Hãy kiểm tra mạng hoặc mở Spotify ↗.', 'Spotify could not load. Check your connection or open Spotify ↗.'],
     gesture: ['Cần một chạm trực tiếp để mở khóa âm thanh. Hãy bấm ▶ trong khung Spotify bên dưới; khi nhạc chạy, mâm sẽ tự quay.', 'One direct tap is needed to unlock audio. Press ▶ inside the Spotify player below; the platter will spin as soon as playback starts.'],
     playing: ['Đang phát · 33⅓ RPM', 'Playing · 33⅓ RPM'],
+    paused: ['Đã tạm dừng · kim đang nghỉ', 'Paused · stylus at rest'],
+    progress: ['Tiến trình bài hát', 'Track progress'],
+    expand: ['Danh sách bài', 'Track list'], compact: ['Thu gọn', 'Compact'],
     buffering: ['Spotify đang tải nhạc…', 'Spotify is buffering…'],
     starting: ['Đang bắt đầu nhạc…', 'Starting playback…'],
     pausing: ['Đang tạm dừng…', 'Pausing…'],
@@ -40,7 +43,26 @@ export function initMusic(content) {
     help: ['Chọn album và phát nhạc. Cậu cũng có thể tự kéo đĩa lên mâm.', 'Choose an album and play. You can also drag the record onto the platter.']
   };
   const t = key => strings[key]?.[en() ? 1 : 0] || key;
-  function setStatus(key) { message = key; status.textContent = t(key); }
+  function setStatus(key) {
+    message = key;
+    if (status.textContent !== t(key)) status.textContent = t(key);
+  }
+  const clock = ms => {
+    const seconds = Math.max(0, Math.floor((Number(ms) || 0) / 1000));
+    return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
+  };
+  function progressUI() {
+    const data = playback?.data;
+    const duration = Math.max(0, Number(data?.duration) || 0);
+    const position = clamp(Number(data?.position) || 0, 0, duration || Infinity);
+    const meter = $('mv3Progress');
+    if (meter) {
+      meter.max = duration || 1; meter.value = duration ? position : 0;
+      meter.setAttribute('aria-label', t('progress'));
+    }
+    if ($('mv3Elapsed')) $('mv3Elapsed').textContent = clock(position);
+    if ($('mv3Duration')) $('mv3Duration').textContent = duration ? clock(duration) : '—:——';
+  }
   const motor = createMotor(deck, state, () => state.loadedId ? nodes.get(state.loadedId)?.surface : null, on => {
     play.querySelector('b').textContent = t(on ? 'pause' : 'play');
     play.querySelector('span').textContent = on ? 'Ⅱ' : '▶';
@@ -48,12 +70,12 @@ export function initMusic(content) {
     deck.querySelector('.mv3-signal-text').textContent = on ? '33⅓ RPM' : (en() ? 'READY' : 'CHỜ PHÁT');
   });
   const transport = createSpotify(spotifyMount, (data, id) => {
-    if (id !== state.selectedId || state.phase === 'RETURNING') return;
+    if (suspended || id !== state.selectedId || returning) return;
     playback = { data, id };
     if (data.isPaused === false && state.phase === 'IN_SLEEVE') { place(id); return; }
     followPlayback();
   }, key => {
-    setStatus(key === 'embed' ? 'fallback' : key);
+    setStatus(key === 'ready' && playback ? 'paused' : key);
     sync();
   });
   function followPlayback() {
@@ -63,9 +85,9 @@ export function initMusic(content) {
     if (data.playingURI) state.currentURI = data.playingURI;
 
     if (changed) motor.progress(0);
-    if (Number(data.duration) > 0) motor.progress(clamp(Number(data.position) / Number(data.duration), 0, 1));
+    motor.progress(Number(data.duration) > 0 ? clamp(Number(data.position) / Number(data.duration), 0, 1) : 0);
     if (typeof data.isPaused === 'boolean') {
-      motor.setPlaying(!data.isPaused && !data.isBuffering);
+      motor.setPlaying(!data.isPaused && !data.isBuffering, { buffering: !data.isPaused && data.isBuffering });
       if (data.isBuffering && !data.isPaused) setStatus('buffering');
       sync();
     } else if (data.isBuffering) setStatus('buffering');
@@ -77,14 +99,16 @@ export function initMusic(content) {
     $('mv3SpotifyLink').href = (r || record(state.selectedId)).spotifyUrl;
     $('mv3LibraryTitle').textContent = t('choose'); $('mv3Help').textContent = t('help');
     const playing = playback?.data.isPaused === false;
-    const playLabel = t(!transport.controllable ? 'openPlayer' : playing ? 'pause' : 'play');
+    const playLabel = t(!transport.controllable ? (transport.mode === 'error' ? 'retry' : 'openPlayer') : playing ? 'pause' : 'play');
     play.querySelector('b').textContent = playLabel;
     play.setAttribute('aria-label', playLabel);
     play.setAttribute('aria-pressed', String(playing));
     play.querySelector('span').textContent = playing ? 'Ⅱ' : '▶';
     $('mv3Reconnect').textContent = t('retry');
-    status.textContent = t(message);
-    deck.querySelector('.mv3-signal-text').textContent = state.playing ? '33⅓ RPM' : (en() ? 'READY' : 'CHỜ PHÁT');
+    if ($('mv3Expand')) $('mv3Expand').textContent = t(expanded ? 'compact' : 'expand');
+    setStatus(message);
+    progressUI();
+    deck.querySelector('.mv3-signal-text').textContent = message === 'buffering' ? (en() ? 'BUFFERING' : 'ĐANG TẢI') : state.playing ? '33⅓ RPM' : (en() ? 'READY' : 'CHỜ PHÁT');
   }
   function sync() {
     for (const [id, n] of nodes) {
@@ -106,7 +130,7 @@ export function initMusic(content) {
       quick.disabled = Boolean(drag || returning) || ['SETTLING', 'RETURNING', 'DRAGGING'].includes(state.phase);
     }
     deck.dataset.transportState = transport.mode;
-    $('mv3Reconnect').hidden = !['error', 'embed', 'gesture'].includes(transport.mode);
+    $('mv3Reconnect').hidden = !['error', 'delayed', 'gesture'].includes(transport.mode);
     meta();
   }
   function createAlbum(r) {
@@ -173,7 +197,7 @@ export function initMusic(content) {
       await relocate(id, nodes.get(id).visual, false); home(id);
       state.trackProgress = 0; state.currentURI = ''; state.phase = 'IN_SLEEVE';
       sync();
-    })().finally(() => { returning = null; transport.ensure(record(latestSelection || state.selectedId)); sync(); });
+    })().finally(() => { returning = null; if (!suspended) transport.ensure(record(latestSelection || state.selectedId)); sync(); });
     return returning;
   }
   async function select(id) {
@@ -252,11 +276,21 @@ export function initMusic(content) {
   }
   function togglePlay() {
     if (drag || returning || transport.pending) return;
-    if (!transport.controllable) { transport.requestGesture(); return; }
+    if (!transport.controllable) {
+      if (transport.mode === 'error') transport.retry();
+      else transport.requestGesture();
+      return;
+    }
     const wanted = playback?.data.isPaused !== false;
     transport.command(wanted);
   }
   play.addEventListener('click', togglePlay);
+  $('mv3Expand')?.addEventListener('click', () => {
+    expanded = !expanded;
+    spotifyMount.classList.toggle('is-expanded', expanded);
+    $('mv3Expand').setAttribute('aria-expanded', String(expanded));
+    meta();
+  });
   $('mv3Reconnect').addEventListener('click', () => {
     playback = null;
     motor.setPlaying(false);
@@ -270,10 +304,12 @@ export function initMusic(content) {
   document.addEventListener('club:language', () => sync());
   document.addEventListener('visibilitychange', () => { if (document.hidden && drag) finishDrag(true); });
   window.addEventListener('pagehide', () => {
+    suspended = true;
     if (drag) finishDrag(true);
     playback = null; motor.setPlaying(false); transport.destroy();
   });
   window.addEventListener('pageshow', event => {
+    suspended = false;
     if (event.persisted) transport.ensure(record(state.selectedId));
   });
   window.addEventListener('resize', () => { if (drag) finishDrag(true); }, { passive: true });

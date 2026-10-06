@@ -1,6 +1,6 @@
 {
-  "version": "7.2.0",
-  "name": "CLB v7.2.0 Music Session Rebuild",
+  "version": "7.3.0",
+  "name": "CLB v7.3.0 · Playback Sync & Raven",
   "minimumNode": "18",
-  "notes": "Rebuilt Spotify session ownership and playback binding. Native controls are visible below album selection; playback no longer depends on record placement. See docs/releases/CHANGELOG.md."
+  "notes": "Event-driven Spotify playback retained on slow connections; progress display and buffering-aware tonearm. Raven chain repair, GPU cleanup, accessible overlay and lightweight fallback. See docs/releases/CHANGELOG.md."
 }

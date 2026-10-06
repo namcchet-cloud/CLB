@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html data-build="7.2.0" data-motion="full" data-motion-choice="auto" lang="vi">
+<html data-build="7.3.0" data-motion="full" data-motion-choice="auto" lang="vi">
 <head>
   <meta name="google-site-verification" content="GvYN1q4wBFWUE0IxILUatp30PlEIML89ys5nn8n5KYk" />
 <meta charset="utf-8"/>
@@ -111,13 +111,13 @@
 <link href="https://api-partner.spotify.com" rel="preconnect" crossorigin="anonymous"/>
 <link href="https://open.spotifycdn.com" rel="preconnect" crossorigin="anonymous"/>
 <link href="//open.spotify.com" rel="dns-prefetch"/>
-<link href="js/features/music/index.js?v=7.2.0" rel="modulepreload"/>
-<link href="js/features/music/spotify.js?v=7.2.0" rel="modulepreload"/>
-<link href="js/features/music/motor.js?v=7.1.0" rel="modulepreload"/>
+<link href="js/features/music/index.js?v=7.3.0" rel="modulepreload"/>
+<link href="js/features/music/spotify.js?v=7.3.0" rel="modulepreload"/>
+<link href="js/features/music/motor.js?v=7.3.0" rel="modulepreload"/>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800&amp;family=DM+Sans:wght@400;500;600;700&amp;family=Fraunces:ital,wght@0,600;0,700;1,600&amp;display=swap" rel="stylesheet"/>
-<script src="js/core/bootstrap.js?v=7.1.0"></script><link href="css/tokens.css?v=7.1.0" rel="stylesheet"/><link href="css/site.css?v=7.1.0" rel="stylesheet"/><link href="css/music.css?v=7.2.0" rel="stylesheet"/><link as="image" fetchpriority="high" href="assets/optimized/logo-new-640-db642e82.webp" rel="preload"/><link href="css/intro.css?v=7.1.0" rel="stylesheet"/><link href="css/comic-decor.css?v=7.1.0" rel="stylesheet"/><noscript><link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800&amp;family=DM+Sans:wght@400;500;600;700&amp;family=Fraunces:ital,wght@0,600;0,700;1,600&amp;display=swap" rel="stylesheet"/></noscript></head>
+<script src="js/core/bootstrap.js?v=7.1.0"></script><link href="css/tokens.css?v=7.1.0" rel="stylesheet"/><link href="css/site.css?v=7.1.0" rel="stylesheet"/><link href="css/music.css?v=7.3.0" rel="stylesheet"/><link as="image" fetchpriority="high" href="assets/optimized/logo-new-640-db642e82.webp" rel="preload"/><link href="css/intro.css?v=7.1.0" rel="stylesheet"/><link href="css/comic-decor.css?v=7.1.0" rel="stylesheet"/><noscript><link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800&amp;family=DM+Sans:wght@400;500;600;700&amp;family=Fraunces:ital,wght@0,600;0,700;1,600&amp;display=swap" rel="stylesheet"/></noscript></head>
 <body><noscript>Trang cần bật JavaScript để đổi ngôn ngữ, chọn đĩa và chạy chuyển động.</noscript>
 <div aria-hidden="true" class="art-intro" data-logo="assets/optimized/logo-new-640-db642e82.webp" id="artIntro">
 <div class="art-intro-sticker star"></div><div class="art-intro-sticker bolt"></div><div class="art-intro-sticker spark"></div><div class="art-intro-sticker scribble"></div>
@@ -233,8 +233,6 @@
 <div aria-busy="true" aria-label="Album" class="mv3-albums" id="mv3Albums"><article aria-hidden="true" class="mv3-album mv4-album-skeleton"><div class="mv3-album-visual"></div><h4 class="mv3-name">Góc sáng tạo</h4></article><article aria-hidden="true" class="mv3-album mv4-album-skeleton"><div class="mv3-album-visual"></div><h4 class="mv3-name">Mơ một chút</h4></article></div>
 <p class="mv3-help" id="mv3Help">① Bấm bìa để chọn · ② Kéo chiếc đĩa đang ló ra · ③ Thả lên mâm.</p>
 <button class="mv3-quick-place" id="mv3QuickPlace" type="button">Đặt đĩa lên mâm</button>
-<div class="mv3-player-heading"><strong>Spotify</strong><button class="mv3-reconnect" hidden="" id="mv3Reconnect" type="button">Kết nối lại</button></div>
-<div aria-label="Spotify" class="mv3-spotify" hidden="" id="mv3Spotify"></div>
 </section>
 <section class="mv3-deck-panel reveal" data-reveal="right">
 <div class="mv3-turntable" data-state="empty" id="mv3Turntable">
@@ -279,7 +277,12 @@
 <div><span id="mv3NowLabel">Chưa có đĩa trên mâm</span><strong id="mv3NowTitle">—</strong></div>
 <a href="https://open.spotify.com/playlist/4l15Ccxw8hVu7YIpUU6QM0" id="mv3SpotifyLink" rel="noopener noreferrer" target="_blank">Spotify ↗</a>
 </div>
+<div class="mv3-track-progress"><span id="mv3Elapsed">0:00</span><progress id="mv3Progress" max="1" value="0" aria-label="Tiến trình bài hát"></progress><span id="mv3Duration">—:——</span></div>
 <p aria-live="polite" class="mv3-status" id="mv3Status" role="status">Chọn một album rồi kéo đĩa sang mâm.</p>
+</section>
+<section class="mv3-player-panel" aria-label="Spotify">
+<div class="mv3-player-heading"><strong>Spotify</strong><div class="mv3-player-actions"><button class="mv3-reconnect" aria-controls="mv3Spotify" aria-expanded="false" id="mv3Expand" type="button">Danh sách bài</button><button class="mv3-reconnect" hidden="" id="mv3Reconnect" type="button">Kết nối lại</button></div></div>
+<div aria-label="Spotify" class="mv3-spotify" hidden="" id="mv3Spotify"></div>
 </section>
 </div>
 </section>
@@ -302,5 +305,5 @@
 <div class="footer-tools"><button aria-pressed="true" class="text-button" id="motionToggle" type="button"><span aria-hidden="true">✦</span> <span data-i18n="motionOn" id="motionText">Chuyển động: Bật</span></button><a class="legal-link" data-i18n="legalLink" href="legal.html">Bản quyền & quyền riêng tư</a><a data-i18n="backTop" href="#top">↑ Lên đầu trang</a></div>
 <small class="footer-rights" data-i18n="copyrightNotice">© 2026 CLB Nghệ thuật. Tác phẩm thuộc quyền của từng tác giả được ghi tên.</small></footer>
 <dialog aria-describedby="lightboxCaption" aria-label="Xem tác phẩm" class="lightbox" data-i18n-aria="viewArt" id="lightbox"><button aria-label="Đóng" class="lightbox-close" data-i18n-aria="close" type="button">×</button><figure><img alt="" decoding="async" loading="lazy" id="lightboxImage"/><figcaption id="lightboxCaption"></figcaption></figure></dialog>
-<div aria-hidden="true" id="fxLayer"></div><div aria-hidden="true" class="scroll-progress" id="scrollProgress"></div><details class="motion-dock" id="motionDock"><summary><span aria-hidden="true">✦</span><span id="motionDockStatus">Chuyển động</span></summary><div class="motion-panel"><label><strong data-i18n="motionControl">Chuyển động trên trang</strong><select id="motionMode"><option data-i18n="motionAuto" value="auto">Theo thiết bị</option><option data-i18n="motionFull" value="full">Đầy đủ</option><option data-i18n="motionQuiet" value="quiet">Nhẹ</option><option data-i18n="motionDisabled" value="off">Tắt chuyển động</option></select></label><p id="motionReason" role="status"></p><p data-i18n="motionHelp">Chế độ Theo thiết bị tôn trọng cài đặt giảm chuyển động. Chọn Đầy đủ để chủ động bật hiệu ứng.</p><p class="build-status" id="buildStatus">v7.2.0 · đang khởi tạo</p></div></details><script defer="" src="js/core/pwa.js?v=7.1.0"></script><script src="js/data/content.js?v=7.1.0"></script><script src="js/app.js?v=7.2.0" type="module"></script></body>
+<div aria-hidden="true" id="fxLayer"></div><div aria-hidden="true" class="scroll-progress" id="scrollProgress"></div><details class="motion-dock" id="motionDock"><summary><span aria-hidden="true">✦</span><span id="motionDockStatus">Chuyển động</span></summary><div class="motion-panel"><label><strong data-i18n="motionControl">Chuyển động trên trang</strong><select id="motionMode"><option data-i18n="motionAuto" value="auto">Theo thiết bị</option><option data-i18n="motionFull" value="full">Đầy đủ</option><option data-i18n="motionQuiet" value="quiet">Nhẹ</option><option data-i18n="motionDisabled" value="off">Tắt chuyển động</option></select></label><p id="motionReason" role="status"></p><p data-i18n="motionHelp">Chế độ Theo thiết bị tôn trọng cài đặt giảm chuyển động. Chọn Đầy đủ để chủ động bật hiệu ứng.</p><p class="build-status" id="buildStatus">v7.3.0 · đang khởi tạo</p></div></details><script defer="" src="js/core/pwa.js?v=7.1.0"></script><script src="js/data/content.js?v=7.1.0"></script><script src="js/app.js?v=7.3.0" type="module"></script></body>
 </html>

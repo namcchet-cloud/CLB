@@ -1,11 +1,11 @@
-const CACHE_VERSION = 'clb-v7.2.0';
+const CACHE_VERSION = 'clb-v7.3.0';
 const CORE = [
   './', './index.html', './legal.html', './site.webmanifest',
-  './css/tokens.css?v=7.1.0', './css/site.css?v=7.1.0', './css/music.css?v=7.2.0', './css/intro.css?v=7.1.0', './css/comic-decor.css?v=7.1.0', './css/effects.css?v=7.1.0',
-  './js/core/bootstrap.js?v=7.1.0', './js/core/build.js?v=7.2.0', './js/core/runtime.js?v=7.1.0', './js/core/i18n.js?v=7.1.0', './js/core/images.js?v=7.1.0', './js/core/pwa.js?v=7.1.0',
-  './js/data/content.js?v=7.1.0', './js/data/images.js?v=7.1.0', './js/data/translations.js?v=7.1.0', './js/app.js?v=7.2.0',
-  './js/features/motion.js?v=7.1.0', './js/features/navigation.js?v=7.1.0', './js/features/comic-decor.js?v=7.1.0', './js/features/gallery.js?v=7.1.0', './js/features/akiko.js?v=7.1.0', './js/features/raven.js?v=7.1.0',
-  './js/features/music/index.js?v=7.2.0', './js/features/music/motor.js?v=7.1.0', './js/features/music/spotify.js?v=7.2.0',
+  './css/tokens.css?v=7.1.0', './css/site.css?v=7.1.0', './css/music.css?v=7.3.0', './css/intro.css?v=7.1.0', './css/comic-decor.css?v=7.1.0', './css/effects.css?v=7.1.0',
+  './js/core/bootstrap.js?v=7.1.0', './js/core/build.js?v=7.3.0', './js/core/runtime.js?v=7.1.0', './js/core/i18n.js?v=7.1.0', './js/core/images.js?v=7.1.0', './js/core/pwa.js?v=7.1.0',
+  './js/data/content.js?v=7.1.0', './js/data/images.js?v=7.1.0', './js/data/translations.js?v=7.1.0', './js/app.js?v=7.3.0',
+  './js/features/intro.js?v=7.1.0', './js/features/motion.js?v=7.1.0', './js/features/navigation.js?v=7.1.0', './js/features/comic-decor.js?v=7.1.0', './js/features/gallery.js?v=7.3.0', './js/features/akiko.js?v=7.1.0', './js/features/raven.js?v=7.3.0',
+  './js/features/music/index.js?v=7.3.0', './js/features/music/motor.js?v=7.3.0', './js/features/music/spotify.js?v=7.3.0',
   './assets/optimized/logo-new-96-2583a335.webp', './assets/optimized/logo-new-192-86e0c09a.webp', './assets/optimized/logo-new-640-db642e82.webp',
   './assets/icons/favicon-192x192.png', './assets/icons/favicon-512x512.png',
   'https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800&family=DM+Sans:wght@400;500;600;700&family=Fraunces:ital,wght@0,600;0,700;1,600&display=swap'
@@ -51,7 +51,7 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  if ((url.origin === location.origin && cacheableDestination.has(request.destination)) || isFont) {
+  if ((url.origin === location.origin && (cacheableDestination.has(request.destination) || url.pathname.endsWith('/js/features/kivat-mesh-data.json'))) || isFont) {
     event.respondWith((async () => {
       const cached = await caches.match(request);
       if (cached) return cached;

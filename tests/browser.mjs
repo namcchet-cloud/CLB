@@ -19,7 +19,8 @@ const server = createServer(async (req, res) => {
 await new Promise(r => server.listen(0, '127.0.0.1', r));
 const origin = `http://127.0.0.1:${server.address().port}`;
 let browser;
-try { browser = await chromium.launch({ headless: true }); }
+try { browser = await chromium.launch({ headless: true, executablePath: process.env.CLB_CHROME || undefined,
+  args: ['--no-sandbox','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader'] }); }
 catch (error) { await new Promise(r => server.close(r)); throw error; }
 const failures = [];
 async function wait(page, predicate, argument, { timeout = 10000 } = {}) {
@@ -53,6 +54,7 @@ async function open(width = 1280, stall = false) {
   return { page, context };
 }
 async function check(name, fn) {
+  if (process.env.CLB_TEST && !new RegExp(process.env.CLB_TEST).test(name)) return;
   try { await fn(); console.log(`PASS ${name}`); }
   catch (e) { failures.push(`${name}: ${e.stack}`); console.error(`FAIL ${name}: ${e.message}`); }
 }
@@ -84,19 +86,145 @@ try {
     assert.equal(await page.evaluate(() => window.ClubMusicV4.state.playing), false);
     await context.close();
   });
-  await check('controller readiness timeout and fallback teardown', async () => {
+  await check('late playback after controller timeout stays synchronised', async () => {
     const { page, context } = await open(390, true);
     await page.locator('#mv3QuickPlace').click();
-    await wait(page, () => document.getElementById('mv3Spotify').dataset.spotifyMode === 'embed', null, { timeout: 12000 });
+    await wait(page, () => document.getElementById('mv3Spotify').dataset.spotifyMode === 'delayed', null, { timeout: 12000 });
     assert.equal(await page.locator('#mv3Play').isEnabled(), true);
     await page.locator('#mv3Play').click();
     assert.equal(await page.evaluate(() => window.ClubMusicV4.state.playing), false);
     const oldFrame = await page.locator('#mv3Spotify iframe').elementHandle();
+    await page.evaluate(() => window.__players[0].emit('playback_update', { isPaused:false,isBuffering:false,duration:120000,position:30000 }));
+    await wait(page, () => window.ClubMusicV4.state.playing);
+    assert.equal(await page.locator('#mv3Elapsed').textContent(), '0:30');
+    assert.equal(await page.locator('#mv3Duration').textContent(), '2:00');
     await page.evaluate(() => window.ClubMusicV4.returnLoaded());
     assert.equal(await oldFrame.evaluate(el => el.isConnected), false);
     await context.close();
   });
   await mkdir('/tmp/clb-qa', { recursive: true });
+  await check('buffering keeps stylus engaged, pause parks it, next track resets progress', async () => {
+    const { page, context } = await open();
+    await page.evaluate(() => window.__players[0].emit('playback_update', {isPaused:false,isBuffering:false,playingURI:'spotify:track:ONE',duration:100000,position:50000}));
+    await wait(page, () => window.ClubMusic.state.playing);
+    await page.evaluate(() => window.__players[0].emit('playback_update', {isPaused:false,isBuffering:true}));
+    assert.equal(await page.evaluate(() => window.ClubMusic.state.armMode), 'TRACKING');
+    assert.equal(await page.evaluate(() => window.ClubMusic.state.playing), false);
+    assert.equal(await page.locator('#mv3Elapsed').textContent(), '0:50');
+    await page.evaluate(() => window.__players[0].emit('playback_update', {isPaused:true,isBuffering:false}));
+    assert.equal(await page.evaluate(() => window.ClubMusic.state.armMode), 'REST');
+    await page.evaluate(() => window.__players[0].emit('playback_started', {playingURI:'spotify:track:TWO'}));
+    assert.equal(await page.locator('#mv3Elapsed').textContent(), '0:00');
+    await context.close();
+  });
+  await check('Raven 3D: valid chain targets, focus isolation, Escape and replay cleanup', async () => {
+    const { page, context } = await open();
+    await page.locator('#gallery').scrollIntoViewIfNeeded();
+    await page.locator('[data-artist="raven-lin"]').waitFor();
+    await page.evaluate(() => window.ClubMotion.setChoice('full'));
+    await page.locator('[data-artist="raven-lin"]').click();
+    await wait(page, () => window.ClubRaven?.state.active);
+    assert.equal(await page.evaluate(() => window.ClubRaven.state.renderer), 'webgl');
+    assert.equal(await page.locator('main').evaluate(el=>el.inert), true);
+    await page.locator('[data-raven-overlay] .chains.lock').waitFor();
+    const offsets=await page.locator('[data-raven-overlay] .slot img').evaluateAll(images=>images.map(img=>{
+      for(const a of img.getAnimations()){a.pause();a.currentTime=2000}
+      const matrix=new DOMMatrix(getComputedStyle(img).transform);
+      return [Math.round(matrix.m41),Math.round(matrix.m42)];
+    }));
+    assert.deepEqual(offsets,[[-432,-432],[-108,-108],[216,216],[540,540],[432,-432],[108,-108],[-216,216],[-540,540]]);
+    await page.screenshot({path:'/tmp/clb-qa/raven-3d.png'});
+    await page.keyboard.press('Escape');
+    assert.equal(await page.locator('[data-raven-overlay]').count(),0);
+    assert.equal(await page.locator('main').evaluate(el=>el.inert),false);
+    assert.equal(await page.locator('body').evaluate(el=>el.style.overflow),'');
+    assert.equal(await page.evaluate(()=>document.activeElement.dataset.artist),'raven-lin');
+    for(let i=0;i<3;i++)await page.evaluate(()=>{window.ClubRaven.launch(document.querySelector('[data-artist="raven-lin"]'));window.ClubRaven.stop()});
+    assert.equal(await page.evaluate(()=>window.ClubRaven.state.lastError),'');
+    await context.close();
+  });
+  await check('Raven without WebGL: lightweight scene completes and skip/motion restore page', async () => {
+    const { page, context } = await open(390);
+    await page.locator('#gallery').scrollIntoViewIfNeeded();
+    await page.locator('[data-artist="raven-lin"]').waitFor();
+    await page.evaluate(()=>{
+      window.ClubMotion.setChoice('full');
+      const original=HTMLCanvasElement.prototype.getContext;
+      HTMLCanvasElement.prototype.getContext=function(type,...args){return type==='webgl'?null:original.call(this,type,...args)};
+    });
+    await page.locator('[data-artist="raven-lin"]').click();
+    await wait(page,()=>window.ClubRaven?.state.active);
+    assert.equal(await page.evaluate(()=>window.ClubRaven.state.renderer),'lite');
+    await page.locator('[data-raven-overlay] .chains.lock').waitFor();
+    await page.screenshot({path:'/tmp/clb-qa/raven-lite.png'});
+    await wait(page,()=>!window.ClubRaven.state.active);
+    assert.equal(await page.locator('body').evaluate(el=>el.style.overflow),'');
+    await page.evaluate(()=>window.ClubRaven.launch(document.querySelector('[data-artist="raven-lin"]')));
+    await page.locator('[data-raven-overlay] [data-skip]').click();
+    assert.equal(await page.locator('[data-raven-overlay]').count(),0);
+    await page.evaluate(()=>{window.ClubRaven.launch();window.ClubMotion.setChoice('off')});
+    assert.equal(await page.locator('[data-raven-overlay]').count(),0);
+    assert.equal(await page.locator('main').evaluate(el=>el.inert),false);
+    await context.close();
+  });
+  await check('Raven context loss releases overlay and scroll', async()=>{
+    const {page,context}=await open();
+    await page.evaluate(async()=>{
+      window.ClubMotion.setChoice('full');
+      const api=await (await import('/js/features/raven.js?v=7.3.0')).initRaven();api.launch();
+      const canvas=document.querySelector('[data-raven-overlay]').shadowRoot.querySelector('canvas');
+      canvas.dispatchEvent(new Event('webglcontextlost',{cancelable:true}));
+    });
+    assert.equal(await page.locator('[data-raven-overlay]').count(),0);
+    assert.equal(await page.locator('body').evaluate(el=>el.style.overflow),'');
+    await context.close();
+  });
+  await check('Raven failed mesh request and renderer error both leave a usable page', async()=>{
+    const {page,context}=await open();
+    await page.route('**/kivat-mesh-data.json*',route=>route.abort());
+    await page.evaluate(async()=>{
+      window.ClubMotion.setChoice('full');
+      const api=await(await import('/js/features/raven.js?v=7.3.0')).initRaven();api.launch();
+    });
+    assert.equal(await page.evaluate(()=>window.ClubRaven.state.renderer),'lite');
+    await page.locator('[data-raven-overlay] [data-skip]').click();
+    await context.close();
+    const {page:p,context:c}=await open();
+    await p.evaluate(async()=>{
+      const original=HTMLCanvasElement.prototype.getContext;
+      HTMLCanvasElement.prototype.getContext=function(type,...args){const gl=original.call(this,type,...args);if(type==='webgl'&&gl)gl.drawArrays=()=>{throw new Error('Injected draw failure')};return gl};
+      window.ClubMotion.setChoice('full');
+      const api=await(await import('/js/features/raven.js?v=7.3.0')).initRaven();api.launch();
+    });
+    await wait(p,()=>!window.ClubRaven.state.active);
+    assert.equal(await p.evaluate(()=>window.ClubRaven.state.lastError),'Injected draw failure');
+    assert.equal(await p.locator('main').evaluate(el=>el.inert),false);
+    assert.equal(await p.locator('body').evaluate(el=>el.style.overflow),'');
+    await c.close();
+  });
+  await check('player expansion preserves session, fast selection settles on last album, bfcache reconnects',async()=>{
+    const {page,context}=await open();
+    await page.locator('#mv3Expand').click();
+    assert.equal(await page.locator('#mv3Spotify iframe').evaluate(el=>Math.round(el.getBoundingClientRect().height)),352);
+    await page.locator('#mv3Expand').click();
+    assert.equal(await page.locator('#mv3Spotify iframe').evaluate(el=>Math.round(el.getBoundingClientRect().height)),152);
+    assert.equal(await page.evaluate(()=>window.__players.length),1);
+    await page.evaluate(()=>{
+      window.ClubMotion.setChoice('full');
+      window.__players[0].emit('playback_started',{});
+      window.ClubMusic.select('pink');window.ClubMusic.select('studio');window.ClubMusic.select('pink');
+    });
+    await wait(page,()=>window.ClubMusic.state.selectedId==='pink'&&window.ClubMusic.state.phase==='IN_SLEEVE');
+    await page.evaluate(()=>window.__players.at(-1).emit('playback_started',{}));
+    await wait(page,()=>window.ClubMusic.state.playing);
+    await page.evaluate(()=>{window.ClubMusic.returnLoaded();window.dispatchEvent(new PageTransitionEvent('pagehide',{persisted:true}))});
+    await wait(page,()=>window.ClubMusic.state.phase==='IN_SLEEVE');
+    assert.equal(await page.locator('#mv3Spotify iframe').count(),0);
+    await page.evaluate(()=>window.dispatchEvent(new PageTransitionEvent('pageshow',{persisted:true})));
+    await wait(page,()=>document.querySelector('#mv3Spotify').dataset.spotifyMode==='ready');
+    assert.equal(await page.evaluate(()=>window.ClubMusic.state.playing),false);
+    await context.close();
+  });
   await check('pointer placement and keyboard album change', async () => {
     const { page, context } = await open();
     const disc = page.locator('.mv3-album.is-selected .mv3-disc');
@@ -168,6 +296,7 @@ try {
     });
     await page.screenshot({ path: `/tmp/clb-qa/page-${width}.png`, fullPage: true });
     await page.locator('.gallery-card[data-index]').first().scrollIntoViewIfNeeded();
+    await page.locator('.gallery-card[data-index]>img').first().evaluate(el => el.decode());
     assert.equal(await page.locator('.gallery-card[data-index]>img').first().evaluate(el => el.naturalWidth > 0), true);
     await page.screenshot({ path: `/tmp/clb-qa/gallery-${width}.png` });
     await page.locator('#playlist').scrollIntoViewIfNeeded();

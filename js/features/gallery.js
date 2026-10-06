@@ -56,7 +56,7 @@ export function initGallery(content) {
         if (rev === effectRevision && artistId === selected && effectsAllowed()) await akiko.launch(btn);
       }
       if (selected === 'raven-lin' && replay && effectsAllowed()) {
-        const raven = await start('raven', async () => (await import('./raven.js?v=7.1.0')).initRaven());
+        const raven = await start('raven', async () => (await import('./raven.js?v=7.3.0')).initRaven());
         if (rev === effectRevision && artistId === selected && effectsAllowed()) raven.launch(btn);
       }
     } catch (error) {
