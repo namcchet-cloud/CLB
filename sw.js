@@ -1,5 +1,5 @@
-/* CLB v7.3.1 — atomic core precache, safe upgrades, resilient offline fallback. */
-const CACHE_VERSION = 'clb-v7.3.1';
+/* CLB v7.3.2 — atomic core precache, safe upgrades, resilient offline fallback. */
+const CACHE_VERSION = 'clb-v7.3.2';
 const CORE = [
   './', './index.html', './legal.html', './site.webmanifest',
   './css/tokens.css?v=7.1.0', './css/site.css?v=7.1.0', './css/music.css?v=7.3.0', './css/intro.css?v=7.1.0', './css/comic-decor.css?v=7.1.0', './css/effects.css?v=7.1.0',
@@ -29,7 +29,7 @@ self.addEventListener('install', event => {
     }));
     if (results.some(result => result.status === 'rejected')) {
       await caches.delete(CACHE_VERSION);
-      throw new Error('Cannot install CLB v7.3.1: required assets missing');
+      throw new Error('Cannot install CLB v7.3.2: required assets missing');
     }
     await self.skipWaiting();
   })());

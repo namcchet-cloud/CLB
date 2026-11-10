@@ -1,4 +1,4 @@
-/** One visible embed per selection; each session owns its callbacks and timers. */
+/** One visible Spotify controller per selection; stale callbacks never take over. */
 const API_URL = 'https://open.spotify.com/embed/iframe-api/v1';
 let apiJob;
 const apiListeners = new Set();
@@ -21,8 +21,7 @@ function getAPI() {
     const timer = setTimeout(() => finish(null, new Error('Spotify API timeout')), 6000);
     window.onSpotifyIframeApiReady = api => {
       if (!api?.createController) return;
-      // A slow script may finish after its timeout. Keep it usable for the
-      // current selection; never strand the page in an unsynchronised iframe.
+      // Preserve recovery of a late API, even if its original timeout fired.
       window.SpotifyIframeApi = api;
       finish(api);
       apiListeners.forEach(listener => listener());
@@ -96,9 +95,10 @@ export function createSpotify(mount, onPlayback, onStatus) {
     onPlayback?.({ ...s.snapshot }, s.record.id);
   }
   function ensure(record) {
-    if (session?.record.id === record.id) return Promise.resolve(session.controller);
+    if (session?.record.id === record.id) return session.connectJob || Promise.resolve(session.controller);
     destroy();
-    const s = { record, mode: 'connecting', ready: false, playing: false, intent: null, controller: null, closed: false,
+    const s = { record, mode: 'connecting', ready: false, playing: false, intent: null, controller: null,
+      closed: false, connectJob: null, generation: 0,
       snapshot: { isPaused: true, isBuffering: false, position: 0, duration: 0 } };
     session = s;
     mount.hidden = false;
@@ -109,30 +109,40 @@ export function createSpotify(mount, onPlayback, onStatus) {
     const host = document.createElement('div');
     mount.append(host);
     publish(s, 'connecting');
-    s.recover = () => { if (active(s) && s.mode === 'error' && !s.creating) connect(s, host); };
+    // Recovery only when the API genuinely failed; never duplicate a pending session.
+    s.recover = () => {
+      if (active(s) && s.mode === 'error' && !s.connectJob && !s.controller) connect(s, host);
+    };
     apiListeners.add(s.recover);
     return connect(s, host);
   }
   function connect(s, host) {
+    if (!active(s)) return Promise.resolve(null);
+    if (s.connectJob) return s.connectJob;
+    if (s.controller) return Promise.resolve(s.controller);
+    const generation = ++s.generation;
     s.creating = true;
     publish(s, 'connecting');
     clearTimeout(s.readyTimer);
     s.readyTimer = setTimeout(() => {
-      if (active(s) && !s.ready) publish(s, 'delayed');
+      if (active(s) && s.generation === generation && !s.ready) publish(s, 'delayed');
     }, 10000);
-    return getAPI().then(api => {
-      if (!active(s)) return null;
-      s.observer = new MutationObserver(() => {
-        const iframe = mount.querySelector('iframe');
-        if (iframe) {
-          iframe.setAttribute('allow', 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture');
-          iframe.title = 'Spotify player';
-        }
-      });
-      s.observer.observe(mount, { childList: true, subtree: true });
+    const job = getAPI().then(api => {
+      if (!active(s) || s.generation !== generation) return null;
+      if (!s.observer) {
+        s.observer = new MutationObserver(() => {
+          const iframe = mount.querySelector('iframe');
+          if (iframe) {
+            iframe.setAttribute('allow', 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture');
+            iframe.title = 'Spotify player';
+          }
+        });
+        s.observer.observe(mount, { childList: true, subtree: true });
+      }
+      // createController can throw synchronously. Catch it through the promise chain.
       api.createController(host, { uri: s.source.uri, width: '100%', height: 152 }, c => {
-        if (!active(s)) { try { c?.destroy?.(); } catch {} return; }
-        if (!c?.addListener) { try { c?.destroy?.(); } catch {} publish(s, 'error'); return; }
+        if (!active(s) || s.generation !== generation) { try { c?.destroy?.(); } catch {} return; }
+        if (!c?.addListener) { try { c?.destroy?.(); } catch {} clearTimeout(s.readyTimer); publish(s, 'error'); return; }
         s.controller = c;
         c.addListener('ready', () => {
           if (!active(s) || s.controller !== c) return;
@@ -145,9 +155,17 @@ export function createSpotify(mount, onPlayback, onStatus) {
       });
       return s.controller;
     }).catch(() => {
-      if (active(s)) { clearTimeout(s.readyTimer); publish(s, 'error'); }
+      if (active(s) && s.generation === generation) {
+        clearTimeout(s.readyTimer);
+        publish(s, 'error');
+      }
       return null;
-    }).finally(() => { s.creating = false; });
+    }).finally(() => {
+      if (s.connectJob === job) s.connectJob = null;
+      s.creating = false;
+    });
+    s.connectJob = job;
+    return job;
   }
   function requestGesture() {
     const s = session;
@@ -171,7 +189,7 @@ export function createSpotify(mount, onPlayback, onStatus) {
     try {
       const fn = wanted ? s.controller.resume || s.controller.play : s.controller.pause;
       if (typeof fn !== 'function') throw new Error('Unsupported command');
-      // Keep the audio command in the click, before any disc animation or await.
+      // Keep audio command synchronous with user gesture.
       fn.call(s.controller);
       return true;
     } catch {
