@@ -1,6 +1,6 @@
 {
-  "version": "7.3.0",
-  "name": "CLB v7.3.0 · Playback Sync & Raven",
+  "version": "7.3.1",
+  "name": "CLB v7.3.1 · Stability & Cache Safety",
   "minimumNode": "18",
-  "notes": "Event-driven Spotify playback retained on slow connections; progress display and buffering-aware tonearm. Raven chain repair, GPU cleanup, accessible overlay and lightweight fallback. See docs/releases/CHANGELOG.md."
+  "notes": "Atomic service-worker precache and safer offline navigation. No design changes. See docs/releases/v7.3.1.md."
 }
