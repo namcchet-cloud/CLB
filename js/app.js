@@ -1,10 +1,13 @@
-import { VERSION } from './core/build.js?v=7.3.0';
+import { VERSION } from './core/build.js?v=7.3.3';
 import { start, near, features, issues, report } from './core/runtime.js?v=7.1.0';
 import { initI18n } from './core/i18n.js?v=7.1.0';
 import { initMotion } from './features/motion.js?v=7.1.0';
 import { initNavigation } from './features/navigation.js?v=7.1.0';
 import { initComicDecor } from './features/comic-decor.js?v=7.1.0';
 
+// The static HTML retains its original URLs and appearance; report the actual
+// loaded runtime build instead of showing a stale data-build attribute.
+document.documentElement.dataset.build = VERSION;
 const content = window.CLUB_CONTENT || { artists: [], artworks: [], records: [] };
 const buildStatus = document.getElementById('buildStatus');
 const labels = { gallery: 'triển lãm', music: 'âm nhạc' };
@@ -27,7 +30,6 @@ try {
   features.set('navigation', initNavigation());
   features.set('comicDecor', initComicDecor());
   lazy('gallery', document.getElementById('gallery'), async () => (await import('./features/gallery.js?v=7.3.0')).initGallery(content));
-  // Load the selected album's visible player independently of record placement.
   const loadMusic = lazy('music', document.getElementById('playlist'), async () => (await import('./features/music/index.js?v=7.3.0')).initMusic(content));
   loadMusic();
   document.documentElement.dataset.appReady = 'true';

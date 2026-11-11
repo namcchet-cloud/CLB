@@ -1,13 +1,21 @@
 const ROOT = document.documentElement;
+const INTRO_SESSION_KEY = 'artclub-intro-seen-v733';
 
 function explicitMotionOff() {
-  // Only an explicit user choice disables the intro. Do not inherit the
-  // computed `data-motion=off` value from OS reduced-motion on desktop.
   return ROOT.dataset.motionChoice === 'off';
 }
 
 function prefersReducedMotion() {
   return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+}
+
+function alreadyShownInSession() {
+  try { return sessionStorage.getItem(INTRO_SESSION_KEY) === '1'; }
+  catch { return false; }
+}
+
+function rememberShownInSession() {
+  try { sessionStorage.setItem(INTRO_SESSION_KEY, '1'); } catch {}
 }
 
 function moveLogoToHeader(wrap, target) {
@@ -32,8 +40,7 @@ function finishImmediately(intro) {
 function waitForLogoImages(intro) {
   const images = [...intro.querySelectorAll('.art-intro-logo img')];
   if (!images.length) return Promise.resolve();
-
-  const one = (img) => new Promise(resolve => {
+  const one = img => new Promise(resolve => {
     const done = () => {
       if (typeof img.decode === 'function') img.decode().catch(() => {}).finally(resolve);
       else resolve();
@@ -42,8 +49,6 @@ function waitForLogoImages(intro) {
     img.addEventListener('load', done, { once: true });
     img.addEventListener('error', resolve, { once: true });
   });
-
-  // Never leave the page behind the intro indefinitely if an image request fails.
   return Promise.race([
     Promise.all(images.map(one)),
     new Promise(resolve => window.setTimeout(resolve, 2200))
@@ -80,31 +85,23 @@ function addFallingDrops(intro) {
 function startFullIntro(intro, wrap, target) {
   const timers = [];
   const later = (fn, ms) => timers.push(window.setTimeout(fn, ms));
-
   intro.classList.add('is-ready');
   addFallingDrops(intro);
   requestAnimationFrame(() => requestAnimationFrame(() => intro.classList.add('is-started')));
-
-  // Same choreography as before, globally accelerated so every paint/sticker phase keeps its relative timing.
   later(() => intro.classList.add('is-flowing'), 186);
   later(() => intro.classList.add('is-dripping'), 684);
   later(() => intro.classList.add('is-color-complete'), 2030);
   later(() => intro.classList.add('is-burst'), 2158);
   later(() => intro.classList.add('is-settled'), 2726);
-
-  // Hold the finished mark, then move the whole composition out of the frame.
   later(() => {
     intro.classList.add('is-scatter', 'is-handoff');
     moveLogoToHeader(wrap, target);
   }, 3178);
-
   later(() => intro.classList.add('is-finished'), 4083);
   later(() => intro.remove(), 4385);
 
   const onVisibility = () => {
     if (!document.hidden) return;
-    // Keep the overlay stable while the tab is hidden. When the user returns,
-    // complete cleanly rather than exposing a half-finished frame.
     timers.forEach(window.clearTimeout);
     finishImmediately(intro);
     document.removeEventListener('visibilitychange', onVisibility);
@@ -120,15 +117,18 @@ async function runIntro() {
     intro?.remove();
     return;
   }
-  if (explicitMotionOff()) {
+  // Keep the original cinematic first impression. On reload in the same tab,
+  // omit the overlay entirely to avoid an unnecessary 4+ second animation.
+  if (explicitMotionOff() || alreadyShownInSession() || document.hidden) {
     intro.remove();
     return;
   }
-
-  // Critical desktop fix: the timeline does not start until the logo has decoded.
-  // This prevents the first half of the animation from elapsing behind an empty image.
   await waitForLogoImages(intro);
-
+  if (!intro.isConnected || document.hidden) {
+    intro.remove();
+    return;
+  }
+  rememberShownInSession();
   if (prefersReducedMotion()) runReducedIntro(intro, wrap, target);
   else startFullIntro(intro, wrap, target);
 }

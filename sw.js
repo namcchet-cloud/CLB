@@ -1,9 +1,9 @@
-/* CLB v7.3.2 — atomic core precache, safe upgrades, resilient offline fallback. */
-const CACHE_VERSION = 'clb-v7.3.2';
+/* CLB v7.3.3 — atomic precache, offline fallback, current startup assets. */
+const CACHE_VERSION = 'clb-v7.3.3';
 const CORE = [
   './', './index.html', './legal.html', './site.webmanifest',
   './css/tokens.css?v=7.1.0', './css/site.css?v=7.1.0', './css/music.css?v=7.3.0', './css/intro.css?v=7.1.0', './css/comic-decor.css?v=7.1.0', './css/effects.css?v=7.1.0',
-  './js/core/bootstrap.js?v=7.1.0', './js/core/build.js?v=7.3.0', './js/core/runtime.js?v=7.1.0', './js/core/i18n.js?v=7.1.0', './js/core/images.js?v=7.1.0', './js/core/pwa.js?v=7.1.0',
+  './js/core/bootstrap.js?v=7.1.0', './js/core/build.js?v=7.3.3', './js/core/runtime.js?v=7.1.0', './js/core/i18n.js?v=7.1.0', './js/core/images.js?v=7.1.0', './js/core/pwa.js?v=7.1.0',
   './js/data/content.js?v=7.1.0', './js/data/images.js?v=7.1.0', './js/data/translations.js?v=7.1.0', './js/app.js?v=7.3.0',
   './js/features/intro.js?v=7.1.0', './js/features/motion.js?v=7.1.0', './js/features/navigation.js?v=7.1.0', './js/features/comic-decor.js?v=7.1.0', './js/features/gallery.js?v=7.3.0', './js/features/akiko.js?v=7.1.0', './js/features/raven.js?v=7.3.0',
   './js/features/music/index.js?v=7.3.0', './js/features/music/motor.js?v=7.3.0', './js/features/music/spotify.js?v=7.3.0',
@@ -16,8 +16,7 @@ const coreNames = new Set(CORE.map(path => new URL(path, self.registration.scope
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE_VERSION);
-    // Wait for every write to settle before deciding whether the new cache is safe.
-    // Otherwise a late successful write could resurrect a deleted partial cache.
+    // Settle every concurrent write before removing a failed installation.
     const results = await Promise.allSettled(CORE.map(async path => {
       const url = new URL(path, self.registration.scope);
       const request = new Request(url, { cache: 'reload' });
@@ -29,7 +28,7 @@ self.addEventListener('install', event => {
     }));
     if (results.some(result => result.status === 'rejected')) {
       await caches.delete(CACHE_VERSION);
-      throw new Error('Cannot install CLB v7.3.2: required assets missing');
+      throw new Error('Cannot install CLB v7.3.3: required assets missing');
     }
     await self.skipWaiting();
   })());
@@ -56,7 +55,6 @@ self.addEventListener('fetch', event => {
       try {
         const fresh = await fetch(request);
         if (!fresh.ok) throw new Error(`Navigation HTTP ${fresh.status}`);
-        // Do not fail a successful navigation when browser storage is full.
         try { await (await caches.open(CACHE_VERSION)).put(request, fresh.clone()); } catch {}
         return fresh;
       } catch {
@@ -73,8 +71,6 @@ self.addEventListener('fetch', event => {
     event.respondWith((async () => {
       const cache = await caches.open(CACHE_VERSION);
       const cached = await cache.match(request);
-      // Versioned core assets stay stable offline. Non-core assets can refresh
-      // without blocking first paint; cache write failures are non-fatal.
       if (cached) {
         if (sameOrigin && !coreNames.has(url.href)) {
           event.waitUntil(fetch(request).then(response => {

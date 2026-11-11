@@ -1,6 +1,6 @@
 {
-  "version": "7.3.2",
-  "name": "CLB v7.3.2 · Spotify Reliability",
+  "version": "7.3.3",
+  "name": "CLB v7.3.3 · Startup & Cache Consistency",
   "minimumNode": "18",
-  "notes": "Single-flight Spotify session connections, guarded stale callbacks and controller failure handling; Service Worker cache updated. See docs/releases/v7.3.2.md."
+  "notes": "Skip repeat intro within the same tab session, correct runtime build label, refresh atomic service worker precache; no visual design changes. See docs/releases/v7.3.3.md."
 }
