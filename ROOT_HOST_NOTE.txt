@@ -1,0 +1,6 @@
+ROOT HOSTNAME: namcchet-cloud.github.io
+Google Search commonly selects favicon on hostname level. CLB /CLB/ cannot force its own separate Google favicon while shared with other paths on the same hostname.
+Recommended stable fix: use a CLB-specific custom domain (for example clbnghethuat.example) and point GitHub Pages + Search Console there, or accept shared favicon managed at root.
+DO NOT automatically redirect the root hostname to /CLB/: this could affect other projects and site discovery.
+The screenshot title 'GitHub Pages documentation' may originate from a separate root repository. Changing CLB/index.html cannot change the root repository's title.
+Search Console: inspect both https://namcchet-cloud.github.io/ and https://namcchet-cloud.github.io/CLB/ ; submit the correct CLB URL, and resolve any separate root site metadata in that site's OWN repository.
