@@ -1,25 +1,27 @@
-CLB ART CLUB - GOOGLE FAVICON / SEARCH PATCH
+CLB NGHE THUAT - FIX KICH HOAT POSTER MODE / ZZZ PURPLE 1.0.1
+================================================================
+NGUYEN NHAN (xac minh voi nhanh main):
+- css/poster-gallery.css VA js/features/poster-gallery.js da co.
+- index.html CHUA nap hai file tren nen khong co nut Poster Mode.
+- Day la tinh trang CHUA LIEN KET TAI NGUYEN, khong phai thieu file.
 
-Source inspected: namcchet-cloud/CLB, branch main, 2026-11-11.
-IMPORTANT: This is an application overlay for an EXISTING full CLB repository, not a standalone copy of all website files.
-It intentionally does NOT replace CSS, JS, gallery, animations, or other pages.
+CACH NHANH NHAT TREN GITHUB (khong can Python):
+1. Mo https://github.com/namcchet-cloud/CLB/edit/main/index.html
+2. Tim </head> va chen ngay TRUOC no:
+   <link rel="stylesheet" href="css/poster-gallery.css?v=1.0.1">
+3. Tim </body> va chen ngay TRUOC no (sau js/data/content.js):
+   <script type="module" src="js/features/poster-gallery.js?v=1.0.1"></script>
+4. Commit changes vao main.
+5. Mo https://namcchet-cloud.github.io/CLB/?gallery=poster#gallery
+6. Neu thay giao dien cu, tai lai trang/thu cua so rieng tu. 
 
-HOW TO APPLY (Windows / macOS / Linux):
-1. Download ZIP of your entire CLB repository from GitHub > Code > Download ZIP.
-2. Extract that repository to a folder.
-3. Extract this package anywhere.
-4. Run: python apply_patch.py "/path/to/CLB-main"
-   Full cleanup package: python apply_patch.py "/path/to/CLB-main" --full
-5. Run: python audit.py "/path/to/CLB-main"
-6. Upload ONLY the changed index.html and (if changed) site.webmanifest to your CLB repository.
-7. Check deployed URL and use Google Search Console > URL inspection > Request indexing.
+CACH TU DONG NEU CO THU MUC CLB TREN MAY TINH:
+1. Dam bao repo CLB co du css/poster-gallery.css va js/features/poster-gallery.js.
+2. Chay: python fix_gallery_mode.py /duong/dan/den/CLB
+3. Chi commit index.html da sua, KHONG upload file .bak.
 
-FOR GOOGLE ICON: Google Search favicon is per HOSTNAME, so /CLB/ and root URL share a host icon.
-To have the CLB logo appear for results hosted at namcchet-cloud.github.io, root hostname must serve a favicon as well. If root is another website, do NOT silently relabel it as the CLB. See ROOT_HOST_NOTE.txt.
-
-SAFEGUARDS:
-- The script backups each touched source file in a timestamped subfolder.
-- Existing image assets are reused, not regenerated.
-- Full cleanup is scoped to SEO head and site manifest, NOT arbitrary CSS/JS overrides.
-- Re-running should not create duplicate favicon or canonical tags.
-- Other repositories (such as Chạm Mây) are never touched.
+LUU Y:
+- Khong can chinh sua JS/CSS hoac xoa du lieu web.
+- Upload file fix_gallery_mode.py len GitHub khong tu chay script.
+- Poster Mode la che do o muc GOC TRIEN LAM, khong thay toan bo website.
+- Neu mat mang, Service Worker co the phuc hoi ban cu tu cache.
