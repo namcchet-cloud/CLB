@@ -1,0 +1,184 @@
+/*
+ * ART CLUB / ZZZ V6.1 - SURFACE + SCROLL POLISH
+ * Self-contained overrides. Classic interface and legacy animation unaffected.
+ * Paper texture is tied to physical backgrounds/lettering, never a screen overlay.
+ */
+
+/* Remove the site-wide translucent texture ONLY in ZZZ mode. */
+html[data-clb-mode="zzz"] .paper-noise { display: none !important; }
+
+/* The page cover gets its own print surface, below all content and artwork. */
+html[data-clb-mode="zzz"] #home.hero::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  opacity: .105;
+  pointer-events: none;
+  background: url("../assets/optimized/paper-grain.png") left top / 128px 128px repeat;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+/* Section texture is part of the paper background, never a fixed foreground layer. */
+html[data-clb-mode="zzz"] :is(#about, #contact) {
+  background-color: #fff9ea;
+  background-image:
+    linear-gradient(rgba(255,249,234,.95),rgba(255,249,234,.95)),
+    url("../assets/optimized/paper-grain.png");
+  background-size: auto, 128px 128px;
+  background-repeat: repeat;
+}
+
+/* Low-opacity paper speckle clipped to the actual ART CLUB letter silhouette. */
+html[data-clb-mode="zzz"] #home.hero .zz-wordmark {
+  position: relative;
+  isolation: isolate;
+}
+html[data-clb-mode="zzz"] #home.hero .zz-wordmark::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  opacity: .13;
+  pointer-events: none;
+  background: url("../assets/optimized/paper-grain.png") center / 128px 128px repeat;
+  -webkit-mask-image: url("../assets/zzz-v4/wordmark-art-club.svg");
+  mask-image: url("../assets/zzz-v4/wordmark-art-club.svg");
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+/* No filters, pseudo textures or overlays are applied to images and controls. */
+
+/* One finished green silhouette, with all entry / exit corners INSIDE the stage.
+   It has a visible beginning and end on desktop, tablet and mobile. */
+html[data-clb-mode="zzz"] #home.hero .hero-stage::before {
+  content: "";
+  position: absolute;
+  inset: 4% 3% 5% 3%;
+  display: block;
+  width: auto;
+  height: auto;
+  z-index: 0;
+  opacity: 1;
+  pointer-events: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  transform: none;
+  background:
+    radial-gradient(circle, rgba(34,104,20,.12) 0 1px, transparent 1.55px) 0 0 / 17px 17px,
+    linear-gradient(132deg, #cced97 3%, #b4df83 36%, #a6d562 65%, #8cc849 100%);
+  clip-path: polygon(
+    13% 4%, 58% 4%, 70% 0%, 85% 10%, 98% 12%,
+    92% 33%, 100% 56%, 95% 78%, 82% 96%, 58% 91%,
+    30% 100%, 12% 85%, 3% 89%, 9% 62%, 0% 44%, 12% 24%
+  );
+}
+/* Original artwork is a separate element above the green backdrop. */
+html[data-clb-mode="zzz"] #home.hero .hero-stage .logo-float { z-index: 4; }
+
+/* The dark issue band is a real VIEWPORT element, not a hero footer imitation. */
+html[data-clb-mode="zzz"] #home.hero::after { content: none !important; display: none !important; }
+.zz-v61-bottom-band { display: none; }
+html[data-clb-mode="zzz"] {
+  --zz-bottom-height: 43px;
+  scroll-padding-top: 22px;
+}
+html[data-clb-mode="zzz"] body {
+  padding-bottom: calc(var(--zz-bottom-height) + env(safe-area-inset-bottom, 0px));
+}
+html[data-clb-mode="zzz"] .zz-v61-bottom-band {
+  position: fixed;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  min-height: calc(var(--zz-bottom-height) + env(safe-area-inset-bottom, 0px));
+  padding: 9px clamp(16px, 3.1vw, 54px) calc(9px + env(safe-area-inset-bottom, 0px));
+  background: #17191a;
+  color: #fff9e9;
+  border-top: 1px solid rgba(255,255,255,.1);
+  font: 800 13px/1.2 var(--zz-type, sans-serif);
+  letter-spacing: .095em;
+  pointer-events: none;
+  contain: layout style;
+}
+html[data-clb-mode="zzz"] .zz-v61-bottom-brand { flex: 0 0 auto; color: #fef5df; }
+html[data-clb-mode="zzz"] .zz-v61-bottom-section {
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  color: #c5e8a0; text-align: center;
+}
+html[data-clb-mode="zzz"] .zz-v61-bottom-progress {
+  display: flex; flex: 0 0 auto; align-items: center; gap: 12px;
+  font-variant-numeric: tabular-nums;
+}
+html[data-clb-mode="zzz"] .zz-v61-bottom-bar {
+  display: block; height: 3px; width: clamp(48px, 9vw, 110px);
+  background: #596052;
+}
+html[data-clb-mode="zzz"] .zz-v61-bottom-fill {
+  display: block; width: 100%; height: 100%;
+  background: #b5e34c;
+  transform: scaleX(var(--zz-progress, 0));
+  transform-origin: left;
+}
+/* Existing motion controls are moved ABOVE the band, never underneath it. */
+html[data-clb-mode="zzz"] .motion-dock {
+  bottom: calc(var(--zz-bottom-height) + env(safe-area-inset-bottom, 0px) + 12px);
+  z-index: 100;
+}
+
+/* Hide the header when ZZZ first opens and while scrolling down. Show on upward
+   scroll, keyboard focus, or when the menu is open. Classic mode is untouched. */
+html[data-clb-mode="zzz"] .site-header {
+  position: fixed;
+  z-index: 120;
+  left: 0;
+  right: 0;
+  top: 0;
+  width: 100%;
+  margin: 0;
+  transform: translate3d(0, -115%, 0);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform .32s cubic-bezier(.22,1,.36,1), opacity .22s ease, box-shadow .2s;
+  will-change: transform;
+}
+html[data-clb-mode="zzz"] .site-header.zz-v61-header-show,
+html[data-clb-mode="zzz"] .site-header:focus-within,
+html[data-clb-mode="zzz"] .site-header:has(.nav.open) {
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (max-width: 980px) {
+  html[data-clb-mode="zzz"] #home.hero .hero-stage::before {
+    inset: 5% 5% 4% 5%;
+    clip-path: polygon(
+      12% 12%, 63% 2%, 85% 9%, 98% 31%, 89% 49%,
+      100% 72%, 83% 91%, 61% 94%, 28% 98%, 7% 85%,
+      1% 61%, 11% 40%, 2% 24%
+    );
+  }
+}
+@media (max-width: 540px) {
+  html[data-clb-mode="zzz"] { --zz-bottom-height: 38px; }
+  html[data-clb-mode="zzz"] #home.hero .hero-stage::before { inset: 4% 3% 4% 3%; }
+  html[data-clb-mode="zzz"] .zz-v61-bottom-band { padding-inline: 13px; gap: 10px; font-size: 11px; }
+  html[data-clb-mode="zzz"] .zz-v61-bottom-brand { font-size: 11px; }
+  html[data-clb-mode="zzz"] .zz-v61-bottom-section { font-size: 10px; }
+  html[data-clb-mode="zzz"] .zz-v61-bottom-progress { gap: 7px; }
+  html[data-clb-mode="zzz"] .zz-v61-bottom-bar { width: 42px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-clb-mode="zzz"] .site-header { transition: none; }
+  html[data-clb-mode="zzz"] .zz-v61-bottom-fill { transition: none; }
+}
+html[data-motion-choice="off"][data-clb-mode="zzz"] .site-header { transition: none; }
