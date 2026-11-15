@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="vi" data-motion-choice="full">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Art Club / Poster Gallery Purple Edition - Demo</title>
+  <style>
+    :root { color-scheme: light; }
+    body { margin: 0; background: #ede6f6; font-family: system-ui,sans-serif; color: #11111c; }
+    .banner { background:#171323; color:white; padding:14px clamp(14px,5vw,70px); font-weight:800; }
+    .banner strong{color:#e3ff59}
+    .site-wrap { max-width: 1480px; margin: auto; padding: clamp(15px,4vw,55px); }
+    h1 { font-family:Impact,Arial,sans-serif; font-style:italic; letter-spacing:-.02em; text-transform:uppercase; font-size:clamp(2.5rem,6vw,5rem); margin:8px 0; }
+    .lead{max-width:740px;line-height:1.5;color:#473957}
+    #gallery .filters,#gallery #artistSwitcher{display:flex;flex-wrap:wrap;gap:9px;margin:18px 0}
+    #gallery .filter,#gallery .artist-chip{border:2px solid #16101e;padding:10px 15px;font-weight:800;color:#171323;background:white;cursor:pointer}
+    #gallery .filter.active,#gallery .artist-chip.active{background:#d8b7ff}
+    #gallery .exhibition-wall{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin:18px 0}
+    #gallery .gallery-card{font:inherit;border:2px solid #16101e;text-align:left;cursor:pointer;background:white;padding:10px}
+    #gallery .gallery-card img{width:100%;height:190px;object-fit:cover}
+    #gallery .gallery-card strong{display:block}
+    @media(max-width:650px){#gallery .exhibition-wall{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  </style>
+  <link rel="stylesheet" href="../css/poster-gallery.css?v=1.0.0">
+</head>
+<body>
+<div class="banner"><strong>ART CLUB</strong> / POSTER GALLERY - INTERACTIVE DESIGN DEMO (NO REAL ARTWORKS)</div>
+<main class="site-wrap">
+  <section id="gallery" aria-labelledby="demo-title">
+    <div style="font-weight:900;letter-spacing:.15em">02 / THE EXHIBITION</div>
+    <h1 id="demo-title">GOC TRIEN LAM / ART CLUB</h1>
+    <p class="lead">Local visual test with original placeholder illustrations. Production mode uses the existing real artworks and artist credits from the Art Club website.</p>
+    <div id="artistSwitcher" aria-label="Artists"></div>
+    <div class="filters" role="group" aria-label="Artwork categories">
+      <button class="filter active" data-filter="all" type="button">All</button>
+      <button class="filter" data-filter="paintings" type="button">Painting</button>
+      <button class="filter" data-filter="digital-art" type="button">Digital art</button>
+      <button class="filter" data-filter="photography" type="button">Photography</button>
+    </div>
+    <div class="exhibition-wall" id="galleryGrid"></div>
+    <p class="gallery-hint">Open an artwork in the existing gallery view.</p>
+  </section>
+</main>
+<script>
+  window.CLUB_CONTENT = {
+    artists: [
+      { id: 'artist-1', name:{vi:'Thanh Vien Mot',en:'Member One'} },
+      { id: 'artist-2', name:{vi:'Thanh Vien Hai',en:'Member Two'} }
+    ],
+    artworks: [
+      { id:'sample-1', artistId:'artist-1', image:'images/sample-1.svg', thumb:'images/sample-1.svg', category:'digital-art',title:{vi:'Dem Song Song',en:'Twin Night'},description:{vi:'Minh hoa ky thuat so - Demo',en:'Digital illustration - Demo'} },
+      { id:'sample-2', artistId:'artist-1', image:'images/sample-2.svg', thumb:'images/sample-2.svg', category:'paintings',title:{vi:'Hoa Roi',en:'Falling Flowers'},description:{vi:'Tranh cach dieu - Demo',en:'Stylized artwork - Demo'} },
+      { id:'sample-3', artistId:'artist-1', image:'images/sample-3.svg', thumb:'images/sample-3.svg', category:'digital-art',title:{vi:'Pho Tim',en:'Violet City'},description:{vi:'Poster art - Demo',en:'Poster art - Demo'} },
+      { id:'sample-4', artistId:'artist-2', image:'images/sample-4.svg', thumb:'images/sample-4.svg', category:'photography',title:{vi:'Khoang Troi',en:'Open Sky'},description:{vi:'Y tuong thuc hanh - Demo',en:'Practice concept - Demo'} }
+    ]
+  };
+  const arts = window.CLUB_CONTENT.artworks;
+  let artist = 'artist-1', filter = 'all';
+  const artistRoot = document.querySelector('#artistSwitcher');
+  const grid = document.querySelector('#galleryGrid');
+  function draw(){
+    artistRoot.innerHTML = window.CLUB_CONTENT.artists.map(a=>`<button class="artist-chip ${a.id===artist?'active':''}" data-artist="${a.id}">${a.name.vi}</button>`).join('');
+    grid.innerHTML = arts.filter(a=>a.artistId===artist && (filter==='all'||a.category===filter)).map(a=>`<button class="gallery-card"><img src="${a.thumb}" alt=""><strong>${a.title.en}</strong></button>`).join('');
+  }
+  artistRoot.addEventListener('click',e=>{ const btn=e.target.closest('[data-artist]'); if(!btn)return;artist=btn.dataset.artist;draw(); });
+  document.querySelector('.filters').addEventListener('click',e=>{const btn=e.target.closest('[data-filter]');if(!btn)return;filter=btn.dataset.filter;document.querySelectorAll('.filter').forEach(b=>b.classList.toggle('active',b===btn));draw();});
+  draw();
+</script>
+<script type="module" src="../js/features/poster-gallery.js?v=1.0.0"></script>
+</body>
+</html>
