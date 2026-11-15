@@ -4,7 +4,8 @@
  * Paper texture is tied to physical backgrounds/lettering, never a screen overlay.
  */
 
-/* Remove the site-wide translucent texture ONLY in ZZZ mode. */
+/* Remove the site-wide translucent texture ONLY in ZZZ mode.
+   All textures in this patch are self-contained CSS, not external images. */
 html[data-clb-mode="zzz"] .paper-noise { display: none !important; }
 
 /* The page cover gets its own print surface, below all content and artwork. */
@@ -15,7 +16,7 @@ html[data-clb-mode="zzz"] #home.hero::before {
   inset: 0;
   opacity: .105;
   pointer-events: none;
-  background: url("../assets/optimized/paper-grain.png") left top / 128px 128px repeat;
+  background: radial-gradient(circle, rgba(29, 39, 25, .12) .65px, transparent 1px) 0 0 / 7px 7px repeat;
   -webkit-mask-image: none;
   mask-image: none;
 }
@@ -23,9 +24,9 @@ html[data-clb-mode="zzz"] #home.hero::before {
 html[data-clb-mode="zzz"] :is(#about, #contact) {
   background-color: #fff9ea;
   background-image:
-    linear-gradient(rgba(255,249,234,.95),rgba(255,249,234,.95)),
-    url("../assets/optimized/paper-grain.png");
-  background-size: auto, 128px 128px;
+    linear-gradient(rgba(255,249,234,.97),rgba(255,249,234,.97)),
+    radial-gradient(circle, rgba(38, 45, 29, .10) .7px, transparent 1px);
+  background-size: auto, 8px 8px;
   background-repeat: repeat;
 }
 
@@ -41,7 +42,7 @@ html[data-clb-mode="zzz"] #home.hero .zz-wordmark::after {
   inset: 0;
   opacity: .13;
   pointer-events: none;
-  background: url("../assets/optimized/paper-grain.png") center / 128px 128px repeat;
+  background: radial-gradient(circle, rgba(255,255,255,.65) .65px, transparent 1px) 0 0 / 8px 8px repeat;
   -webkit-mask-image: url("../assets/zzz-v4/wordmark-art-club.svg");
   mask-image: url("../assets/zzz-v4/wordmark-art-club.svg");
   -webkit-mask-size: 100% 100%;
