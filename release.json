@@ -1,0 +1,6 @@
+{
+  "version": "7.3.3",
+  "name": "CLB v7.3.3 · Startup & Cache Consistency",
+  "minimumNode": "18",
+  "notes": "Skip repeat intro within the same tab session, correct runtime build label, refresh atomic service worker precache; no visual design changes. See docs/releases/v7.3.3.md."
+}

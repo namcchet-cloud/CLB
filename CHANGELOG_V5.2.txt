@@ -1,0 +1,11 @@
+ART CLUB V5.2 / 2026-11-15
+
++ Full-page visual revision of existing V4 ZZZ editorial theme
++ Closer to approved demo: oversized geometric title, stronger teal illustration field, official fox emblem, restrained metadata badge
++ 5-piece featured-art strip uses original gallery data instead of redundant navigation tiles
++ Wider hierarchy and stronger lime/orange accent roles
++ Breakpoint tuning at 1440, 820 and 390 pixels
+= Preserved existing site modes, navigation preview interactions, gallery, mascot and music modules
+= No changes to gallery data, existing images, old animations, PWA or music controllers
+
+Open ?mode=zzz to view the new design.
