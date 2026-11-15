@@ -1,8 +1,0 @@
-For the existing CLB index.html:
-1. Before </head> add:
-<link rel="stylesheet" href="css/poster-gallery.css?v=1.0.0">
-
-2. Before </body> add:
-<script type="module" src="js/features/poster-gallery.js?v=1.0.0"></script>
-
-Do not replace or remove the existing gallery.js, CSS, content.js, app.js, or service worker.
