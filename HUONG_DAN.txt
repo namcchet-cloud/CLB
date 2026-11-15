@@ -1,0 +1,33 @@
+# CLB V6.1.2 - FIX LOI BAN VA KHONG HIEN THI
+
+## Nguyen nhan (da doi chieu repository main)
+- CSS va JavaScript V6.1 duoc upload vao thu muc goc:
+  - `zzz-v6.1-polish.css`
+  - `zzz-v6.1-polish.js`
+- Tuy nhien `index.html` va `sw.js` goi file tu `css/` va `js/features/`, nen hai yeu cau 404.
+- PWA cache 6.1 co cai dat nguyen tu theo danh sach CORE, thieu hai file se lam lan cai dat service worker moi that bai.
+
+## CAP NHAT: CHI 2 FILE
+1. Mo repo `namcchet-cloud/CLB`, chon nhanh `main`, vao ROOT (ngay cap index.html).
+2. Upload **index.html** va **sw.js** trong thu muc nay vao ROOT, ghi de 2 file cu.
+3. KHONG upload `zzz-v6.1-polish.css` va `zzz-v6.1-polish.js` lan nua, chung da co san o ROOT.
+4. Commit. Kiem tra GitHub Pages deployment hoan thanh (Settings > Pages / Actions).
+5. Mo `https://namcchet-cloud.github.io/CLB/?mode=zzz&v=612` tren tab moi.
+
+## DOI SOAT
+- `index.html` goi `zzz-v6.1-polish.css?v=6.1.2` va `zzz-v6.1-polish.js?v=6.1.2` (thu muc goc).
+- `sw.js` precache dung duong dan tuong ung va doi CACHE_VERSION thanh `clb-v7.3.4-zzz6.1.2`.
+- Chi doi 5 cho (2 tham chieu index, 2 sw, 1 cache version). Cac code chuc nang va hieu ung cu giu nguyen.
+
+## KIEM TRA NEU CHUA THAY
+- Truy cap: https://namcchet-cloud.github.io/CLB/zzz-v6.1-polish.css?v=6.1.2
+  Neu thay ma CSS la dung (khong phai trang 404).
+- Tuong tu: https://namcchet-cloud.github.io/CLB/zzz-v6.1-polish.js?v=6.1.2
+- Trong Safari iPhone: mo trang trong tab moi va tai lai; neu van hien ban cu, xoa Website Data cua ten mien GitHub Pages (Settings > Safari > Advanced > Website Data).
+- Sau khi vao ZZZ mode, header se an ban dau, cuon len hien, cuon xuong an; thanh trang thai den bam day man hinh.
+
+## HOAN TAC
+- GitHub > index.html hoac sw.js > History > Restore phien ban commit truoc neu can.
+
+## LUU Y
+Hai file nay duoc tao tu dung index.html va sw.js dang co o GitHub vao thoi diem doi chieu, khong phai tu ban zip V6 cu.
