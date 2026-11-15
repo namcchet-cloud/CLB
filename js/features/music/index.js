@@ -1,0 +1,325 @@
+import { createMotor } from './motor.js?v=7.3.0';
+import { createSpotify } from './spotify.js?v=7.3.0';
+import { local } from '../../core/i18n.js?v=7.1.0';
+import { setImage } from '../../core/images.js?v=7.1.0';
+import { clamp } from '../../core/runtime.js?v=7.1.0';
+
+/** A single real record node travels from its sleeve to the platter and back. */
+export function initMusic(content) {
+  const records = content.records || [], $ = id => document.getElementById(id);
+  const room = $('playlist'), albums = $('mv3Albums'), platter = $('mv3Platter');
+  const drop = $('mv3DropZone'), deck = $('mv3Turntable'), play = $('mv3Play'), quick = $('mv3QuickPlace');
+  const status = $('mv3Status'), spotifyMount = $('mv3Spotify');
+  if (!records.length) { status.textContent = 'Chưa có playlist.'; return {}; }
+  const state = { selectedId: records[0].id, loadedId: null, phase: 'IN_SLEEVE', playing: false,
+    trackProgress: 0, spinAngle: 0, spinVelocity: 0, armAngle: -6, armMode: 'REST', currentURI: '' };
+  const nodes = new Map(), record = id => records.find(r => r.id === id);
+  let drag = null, dragFrame = 0, animation = null, returning = null, latestSelection = null;
+  let message = 'connecting', playback = null, expanded = false, suspended = false;
+  const en = () => document.documentElement.lang === 'en';
+  const strings = {
+    choose: ['Chọn album', 'Choose album'], selected: ['Đang chọn', 'Selected'],
+    empty: ['Chưa có đĩa trên mâm', 'No record on the platter'],
+    drag: ['Giữ phần đĩa đang ló ra và kéo lên mâm.', 'Hold the exposed record and drag it onto the platter.'],
+    ready: ['Sẵn sàng phát nhạc.', 'Ready to play.'],
+    returning: ['Đang nhấc kim và trả đĩa về bìa…', 'Lifting the stylus and returning the record…'],
+    miss: ['Đĩa đã trở về bìa. Thả gần mâm để đặt lại.', 'Record returned. Drop it near the platter to place it.'],
+    connecting: ['Đang kết nối Spotify…', 'Connecting to Spotify…'],
+    readyAgain: ['Spotify đã sẵn sàng. Nhấn Phát nhạc lần nữa.', 'Spotify is ready. Press Play music once more.'],
+    delayed: ['Spotify tải hơi lâu. Cậu có thể bấm ▶ ngay trong khung bên dưới; đĩa vẫn theo nhạc.', 'Spotify is taking a little longer. Try ▶ in the player below; the record will still follow playback.'],
+    retry: ['Kết nối lại', 'Reconnect'],
+    error: ['Không tải được Spotify. Hãy kiểm tra mạng hoặc mở Spotify ↗.', 'Spotify could not load. Check your connection or open Spotify ↗.'],
+    gesture: ['Cần một chạm trực tiếp để mở khóa âm thanh. Hãy bấm ▶ trong khung Spotify bên dưới; khi nhạc chạy, mâm sẽ tự quay.', 'One direct tap is needed to unlock audio. Press ▶ inside the Spotify player below; the platter will spin as soon as playback starts.'],
+    playing: ['Đang phát · 33⅓ RPM', 'Playing · 33⅓ RPM'],
+    paused: ['Đã tạm dừng · kim đang nghỉ', 'Paused · stylus at rest'],
+    progress: ['Tiến trình bài hát', 'Track progress'],
+    expand: ['Danh sách bài', 'Track list'], compact: ['Thu gọn', 'Compact'],
+    buffering: ['Spotify đang tải nhạc…', 'Spotify is buffering…'],
+    starting: ['Đang bắt đầu nhạc…', 'Starting playback…'],
+    pausing: ['Đang tạm dừng…', 'Pausing…'],
+    play: ['Phát nhạc', 'Play music'], pause: ['Tạm dừng', 'Pause'],
+    openPlayer: ['Mở trình phát', 'Open player'],
+    quickPlace: ['Đặt đĩa lên mâm', 'Place record on platter'], quickReturn: ['Trả đĩa về bìa', 'Return record to sleeve'],
+    help: ['Chọn album và phát nhạc. Cậu cũng có thể tự kéo đĩa lên mâm.', 'Choose an album and play. You can also drag the record onto the platter.']
+  };
+  const t = key => strings[key]?.[en() ? 1 : 0] || key;
+  function setStatus(key) {
+    message = key;
+    if (status.textContent !== t(key)) status.textContent = t(key);
+  }
+  const clock = ms => {
+    const seconds = Math.max(0, Math.floor((Number(ms) || 0) / 1000));
+    return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
+  };
+  function progressUI() {
+    const data = playback?.data;
+    const duration = Math.max(0, Number(data?.duration) || 0);
+    const position = clamp(Number(data?.position) || 0, 0, duration || Infinity);
+    const meter = $('mv3Progress');
+    if (meter) {
+      meter.max = duration || 1; meter.value = duration ? position : 0;
+      meter.setAttribute('aria-label', t('progress'));
+    }
+    if ($('mv3Elapsed')) $('mv3Elapsed').textContent = clock(position);
+    if ($('mv3Duration')) $('mv3Duration').textContent = duration ? clock(duration) : '—:——';
+  }
+  const motor = createMotor(deck, state, () => state.loadedId ? nodes.get(state.loadedId)?.surface : null, on => {
+    play.querySelector('b').textContent = t(on ? 'pause' : 'play');
+    play.querySelector('span').textContent = on ? 'Ⅱ' : '▶';
+    play.setAttribute('aria-pressed', String(on));
+    deck.querySelector('.mv3-signal-text').textContent = on ? '33⅓ RPM' : (en() ? 'READY' : 'CHỜ PHÁT');
+  });
+  const transport = createSpotify(spotifyMount, (data, id) => {
+    if (suspended || id !== state.selectedId || returning) return;
+    playback = { data, id };
+    if (data.isPaused === false && state.phase === 'IN_SLEEVE') { place(id); return; }
+    followPlayback();
+  }, key => {
+    setStatus(key === 'ready' && playback ? 'paused' : key);
+    sync();
+  });
+  function followPlayback() {
+    if (!playback || playback.id !== state.loadedId || state.phase !== 'ON_TURNTABLE') return;
+    const { data } = playback;
+    const changed = data.playingURI && state.currentURI && data.playingURI !== state.currentURI;
+    if (data.playingURI) state.currentURI = data.playingURI;
+
+    if (changed) motor.progress(0);
+    motor.progress(Number(data.duration) > 0 ? clamp(Number(data.position) / Number(data.duration), 0, 1) : 0);
+    if (typeof data.isPaused === 'boolean') {
+      motor.setPlaying(!data.isPaused && !data.isBuffering, { buffering: !data.isPaused && data.isBuffering });
+      if (data.isBuffering && !data.isPaused) setStatus('buffering');
+      sync();
+    } else if (data.isBuffering) setStatus('buffering');
+  }
+  function meta() {
+    const r = record(state.selectedId);
+    $('mv3NowLabel').textContent = t(r ? 'selected' : 'empty');
+    $('mv3NowTitle').textContent = r ? local(r.name) : '—';
+    $('mv3SpotifyLink').href = (r || record(state.selectedId)).spotifyUrl;
+    $('mv3LibraryTitle').textContent = t('choose'); $('mv3Help').textContent = t('help');
+    const playing = playback?.data.isPaused === false;
+    const playLabel = t(!transport.controllable ? (transport.mode === 'error' ? 'retry' : 'openPlayer') : playing ? 'pause' : 'play');
+    play.querySelector('b').textContent = playLabel;
+    play.setAttribute('aria-label', playLabel);
+    play.setAttribute('aria-pressed', String(playing));
+    play.querySelector('span').textContent = playing ? 'Ⅱ' : '▶';
+    $('mv3Reconnect').textContent = t('retry');
+    if ($('mv3Expand')) $('mv3Expand').textContent = t(expanded ? 'compact' : 'expand');
+    setStatus(message);
+    progressUI();
+    deck.querySelector('.mv3-signal-text').textContent = message === 'buffering' ? (en() ? 'BUFFERING' : 'ĐANG TẢI') : state.playing ? '33⅓ RPM' : (en() ? 'READY' : 'CHỜ PHÁT');
+  }
+  function sync() {
+    for (const [id, n] of nodes) {
+      const selected = id === state.selectedId, r = record(id);
+      n.wrap.classList.toggle('is-selected', selected);
+      n.disc.classList.toggle('is-enabled', selected || id === state.loadedId);
+      n.disc.tabIndex = selected ? 0 : -1;
+      n.button.setAttribute('aria-pressed', String(selected));
+      n.button.setAttribute('aria-label', `${t('choose')}: ${local(r.name)}`);
+      n.disc.setAttribute('aria-label', `${local(r.name)} — ${en() ? 'drag onto platter, or press Enter' : 'kéo lên mâm, hoặc nhấn Enter'}`);
+      n.name.textContent = local(r.name); n.title.textContent = local(r.name);
+      n.caption.textContent = local(r.caption); n.tag.textContent = t('selected');
+    }
+    play.disabled = Boolean(drag || returning || transport.pending);
+    play.setAttribute('aria-busy', String(transport.pending));
+    if (quick) {
+      quick.textContent = t(state.loadedId ? 'quickReturn' : 'quickPlace');
+      quick.setAttribute('aria-label', quick.textContent);
+      quick.disabled = Boolean(drag || returning) || ['SETTLING', 'RETURNING', 'DRAGGING'].includes(state.phase);
+    }
+    deck.dataset.transportState = transport.mode;
+    $('mv3Reconnect').hidden = !['error', 'delayed', 'gesture'].includes(transport.mode);
+    meta();
+  }
+  function createAlbum(r) {
+    const wrap = document.createElement('article'); wrap.className = 'mv3-album'; wrap.dataset.record = r.id; wrap.dataset.theme = r.theme;
+    const visual = document.createElement('div'); visual.className = 'mv3-album-visual';
+    const button = document.createElement('button'); button.type = 'button'; button.className = 'mv3-cover-button'; button.dataset.chooseRecord = r.id;
+    const cover = document.createElement('span'); cover.className = 'mv3-cover';
+    const ci = document.createElement('img'); ci.alt = ''; setImage(ci, r.image, { width: 540, sizes: '(max-width:980px) 235px, 269px' }); cover.append(ci);
+    const title = document.createElement('span'); title.className = 'mv3-cover-title';
+    const tag = document.createElement('span'); tag.className = 'mv3-selected-tag'; button.append(cover, title, tag);
+    const disc = document.createElement('div'); disc.className = 'mv3-disc'; disc.dataset.record = r.id; disc.dataset.theme = r.theme;
+    disc.setAttribute('role', 'button'); disc.tabIndex = 0;
+    const surface = document.createElement('span'); surface.className = 'mv3-disc-surface';
+    const label = document.createElement('span'); label.className = 'mv3-disc-label';
+    const li = document.createElement('img'); li.alt = ''; setImage(li, r.image, { width: 160, sizes: '96px' });
+    label.append(li); surface.append(label); disc.append(surface);
+    const name = document.createElement('h4'); name.className = 'mv3-name';
+    const caption = document.createElement('p'); caption.className = 'mv3-caption';
+    visual.append(disc, button); wrap.append(visual, name, caption); albums.append(wrap);
+    nodes.set(r.id, { wrap, visual, button, disc, surface, name, caption, title, tag });
+    disc.addEventListener('pointerdown', e => beginDrag(e, r.id));
+    disc.addEventListener('keydown', e => {
+      if ((e.key === 'Enter' || e.key === ' ') && r.id === state.selectedId && state.phase === 'IN_SLEEVE') {
+        e.preventDefault(); place(r.id);
+      }
+    });
+  }
+  albums.replaceChildren(); records.forEach(createAlbum);
+  // The sleeve is a click target only. Native browser image-drag is always disabled.
+  albums.addEventListener('dragstart', e => e.preventDefault());
+  albums.addEventListener('click', e => { const b = e.target.closest('[data-choose-record]'); if (b) select(b.dataset.chooseRecord); });
+  const center = r => ({ x: r.left + r.width / 2, y: r.top + r.height / 2 });
+  function accepts(x, y) {
+    const r = drop.getBoundingClientRect(), c = center(r);
+    return Math.hypot(x - c.x, y - c.y) <= Math.max(r.width * .92, 140);
+  }
+  function home(id) {
+    const n = nodes.get(id);
+    n.disc.classList.remove('is-on-deck', 'is-dragging'); n.disc.style.cssText = ''; n.surface.style.transform = '';
+    n.visual.insertBefore(n.disc, n.button);
+  }
+  async function relocate(id, target, onDeck) {
+    const n = nodes.get(id), disc = n.disc, first = disc.getBoundingClientRect();
+    if (onDeck) target.append(disc); else target.insertBefore(disc, n.button);
+    disc.classList.remove('is-dragging'); disc.classList.toggle('is-on-deck', onDeck); disc.style.cssText = '';
+    const last = disc.getBoundingClientRect();
+    if (!disc.animate || document.hidden || document.documentElement.dataset.motion === 'off') return;
+    const a = disc.animate([
+      { transform: `translate(${first.left - last.left}px,${first.top - last.top}px) scale(${first.width / Math.max(1, last.width)})` },
+      { transform: 'translate(0,0) scale(1)' }
+    ], { duration: 540, easing: 'cubic-bezier(.16,.86,.18,1)' });
+    animation = a;
+    try { await a.finished; } catch {} finally { if (animation === a) animation = null; }
+  }
+  async function returnLoaded() {
+    if (returning) return returning;
+    if (!state.loadedId) return;
+    const id = state.loadedId;
+    state.phase = 'RETURNING'; playback = null; transport.deactivate(); setStatus('returning'); sync();
+    returning = (async () => {
+      await motor.park();
+      // Keep the record on its spindle until the stylus has cleared it.
+      state.loadedId = null; deck.classList.remove('is-loaded');
+      await relocate(id, nodes.get(id).visual, false); home(id);
+      state.trackProgress = 0; state.currentURI = ''; state.phase = 'IN_SLEEVE';
+      sync();
+    })().finally(() => { returning = null; if (!suspended) transport.ensure(record(latestSelection || state.selectedId)); sync(); });
+    return returning;
+  }
+  async function select(id) {
+    if (!nodes.has(id)) return;
+    latestSelection = id;
+    if (drag || state.phase === 'SETTLING') return;
+    if (state.loadedId && id !== state.loadedId) await returnLoaded();
+    if (returning) await returning;
+    if (state.selectedId !== latestSelection) playback = null;
+    state.selectedId = latestSelection; sync();
+    if (!state.loadedId) {
+      transport.prepare(record(state.selectedId));
+    }
+  }
+  async function place(id) {
+    if (state.phase === 'SETTLING' || returning) return;
+    if (state.loadedId && state.loadedId !== id) await returnLoaded();
+    state.phase = 'SETTLING'; state.selectedId = id; sync();
+
+    transport.ensure(record(id));
+    await relocate(id, platter, true);
+    state.loadedId = id; state.phase = 'ON_TURNTABLE'; state.trackProgress = 0; state.currentURI = '';
+    deck.classList.add('is-loaded'); sync();
+    window.ClubMotion?.burst(drop, '', 5);
+    followPlayback();
+    if (latestSelection && latestSelection !== id) select(latestSelection);
+  }
+  function beginDrag(event, id) {
+    if (event.button !== undefined && event.button !== 0) return;
+    if (id !== state.selectedId || drag || returning || !['IN_SLEEVE', 'ON_TURNTABLE'].includes(state.phase) || state.loadedId === id) return;
+    // Touch/drag itself is an early intent signal. Make sure the selected entity
+    // is already being prepared while the listener moves the physical record.
+    transport.prepare(record(id));
+    const disc = nodes.get(id).disc, rect = disc.getBoundingClientRect();
+    const abort = new AbortController();
+    drag = { recordId: id, pointerId: event.pointerId, disc, abort, size: rect.width,
+      offsetX: event.clientX - rect.left, offsetY: event.clientY - rect.top, x: event.clientX, y: event.clientY };
+    state.phase = 'DRAGGING'; latestSelection = id;
+    document.body.append(disc); disc.classList.add('is-dragging');
+    Object.assign(disc.style, { width: rect.width + 'px', height: rect.height + 'px', left: rect.left + 'px', top: rect.top + 'px', right: 'auto', translate: 'none' });
+    try { disc.setPointerCapture(event.pointerId); } catch {}
+    const options = { passive: false, signal: abort.signal };
+    window.addEventListener('pointermove', e => {
+      if (e.pointerId !== drag?.pointerId) return;
+      e.preventDefault(); drag.x = e.clientX; drag.y = e.clientY;
+    }, options);
+    window.addEventListener('pointerup', e => { if (e.pointerId === drag?.pointerId) finishDrag(false); }, options);
+    window.addEventListener('pointercancel', e => { if (e.pointerId === drag?.pointerId) finishDrag(true); }, options);
+    window.addEventListener('keydown', e => { if (e.key === 'Escape') finishDrag(true); }, { signal: abort.signal });
+    setStatus('drag'); sync(); event.preventDefault(); dragFrame = requestAnimationFrame(dragTick);
+  }
+  function dragTick() {
+    dragFrame = 0; const d = drag; if (!d) return;
+    const left = d.x - d.offsetX, top = d.y - d.offsetY;
+    const hot = accepts(left + d.size / 2, top + d.size / 2);
+    d.disc.style.left = left + 'px'; d.disc.style.top = top + 'px'; deck.classList.toggle('is-hot', hot);
+    // Mobile dragging can reach a deck below the fold without a second finger.
+    const edge = 64;
+    const dy = d.y > innerHeight - edge ? Math.min(10, (d.y - innerHeight + edge) / 5) : d.y < edge ? -Math.min(10, (edge - d.y) / 5) : 0;
+    if (dy) window.scrollBy({ top: dy, behavior: 'instant' });
+    dragFrame = requestAnimationFrame(dragTick);
+  }
+  async function finishDrag(cancelled) {
+    const d = drag; if (!d) return;
+    drag = null; d.abort.abort(); cancelAnimationFrame(dragFrame); dragFrame = 0;
+    try { d.disc.releasePointerCapture(d.pointerId); } catch {}
+    deck.classList.remove('is-hot');
+    const valid = !cancelled && accepts(d.x - d.offsetX + d.size / 2, d.y - d.offsetY + d.size / 2);
+    if (valid) { state.phase = state.loadedId ? 'ON_TURNTABLE' : 'IN_SLEEVE'; await place(d.recordId); }
+    else {
+      state.phase = 'RETURNING'; await relocate(d.recordId, nodes.get(d.recordId).visual, false); home(d.recordId);
+      state.phase = state.loadedId ? 'ON_TURNTABLE' : 'IN_SLEEVE'; sync(); setStatus('miss');
+      if (latestSelection && latestSelection !== state.selectedId) select(latestSelection);
+      else if (playback?.data.isPaused === false && state.phase === 'IN_SLEEVE') place(state.selectedId);
+    }
+  }
+  function togglePlay() {
+    if (drag || returning || transport.pending) return;
+    if (!transport.controllable) {
+      if (transport.mode === 'error') transport.retry();
+      else transport.requestGesture();
+      return;
+    }
+    const wanted = playback?.data.isPaused !== false;
+    transport.command(wanted);
+  }
+  play.addEventListener('click', togglePlay);
+  $('mv3Expand')?.addEventListener('click', () => {
+    expanded = !expanded;
+    spotifyMount.classList.toggle('is-expanded', expanded);
+    $('mv3Expand').setAttribute('aria-expanded', String(expanded));
+    meta();
+  });
+  $('mv3Reconnect').addEventListener('click', () => {
+    playback = null;
+    motor.setPlaying(false);
+    transport.retry();
+  });
+  quick?.addEventListener('click', async () => {
+    if (drag || returning || ['SETTLING', 'RETURNING', 'DRAGGING'].includes(state.phase)) return;
+    if (state.loadedId) await returnLoaded();
+    else await place(state.selectedId);
+  });
+  document.addEventListener('club:language', () => sync());
+  document.addEventListener('visibilitychange', () => { if (document.hidden && drag) finishDrag(true); });
+  window.addEventListener('pagehide', () => {
+    suspended = true;
+    if (drag) finishDrag(true);
+    playback = null; motor.setPlaying(false); transport.destroy();
+  });
+  window.addEventListener('pageshow', event => {
+    suspended = false;
+    if (event.persisted) transport.ensure(record(state.selectedId));
+  });
+  window.addEventListener('resize', () => { if (drag) finishDrag(true); }, { passive: true });
+  albums.setAttribute('aria-busy', 'false');
+  sync(); setStatus('drag'); room.dataset.musicReady = 'true';
+  // Native controls load with the selection, independently of record placement.
+  transport.prepare(record(state.selectedId));
+  const api = { state, select, returnLoaded, get animationActive() { return Boolean(dragFrame || animation || motor.runningFrame); },
+    get motorVisible() { return motor.visible; }, get dragging() { return Boolean(drag); } };
+  window.ClubMusicV4 = api;
+  window.ClubMusic = api;
+  return api;
+}
