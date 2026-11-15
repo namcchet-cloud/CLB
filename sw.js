@@ -1,5 +1,5 @@
 /* CLB v7.3.4-zzz6 — atomic precache, offline fallback, current startup assets. */
-const CACHE_VERSION = 'clb-v7.3.4-zzz6.1.2';
+const CACHE_VERSION = 'clb-v7.3.4-zzz6.1.3';
 const CORE = [
   './', './index.html', './legal.html', './site.webmanifest',
   './css/tokens.css?v=7.1.0', './css/site.css?v=7.1.0', './css/music.css?v=7.3.0', './css/intro.css?v=7.1.0', './css/comic-decor.css?v=7.1.0', './css/effects.css?v=7.1.0',
@@ -9,7 +9,7 @@ const CORE = [
   './js/features/music/index.js?v=7.3.0', './js/features/music/motor.js?v=7.3.0', './js/features/music/spotify.js?v=7.3.0',
   './assets/optimized/logo-new-96-2583a335.webp', './assets/optimized/logo-new-192-86e0c09a.webp', './assets/optimized/logo-new-640-db642e82.webp',
   './css/zzz-art-direction-v6.css?v=6.0.0',
-  './zzz-v6.1-polish.css?v=6.1.2',
+  './zzz-v6.1-polish.css?v=6.1.3',
   './js/features/zzz-art-direction-v6.js?v=6.0.0',
   './zzz-v6.1-polish.js?v=6.1.2',
   './js/features/zzz-nav-expansion.js?v=6.0.0',

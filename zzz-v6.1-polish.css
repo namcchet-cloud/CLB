@@ -43,8 +43,8 @@ html[data-clb-mode="zzz"] #home.hero .zz-wordmark::after {
   opacity: .13;
   pointer-events: none;
   background: radial-gradient(circle, rgba(255,255,255,.65) .65px, transparent 1px) 0 0 / 8px 8px repeat;
-  -webkit-mask-image: url("../assets/zzz-v4/wordmark-art-club.svg");
-  mask-image: url("../assets/zzz-v4/wordmark-art-club.svg");
+  -webkit-mask-image: url("assets/zzz-v4/wordmark-art-club.svg");
+  mask-image: url("assets/zzz-v4/wordmark-art-club.svg");
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
   -webkit-mask-repeat: no-repeat;
@@ -52,13 +52,14 @@ html[data-clb-mode="zzz"] #home.hero .zz-wordmark::after {
 }
 /* No filters, pseudo textures or overlays are applied to images and controls. */
 
-/* One finished green silhouette, with all entry / exit corners INSIDE the stage.
-   It has a visible beginning and end on desktop, tablet and mobile. */
+/* RESTORED V6 ART DIRECTION: do not redesign the graphic behind the fox.
+   Preserve the original angular motif, transparent gaps, and 3-tone lime palette.
+   Only keep the outer coordinates inside the stage to prevent hard cropping. */
 html[data-clb-mode="zzz"] #home.hero .hero-stage::before {
   content: "";
-  position: absolute;
-  inset: 4% 3% 5% 3%;
   display: block;
+  position: absolute;
+  inset: 3% 3% 4%;
   width: auto;
   height: auto;
   z-index: 0;
@@ -69,13 +70,10 @@ html[data-clb-mode="zzz"] #home.hero .hero-stage::before {
   box-shadow: none;
   transform: none;
   background:
-    radial-gradient(circle, rgba(34,104,20,.12) 0 1px, transparent 1.55px) 0 0 / 17px 17px,
-    linear-gradient(132deg, #cced97 3%, #b4df83 36%, #a6d562 65%, #8cc849 100%);
-  clip-path: polygon(
-    13% 4%, 58% 4%, 70% 0%, 85% 10%, 98% 12%,
-    92% 33%, 100% 56%, 95% 78%, 82% 96%, 58% 91%,
-    30% 100%, 12% 85%, 3% 89%, 9% 62%, 0% 44%, 12% 24%
-  );
+    radial-gradient(circle at 51% 48%, transparent 0 40%, #b3de724d 40.5% 57%, transparent 57.5%),
+    radial-gradient(circle, #32790e51 0 1.7px, transparent 2.2px) 33px 30px / 13px 13px,
+    linear-gradient(136deg, transparent 0 15%, #aadf4d 15% 35%, transparent 35% 41%, #9ad03d 41% 67%, transparent 67% 76%, #b6e075 76% 100%);
+  clip-path: polygon(36% 0, 100% 0, 100% 95%, 16% 97%, 23% 77%, 0 92%, 23% 48%, 3% 56%);
 }
 /* Original artwork is a separate element above the green backdrop. */
 html[data-clb-mode="zzz"] #home.hero .hero-stage .logo-float { z-index: 4; }
@@ -161,17 +159,13 @@ html[data-clb-mode="zzz"] .site-header:has(.nav.open) {
 
 @media (max-width: 980px) {
   html[data-clb-mode="zzz"] #home.hero .hero-stage::before {
-    inset: 5% 5% 4% 5%;
-    clip-path: polygon(
-      12% 12%, 63% 2%, 85% 9%, 98% 31%, 89% 49%,
-      100% 72%, 83% 91%, 61% 94%, 28% 98%, 7% 85%,
-      1% 61%, 11% 40%, 2% 24%
-    );
+    inset: 3% 3% 4%;
+    clip-path: polygon(23% 0, 100% 0, 100% 100%, 0 100%, 14% 53%);
   }
 }
 @media (max-width: 540px) {
   html[data-clb-mode="zzz"] { --zz-bottom-height: 38px; }
-  html[data-clb-mode="zzz"] #home.hero .hero-stage::before { inset: 4% 3% 4% 3%; }
+  html[data-clb-mode="zzz"] #home.hero .hero-stage::before { inset: 3% 3% 4%; }
   html[data-clb-mode="zzz"] .zz-v61-bottom-band { padding-inline: 13px; gap: 10px; font-size: 11px; }
   html[data-clb-mode="zzz"] .zz-v61-bottom-brand { font-size: 11px; }
   html[data-clb-mode="zzz"] .zz-v61-bottom-section { font-size: 10px; }
