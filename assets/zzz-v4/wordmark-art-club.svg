@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 884 371" role="img" aria-labelledby="title desc">
+  <title id="title">ART CLUB</title>
+  <desc id="desc">Original block lettering with large black masses, rounded architectural contours and narrow negative-space cuts, arranged over two rows.</desc>
+  <g fill="#151719" fill-rule="evenodd">
+    <!-- A: a low, wide triangular spine, thick bridge, deliberately narrow counter. -->
+    <path d="M19 179 Q5 179 8 163 L43 19 Q47 4 63 4 H209 Q225 4 229 19 L268 163 Q272 179 255 179 H187 Q176 179 174 165 L169 139 H94 L89 165 Q87 179 74 179 Z M127 61 L115 104 H151 L141 61 Z" />
+    <!-- R: a compressed rounded bowl, hairline eye, and a forward-set diagonal leg. -->
+    <g transform="translate(279 0)">
+      <path d="M13 4 H195 Q260 4 273 46 Q285 85 251 111 L285 163 Q295 179 273 179 H199 Q187 179 180 166 L150 122 H97 V166 Q97 179 83 179 H14 Q0 179 0 165 V18 Q0 4 13 4 Z M96 54 V77 H183 Q198 77 198 65 Q198 54 184 54 Z" />
+    </g>
+    <!-- T: projecting wide headline cap, close counter spacing with subtle curved joins. -->
+    <g transform="translate(572 0)">
+      <path d="M15 4 H296 Q311 4 311 19 V65 Q311 79 296 79 H216 V165 Q216 179 202 179 H105 Q92 179 92 165 V79 H15 Q0 79 0 65 V19 Q0 4 15 4 Z" />
+    </g>
+    <!-- C: a soft outer contour meeting a narrow open mouth on the right. -->
+    <g transform="translate(0 193)">
+      <path d="M64 4 H220 Q236 4 236 20 V58 H153 V55 Q153 48 143 48 H102 Q91 48 91 59 V122 Q91 133 102 133 H143 Q153 133 153 126 V122 H236 V159 Q236 175 220 175 H64 Q0 175 0 117 V62 Q0 4 64 4 Z" />
+    </g>
+    <!-- L: ultra-compressed stem with a heavy, softly rounded foot. -->
+    <g transform="translate(244 193)">
+      <path d="M14 4 H77 Q92 4 92 18 V130 H181 V162 Q181 175 167 175 H14 Q0 175 0 161 V18 Q0 4 14 4 Z" />
+    </g>
+    <!-- U: narrow upright counter and a heavy squircle cradle. -->
+    <g transform="translate(433 193)">
+      <path d="M14 4 H85 Q99 4 99 18 V117 Q99 132 114 132 H122 Q137 132 137 117 V18 Q137 4 152 4 H219 Q233 4 233 18 V118 Q233 175 176 175 H57 Q0 175 0 118 V18 Q0 4 14 4 Z" />
+    </g>
+    <!-- B: two narrow horizontal apertures reference a mechanical printed masthead. -->
+    <g transform="translate(673 193)">
+      <path d="M13 4 H146 Q211 4 211 50 Q211 79 191 88 Q214 97 214 129 Q214 175 149 175 H13 Q0 175 0 162 V17 Q0 4 13 4 Z M78 53 V68 H139 Q149 68 149 60 Q149 53 139 53 Z M78 115 V131 H139 Q150 131 150 123 Q150 115 139 115 Z" />
+    </g>
+    <path d="M130 47 L140 72 L165 80 L141 88 L133 114 L122 91 L98 85 L121 75 Z" fill="#fff9e9" fill-rule="nonzero"/>
+  </g>
+</svg>
